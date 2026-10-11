@@ -1,0 +1,32 @@
+name: todo
+version: 1.0.0
+registry: ${{ values.registry }}
+images:
+  api: todo-api:1.0.0
+  migrate: todo-migrate:1.0.0
+  warm: todo-warm:1.0.0
+  planner: todo-planner:1.0.0
+  collect: todo-collect:1.0.0
+  rank: todo-rank:1.0.0
+  web: todo-web:1.0.0
+valuesSchema:
+  type: object
+  properties:
+    registry:
+      type: string
+      default: registry.example
+    schedule:
+      type: object
+      properties:
+        cron:
+          type: string
+          default: "0 6 * * *"
+        timeZone:
+          type: string
+          default: Asia/Kathmandu
+    keptStores:
+      type: boolean
+      default: false
+when:
+  resources/kept.yaml: ${{ values.keptStores !== true }}
+  resources/kept-ref.yaml: ${{ values.keptStores === true }}

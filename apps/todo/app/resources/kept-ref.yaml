@@ -1,0 +1,4 @@
+kv:
+  - ref: ${{ app.name + "-store" }}
+buckets:
+  - ref: ${{ app.name + "-files" }}

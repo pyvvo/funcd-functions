@@ -1,0 +1,32 @@
+functions:
+  - name: ${{ app.name + "-api" }}
+    runtime: nodejs22
+    handler: handle
+    image: ${{ images.api }}
+    kv:
+      - alias: todos
+        store: ${{ app.name + "-store" }}
+        table: todos
+      - alias: meta
+        store: ${{ app.name + "-store" }}
+        table: meta
+      - alias: warm
+        store: ${{ app.name + "-cache" }}
+        table: warm
+    blob:
+      - alias: files
+        bucket: ${{ app.name + "-files" }}
+        prefix: attachments
+      - alias: uploads
+        bucket: ${{ app.name + "-tmp" }}
+        prefix: uploads
+    config:
+      - ${{ app.name + "-settings" }}
+    secrets:
+      - ${{ app.name + "-api-keys" }}
+routes:
+  - name: ${{ app.name + "-api" }}
+    rules:
+      - path: /api
+        backend:
+          function: ${{ app.name + "-api" }}

@@ -5,6 +5,10 @@ tests that run funcd on containerd. Each example App holds TypeScript and Python
 Secret declarations, catalogs and the other kinds an App can declare. Each one is configured to catch a scenario that
 only a real runtime shows, such as a cold start, a daemon restart, data on disk or the real edge.
 
+## Apps
+
+- [`apps/todo`](apps/todo): the to-do App of funcd's App design, deployed by funcd's `app-todo` lane.
+
 ## How funcd uses this repository
 
 funcd pins this repository as a Go module in its `go.mod`, as it pins

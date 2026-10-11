@@ -1,0 +1,25 @@
+functions:
+  - name: ${{ app.name + "-migrate" }}
+    runtime: nodejs22
+    handler: handle
+    image: ${{ images.migrate }}
+    kv:
+      - alias: todos
+        store: ${{ app.name + "-store" }}
+        table: todos
+      - alias: meta
+        store: ${{ app.name + "-store" }}
+        table: meta
+  - name: ${{ app.name + "-warm" }}
+    runtime: python314
+    handler: handle
+    image: ${{ images.warm }}
+    kv:
+      - alias: warm
+        store: ${{ app.name + "-cache" }}
+        table: warm
+hooks:
+  preApply:
+    - function: ${{ app.name + "-migrate" }}
+  postApply:
+    - function: ${{ app.name + "-warm" }}
