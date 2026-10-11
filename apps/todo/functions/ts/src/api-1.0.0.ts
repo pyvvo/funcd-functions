@@ -1,6 +1,6 @@
 // The todo API, version 1.0.0. A todo is a schema-1 record of table todos; add also stores its title as an attachment,
-// which the App keeps when it is deleted, and as an upload, which goes with the App. attach uploads a file of a todo,
-// which the intake Function records and get lists; hang blocks the API for funcd's liveness check.
+// which the App keeps when it is deleted, and a copy of the record, which goes with the App. attach uploads a file of a
+// todo, which the intake Function records and get lists; hang blocks the API for funcd's liveness check.
 import type { CloudEvent, FunctionContext } from '@funcd-dev/shim';
 
 import type { MigrationRecord, ReleaseRecord, TodoRecord } from './records';
@@ -73,7 +73,7 @@ async function add(ctx: FunctionContext, input: FuncInput): Promise<FuncOutput> 
   const record: TodoRecord = { title };
   await ctx.kv.put('todos', id, JSON.stringify(record));
   await ctx.blob.put('files', `${id}.txt`, utf8.encode(title));
-  await ctx.blob.put('uploads', `${id}.json`, utf8.encode(JSON.stringify(record)));
+  await ctx.blob.put('copies', `${id}.json`, utf8.encode(JSON.stringify(record)));
   ctx.log('add', id);
   return { version, id };
 }

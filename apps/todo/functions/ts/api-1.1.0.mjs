@@ -8,14 +8,14 @@ function requireToken(op, token) {
 }
 async function attach(ctx, id, name, content) {
 	if (!await ctx.kv.getJSON("todos", id)) throw new Error(`attach needs an existing todo, not "${id}"`);
-	if (!/^[A-Za-z0-9._-]+$/.test(name)) throw new Error("attach needs a file name of letters, digits, dots, dashes and underscores");
-	await ctx.blob.put("inbox", `${id}/${name}`, utf8$1.encode(content));
+	if (!/^[A-Za-z0-9_-][A-Za-z0-9._-]*$/.test(name)) throw new Error("attach needs a file name of letters, digits, dots, dashes and underscores, not starting with a dot");
+	await ctx.blob.put("uploads", `${id}/${name}`, utf8$1.encode(content));
 	ctx.log("attach", id, name);
 }
 async function uploadsOf(ctx, id) {
 	const uploads = [];
-	for (const key of (await ctx.kv.list("intake", `${id}/`)).sort()) {
-		const record = await ctx.kv.getJSON("intake", key);
+	for (const key of (await ctx.kv.list("uploads", `${id}/`)).sort()) {
+		const record = await ctx.kv.getJSON("uploads", key);
 		if (record) uploads.push({
 			name: key.slice(id.length + 1),
 			size: record.size
@@ -62,7 +62,7 @@ async function add(ctx, input) {
 	};
 	await ctx.kv.put("todos", id, JSON.stringify(record));
 	await ctx.blob.put("files", `${id}.txt`, utf8.encode(title));
-	await ctx.blob.put("uploads", `${id}.json`, utf8.encode(JSON.stringify(record)));
+	await ctx.blob.put("copies", `${id}.json`, utf8.encode(JSON.stringify(record)));
 	ctx.log("add", id);
 	return {
 		version,

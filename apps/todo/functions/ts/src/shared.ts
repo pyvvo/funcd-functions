@@ -26,18 +26,18 @@ export async function attach(ctx: FunctionContext, id: string, name: string, con
   if (!(await ctx.kv.getJSON('todos', id))) {
     throw new Error(`attach needs an existing todo, not "${id}"`);
   }
-  if (!/^[A-Za-z0-9._-]+$/.test(name)) {
-    throw new Error('attach needs a file name of letters, digits, dots, dashes and underscores');
+  if (!/^[A-Za-z0-9_-][A-Za-z0-9._-]*$/.test(name)) {
+    throw new Error('attach needs a file name of letters, digits, dots, dashes and underscores, not starting with a dot');
   }
-  await ctx.blob.put('inbox', `${id}/${name}`, utf8.encode(content));
+  await ctx.blob.put('uploads', `${id}/${name}`, utf8.encode(content));
   ctx.log('attach', id, name);
 }
 
 // uploadsOf lists the uploads of a todo that the intake Function recorded, by name.
 export async function uploadsOf(ctx: FunctionContext, id: string): Promise<Upload[]> {
   const uploads: Upload[] = [];
-  for (const key of (await ctx.kv.list('intake', `${id}/`)).sort()) {
-    const record = await ctx.kv.getJSON<UploadRecord>('intake', key);
+  for (const key of (await ctx.kv.list('uploads', `${id}/`)).sort()) {
+    const record = await ctx.kv.getJSON<UploadRecord>('uploads', key);
     if (record) {
       uploads.push({ name: key.slice(id.length + 1), size: record.size });
     }

@@ -26,6 +26,7 @@ contract:
       - key
       - size
       - version
+      - time
   output:
     type: object
     additionalProperties: false

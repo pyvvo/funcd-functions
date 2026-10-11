@@ -12,19 +12,19 @@ bindings:
     - alias: warm
       store: todo-cache
       table: warm
-    - alias: intake
+    - alias: uploads
       store: todo-store
       table: uploads
   blob:
     - alias: files
       bucket: todo-files
       prefix: attachments
-    - alias: inbox
+    - alias: uploads
       bucket: todo-files
       prefix: uploads
-    - alias: uploads
+    - alias: copies
       bucket: todo-tmp
-      prefix: uploads
+      prefix: copies
   config:
     - todo-settings
   secrets:

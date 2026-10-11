@@ -75,7 +75,7 @@ async function add(ctx: FunctionContext, input: FuncInput): Promise<FuncOutput> 
   const record: TodoRecord = { title, done: false };
   await ctx.kv.put('todos', id, JSON.stringify(record));
   await ctx.blob.put('files', `${id}.txt`, utf8.encode(title));
-  await ctx.blob.put('uploads', `${id}.json`, utf8.encode(JSON.stringify(record)));
+  await ctx.blob.put('copies', `${id}.json`, utf8.encode(JSON.stringify(record)));
   ctx.log('add', id);
   return { version, id };
 }

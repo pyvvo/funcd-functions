@@ -8,7 +8,7 @@ as an App template. funcd's `app-todo` Lima lane deploys it on containerd (`just
 | Part | Kind | What it does |
 |---|---|---|
 | `todo-api` | Function (TypeScript) and Route `/api` | adds, lists and reads todos; `attach` uploads a file of a todo, and `get` lists the uploads the intake recorded. Adding, attaching and `hang` need the token of Secret `todo-api-keys`; `hang` blocks the API's event loop, for funcd's liveness check |
-| `todo-planner` | Function (Python) | returns the plan that Workflow `todo-plan` stored for a tick; a call can wait for the plan, and a wait past the planner's 2 s `timeout` is stopped |
+| `todo-planner` | Function (Python) | returns the plan that Workflow `todo-plan` stored for a tick; a call can wait for the plan, and a wait past the planner's 2 s `timeout` is stopped. The timeout also bounds the call that wakes the planner |
 | `todo-plan` | Workflow | `collect` (TypeScript) reads the todos' attachments, `rank` (Python) orders them into its own KV store `todo-plans` |
 | `todo-plan-timer`, `todo-plan-schedule` | EventSource, Sensor | a cron timer in a time zone that starts `todo-plan` |
 | `todo-uploads`, `todo-upload-intake` | EventSource, Sensor | an object under `uploads/` in `todo-files` fires event `uploaded`, which the Sensor hands to `todo-intake` |
@@ -31,8 +31,9 @@ its rollout waits until `todo-shared` is Ready at a matching version.
 - `app-1.1.0.yaml`: the `app.yaml` of version 1.1.0. With `app/resources` it is the 1.1.0 template: a new API image,
   whose todos add `done`, and a new migrate hook that rewrites the todos of 1.0.0 before that API replaces it.
 - `values/e2e.yaml`: the registry of the lane, an OCI layout under `/mnt/funcd-deps`. `values/reinstall.yaml` installs
-  over the stores that a deleted install kept, through `ref`. `values/greeting.yaml` changes the greeting, which rolls
-  the API to a new revision; `values/shared.yaml` adds the requirement on `todo-shared`.
+  over the stores that a deleted install kept, through `ref`; a `ref` cannot add a table or a prefix, so the kept stores
+  must come from the same template version. `values/greeting.yaml` changes the greeting, which rolls the API to a new
+  revision; `values/shared.yaml` adds the requirement on `todo-shared`.
 - `grants.yaml`: the RolesAssignment that lets the migrate hook write table `todos`, which the API owns. An App
   declares no IAM kind, so it is applied beside the App.
 - `secret.yaml`: a test fixture, Secret `todo-api-keys` with the lane's test-only token.
