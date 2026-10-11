@@ -8,6 +8,7 @@ images:
   planner: todo-planner:1.0.0
   collect: todo-collect:1.0.0
   rank: todo-rank:1.0.0
+  intake: todo-intake:1.0.0
   web: todo-web:1.0.0
 valuesSchema:
   type: object
@@ -15,6 +16,9 @@ valuesSchema:
     registry:
       type: string
       default: registry.example
+    greeting:
+      type: string
+      default: hello from the todo App
     schedule:
       type: object
       properties:
@@ -27,6 +31,10 @@ valuesSchema:
     keptStores:
       type: boolean
       default: false
+    shared:
+      type: boolean
+      default: false
 when:
   resources/kept.yaml: ${{ values.keptStores !== true }}
   resources/kept-ref.yaml: ${{ values.keptStores === true }}
+  resources/requires.yaml: ${{ values.shared === true }}

@@ -8,6 +8,7 @@ only a real runtime shows, such as a cold start, a daemon restart, data on disk 
 ## Apps
 
 - [`apps/todo`](apps/todo): the to-do App of funcd's App design, deployed by funcd's `app-todo` lane.
+- [`apps/todo-shared`](apps/todo-shared): the App that the to-do App requires, deployed by the same lane.
 
 ## How funcd uses this repository
 

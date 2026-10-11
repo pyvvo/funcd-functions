@@ -13,10 +13,16 @@ functions:
       - alias: warm
         store: ${{ app.name + "-cache" }}
         table: warm
+      - alias: intake
+        store: ${{ app.name + "-store" }}
+        table: uploads
     blob:
       - alias: files
         bucket: ${{ app.name + "-files" }}
         prefix: attachments
+      - alias: inbox
+        bucket: ${{ app.name + "-files" }}
+        prefix: uploads
       - alias: uploads
         bucket: ${{ app.name + "-tmp" }}
         prefix: uploads

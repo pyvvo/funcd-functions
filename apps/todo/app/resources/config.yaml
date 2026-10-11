@@ -1,7 +1,7 @@
 configMaps:
   - name: ${{ app.name + "-settings" }}
     data:
-      TODO_GREETING: hello from the todo App
+      TODO_GREETING: ${{ values.greeting }}
 secrets:
   - name: ${{ app.name + "-api-keys" }}
     description: The token that adding a todo needs; the installer creates this Secret

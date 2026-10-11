@@ -29,3 +29,11 @@ export interface ReleaseRecord {
   revision: string;
   version: string;
 }
+
+/** What the intake Function writes under <todo>/<file> of table uploads, once per uploaded object. */
+export interface UploadRecord {
+  key: string;
+  size: number;
+  version: string;
+  by: string;
+}

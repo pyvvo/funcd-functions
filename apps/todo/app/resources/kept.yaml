@@ -6,9 +6,13 @@ kv:
         owner: ${{ app.name + "-api" }}
       - name: meta
         owner: ${{ app.name + "-migrate" }}
+      - name: uploads
+        owner: ${{ app.name + "-intake" }}
 buckets:
   - name: ${{ app.name + "-files" }}
     deletion: retain
     prefixes:
       - name: attachments
+        owner: ${{ app.name + "-api" }}
+      - name: uploads
         owner: ${{ app.name + "-api" }}

@@ -1,0 +1,36 @@
+# The client config of the uploads intake (funcd ADR-0122): its input is the data of a blob event (funcd ADR-0119).
+runtime: python314
+handler: handle
+bindings:
+  kv:
+    - alias: uploads
+      store: todo-store
+      table: uploads
+contract:
+  input:
+    type: object
+    additionalProperties: false
+    properties:
+      bucket:
+        type: string
+      key:
+        type: string
+      size:
+        type: integer
+      version:
+        type: string
+      time:
+        type: string
+    required:
+      - bucket
+      - key
+      - size
+      - version
+  output:
+    type: object
+    additionalProperties: false
+    properties:
+      key:
+        type: string
+    required:
+      - key

@@ -1,0 +1,26 @@
+functions:
+  - name: ${{ app.name + "-intake" }}
+    runtime: python314
+    handler: handle
+    image: ${{ images.intake }}
+    kv:
+      - alias: uploads
+        store: ${{ app.name + "-store" }}
+        table: uploads
+eventSources:
+  - name: ${{ app.name + "-uploads" }}
+    blob:
+      bucket: ${{ app.name + "-files" }}
+      events:
+        - name: uploaded
+          prefix: uploads/
+sensors:
+  - name: ${{ app.name + "-upload-intake" }}
+    "on":
+      - name: uploaded
+        source: ${{ app.name + "-uploads" }}
+        event: uploaded
+    do:
+      - name: record
+        "on": uploaded
+        function: ${{ app.name + "-intake" }}

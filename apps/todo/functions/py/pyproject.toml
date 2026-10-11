@@ -1,11 +1,11 @@
 [project]
 name = "funcd-functions-todo"
 version = "1.0.0"
-description = "The Python functions of the todo App: the planner, the rank step of its Workflow and its warm hook."
+description = "The Python functions of the todo App: the planner, the rank step of its Workflow, its warm hook and the intake of its uploads."
 authors = [{ name = "The funcd Authors" }]
 requires-python = ">=3.12"
 # funcd-shim types the handlers; at run time the python314 runtime provides it, and each function is one file.
-dependencies = ["funcd-shim==0.7.0"]
+dependencies = ["funcd-shim==0.8.0"]
 
 [dependency-groups]
 dev = ["mypy>=1.13", "ruff>=0.8"]
@@ -13,7 +13,7 @@ dev = ["mypy>=1.13", "ruff>=0.8"]
 [tool.mypy]
 strict = true
 python_version = "3.12"
-files = ["planner.py", "rank.py", "warm.py"]
+files = ["intake.py", "planner.py", "rank.py", "warm.py"]
 
 [tool.ruff]
 line-length = 120

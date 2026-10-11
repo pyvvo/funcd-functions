@@ -1,15 +1,19 @@
 // The todo API, version 1.0.0. A todo is a schema-1 record of table todos; add also stores its title as an attachment,
-// which the App keeps when it is deleted, and as an upload, which goes with the App.
+// which the App keeps when it is deleted, and as an upload, which goes with the App. attach uploads a file of a todo,
+// which the intake Function records and get lists; hang blocks the API for funcd's liveness check.
 import type { CloudEvent, FunctionContext } from '@funcd-dev/shim';
 
 import type { MigrationRecord, ReleaseRecord, TodoRecord } from './records';
+import { attach, hang, requireToken, type Upload, uploadsOf } from './shared';
 
 const version = '1.0.0';
 
 export interface FuncInput {
-  op: 'add' | 'list' | 'get';
+  op: 'add' | 'list' | 'get' | 'attach' | 'hang';
   title?: string;
   id?: string;
+  name?: string;
+  content?: string;
   token?: string;
 }
 
@@ -23,6 +27,7 @@ export interface FuncOutput {
   id?: string;
   todos?: Todo[];
   attachment?: string | null;
+  uploads?: Upload[];
   migration?: MigrationRecord | null;
   release?: ReleaseRecord | null;
   greeting?: string;
@@ -38,6 +43,13 @@ export async function handle(ctx: FunctionContext, event: CloudEvent<FuncInput>)
       return add(ctx, input);
     case 'get':
       return get(ctx, input.id ?? '');
+    case 'attach':
+      requireToken('attach', input.token);
+      await attach(ctx, input.id ?? '', input.name ?? '', input.content ?? '');
+      return { version, id: input.id };
+    case 'hang':
+      requireToken('hang', input.token);
+      return hang();
     default:
       return list(ctx);
   }
@@ -52,10 +64,7 @@ function slug(title: string): string {
 }
 
 async function add(ctx: FunctionContext, input: FuncInput): Promise<FuncOutput> {
-  const token = process.env.TODO_API_TOKEN;
-  if (!token || input.token !== token) {
-    throw new Error('add needs the API token');
-  }
+  requireToken('add', input.token);
   const title = input.title ?? '';
   const id = slug(title);
   if (id === '') {
@@ -76,6 +85,7 @@ async function get(ctx: FunctionContext, id: string): Promise<FuncOutput> {
     version,
     todos: record ? [{ id, title: record.title }] : [],
     attachment: file ? new TextDecoder().decode(file) : null,
+    uploads: await uploadsOf(ctx, id),
   };
 }
 
