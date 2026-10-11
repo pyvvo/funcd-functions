@@ -52,7 +52,8 @@ its rollout waits until `todo-shared` is Ready at a matching version.
   `restore.credentials` and `versitygw.env` hold the S3 server's test key. `probe-configmap.yaml` is the object whose
   version the lane writes back after the restore. `workload-secrets.yaml` holds the S3 key and the identity of the
   App's own backups; `restore-copy.yaml`, `restore-not-empty.yaml` and `restore-in-place.yaml` restore a Backup whose
-  name the lane fills in. `funcdconfig-blob-s3.yaml` puts the blob store itself on the S3 server. None of these is a
+  name the lane fills in. `funcdconfig-blob-s3.yaml` puts the blob store itself on the S3 server.
+  `dead-letter-sensor.yaml` fails on every upload, so the lane has a dead letter to back up and restore. None of these is a
   secret: they exist only in the lane.
 
 ## Install

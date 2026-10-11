@@ -23,6 +23,10 @@ runtime:
   livenessTimeout: 6s
 eventing:
   blobPollInterval: 2s
+  # A failing Sensor action is dead-lettered after two quick attempts, so the lane makes one before its backup.
+  deliveryAttempts: 2
+  deliveryBackoffInitial: 200ms
+  deliveryBackoffMax: 1s
 funclog:
   segmentMaxAge: 2s
 kvstore:

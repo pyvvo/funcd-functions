@@ -1,0 +1,19 @@
+# A Sensor whose action always fails: it hands the intake an input without the object's key, so each upload under
+# uploads/ leaves a dead letter, which funcd's lane backs up, restores and finds again after the release.
+apiVersion: funcd.io/v1alpha1
+kind: Sensor
+metadata:
+  name: todo-dr-dead-letter
+  namespace: default
+  resourceGroup: todo
+spec:
+  "on":
+    - name: uploaded
+      source: todo-uploads
+      event: uploaded
+  do:
+    - name: refused
+      "on": uploaded
+      function: todo-intake
+      input:
+        note: an input without the object's key
