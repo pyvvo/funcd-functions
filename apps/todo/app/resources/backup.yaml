@@ -1,0 +1,11 @@
+backupSchedules:
+  - name: ${{ app.name + "-backup" }}
+    schedule: "* * * * *"
+    ttl: 24h
+    target:
+      url: s3://todo-workload?endpoint=http://127.0.0.1:7070&region=us-east-1&use_path_style=true
+      credentialsSecret: ${{ app.name + "-backup-writer" }}
+    encryption:
+      recipients:
+        - age1gvngj00ucwlleuk898r0s3umcacr5mxhkv4fy67evygxsmlgpanq43ttm3
+        - age1263g0rath75xcgy9wh9cd6p9tpdn6wq35t5fa5pajnna4u7tgyhsxd384c

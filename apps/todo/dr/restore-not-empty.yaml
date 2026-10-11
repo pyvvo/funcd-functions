@@ -1,0 +1,16 @@
+# A Restore of Backup BACKUP into todo-store-r, which todo-copy already filled: refused as NotEmpty (funcd ADR-0222).
+apiVersion: funcd.io/v1alpha1
+kind: Restore
+metadata:
+  name: todo-copy-again
+  namespace: default
+  resourceGroup: todo
+spec:
+  backup: BACKUP
+  source:
+    credentialsSecret: todo-backup-reader
+    identitySecret: todo-backup-key
+  members:
+    - kind: KVStore
+      name: todo-store
+      as: todo-store-r
