@@ -1,0 +1,48 @@
+# The todo App's stores restored under new names from Backup BACKUP, which the lane substitutes (funcd ADR-0222
+# Decision 7): an empty KVStore and an empty Bucket with the App's tables and prefixes.
+apiVersion: funcd.io/v1alpha1
+kind: KVStore
+metadata:
+  name: todo-store-r
+  namespace: default
+  resourceGroup: todo
+spec:
+  tables:
+    - name: todos
+      owner: todo-api
+    - name: meta
+      owner: todo-migrate
+    - name: uploads
+      owner: todo-intake
+---
+apiVersion: funcd.io/v1alpha1
+kind: Bucket
+metadata:
+  name: todo-files-r
+  namespace: default
+  resourceGroup: todo
+spec:
+  prefixes:
+    - name: attachments
+      owner: todo-api
+    - name: uploads
+      owner: todo-api
+---
+apiVersion: funcd.io/v1alpha1
+kind: Restore
+metadata:
+  name: todo-copy
+  namespace: default
+  resourceGroup: todo
+spec:
+  backup: BACKUP
+  source:
+    credentialsSecret: todo-backup-reader
+    identitySecret: todo-backup-key
+  members:
+    - kind: KVStore
+      name: todo-store
+      as: todo-store-r
+    - kind: Bucket
+      name: todo-files
+      as: todo-files-r

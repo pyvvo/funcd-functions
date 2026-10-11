@@ -1,0 +1,17 @@
+# todo-store restored in place from Backup BACKUP: an admin's Restore, which first exports the store as Backup
+# todo-back-before and holds the namespace during the load (funcd ADR-0222 Decision 7).
+apiVersion: funcd.io/v1alpha1
+kind: Restore
+metadata:
+  name: todo-back
+  namespace: default
+  resourceGroup: todo
+spec:
+  backup: BACKUP
+  source:
+    credentialsSecret: todo-backup-reader
+    identitySecret: todo-backup-key
+  members:
+    - kind: KVStore
+      name: todo-store
+      inPlace: true

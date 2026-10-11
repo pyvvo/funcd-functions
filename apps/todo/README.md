@@ -33,7 +33,8 @@ its rollout waits until `todo-shared` is Ready at a matching version.
 - `values/e2e.yaml`: the registry of the lane, an OCI layout under `/mnt/funcd-deps`. `values/reinstall.yaml` installs
   over the stores that a deleted install kept, through `ref`; a `ref` cannot add a table or a prefix, so the kept stores
   must come from the same template version. `values/greeting.yaml` changes the greeting, which rolls the API to a new
-  revision; `values/shared.yaml` adds the requirement on `todo-shared`.
+  revision; `values/shared.yaml` adds the requirement on `todo-shared`; `values/backup.yaml` adds the App's backup schedule
+  (`resources/backup.yaml`), every minute to the S3 server of the lane's disaster-recovery block.
 - `grants.yaml`: the RolesAssignment that lets the migrate hook write table `todos`, which the API owns. An App
   declares no IAM kind, so it is applied beside the App.
 - `secret.yaml`: a test fixture, Secret `todo-api-keys` with the lane's test-only token.
@@ -49,7 +50,10 @@ its rollout waits until `todo-shared` is Ready at a matching version.
   `recipients.txt`, and static credentials from `admin.token` and `developer.token`. `identity.txt` is the operator's
   identity, which opens the backups; the recovery key's identity is not kept. `backup.credentials`,
   `restore.credentials` and `versitygw.env` hold the S3 server's test key. `probe-configmap.yaml` is the object whose
-  version the lane writes back after the restore. None of these is a secret: they exist only in the lane.
+  version the lane writes back after the restore. `workload-secrets.yaml` holds the S3 key and the identity of the
+  App's own backups; `restore-copy.yaml`, `restore-not-empty.yaml` and `restore-in-place.yaml` restore a Backup whose
+  name the lane fills in. `funcdconfig-blob-s3.yaml` puts the blob store itself on the S3 server. None of these is a
+  secret: they exist only in the lane.
 
 ## Install
 

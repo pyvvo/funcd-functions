@@ -34,7 +34,11 @@ valuesSchema:
     shared:
       type: boolean
       default: false
+    backup:
+      type: boolean
+      default: false
 when:
   resources/kept.yaml: ${{ values.keptStores !== true }}
   resources/kept-ref.yaml: ${{ values.keptStores === true }}
   resources/requires.yaml: ${{ values.shared === true }}
+  resources/backup.yaml: ${{ values.backup === true }}
