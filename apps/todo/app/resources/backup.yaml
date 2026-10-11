@@ -1,3 +1,5 @@
+# A fixture of funcd's app-todo lane (value backup): the App backs up its own stores to the lane's S3 server,
+# sealed to the lane's recipients (dr/recipients.txt).
 backupSchedules:
   - name: ${{ app.name + "-backup" }}
     schedule: "* * * * *"
