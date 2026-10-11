@@ -94,7 +94,7 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "funcd-shim", specifier = "==0.7.0" }]
+requires-dist = [{ name = "funcd-shim", specifier = "==0.8.0" }]
 
 [package.metadata.requires-dev]
 dev = [
@@ -104,14 +104,14 @@ dev = [
 
 [[package]]
 name = "funcd-shim"
-version = "0.7.0"
+version = "0.8.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "fastjsonschema" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/4a/21/3d82aefc7f16600d43c6da23ecb3913a42f5f53fc999a7e8addcb0480f0b/funcd_shim-0.7.0.tar.gz", hash = "sha256:8629032ebb6b2b58a31fbbf3d3abf115248715b8e849003625e16e53ccad8e9a", size = 99449, upload-time = "2026-10-10T14:36:07.977Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/81/28/ec94f61c7ab133fe03eac808eef0364397d589c0acfa12849340115b0758/funcd_shim-0.8.0.tar.gz", hash = "sha256:655522af4098312b0cb22e702d0bfacc085ea333f7e0a4a4c0458d9bb1aee15c", size = 108397, upload-time = "2026-10-11T02:38:07.455Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b6/0b/17f50bc3b2e31d63228ab3971e8b7979ca47887338140a7d3c8f2de25c45/funcd_shim-0.7.0-py3-none-any.whl", hash = "sha256:f01c4abf863f957db8dcd7a69c54271117dd32432970cdfec3ac7ce9dfbc29e3", size = 46885, upload-time = "2026-10-10T14:36:05.163Z" },
+    { url = "https://files.pythonhosted.org/packages/b5/31/0432526cfadcf2d4993e96d9e6890fd1f6800881c09c7cee6ef7b0ab1539/funcd_shim-0.8.0-py3-none-any.whl", hash = "sha256:d9451fe5722b2ec12b57c5303ec04f352d778fe52d3efd6585741ada734a4b03", size = 51164, upload-time = "2026-10-11T02:38:04.809Z" },
 ]
 
 [[package]]

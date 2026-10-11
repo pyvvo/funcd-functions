@@ -7,17 +7,22 @@ as an App template. funcd's `app-todo` Lima lane deploys it on containerd (`just
 
 | Part | Kind | What it does |
 |---|---|---|
-| `todo-api` | Function (TypeScript) and Route `/api` | adds, lists and reads todos; adding one needs the token of Secret `todo-api-keys` |
-| `todo-planner` | Function (Python) | returns the plan that Workflow `todo-plan` stored for a tick |
+| `todo-api` | Function (TypeScript) and Route `/api` | adds, lists and reads todos; `attach` uploads a file of a todo, and `get` lists the uploads the intake recorded. Adding, attaching and `hang` need the token of Secret `todo-api-keys`; `hang` blocks the API's event loop, for funcd's liveness check |
+| `todo-planner` | Function (Python) | returns the plan that Workflow `todo-plan` stored for a tick; a call can wait for the plan, and a wait past the planner's 2 s `timeout` is stopped. The timeout also bounds the call that wakes the planner |
 | `todo-plan` | Workflow | `collect` (TypeScript) reads the todos' attachments, `rank` (Python) orders them into its own KV store `todo-plans` |
 | `todo-plan-timer`, `todo-plan-schedule` | EventSource, Sensor | a cron timer in a time zone that starts `todo-plan` |
+| `todo-uploads`, `todo-upload-intake` | EventSource, Sensor | an object under `uploads/` in `todo-files` fires event `uploaded`, which the Sensor hands to `todo-intake` |
+| `todo-intake` | Function (Python) | records each upload in table `uploads` of `todo-store` |
 | `todo-web` | Site | a static page that lists the todos through `/api` |
-| `todo-store`, `todo-files` | KVStore, Bucket | the todos and their attachments; `deletion: retain` |
-| `todo-cache`, `todo-tmp` | KVStore, Bucket | the release record and the uploads; `deletion: delete` |
-| `todo-settings` | ConfigMap | `TODO_GREETING` |
+| `todo-store`, `todo-files` | KVStore, Bucket | the todos, the upload records, and the attachments and uploads; `deletion: retain` |
+| `todo-cache`, `todo-tmp` | KVStore, Bucket | the release record and a copy of each todo; `deletion: delete` |
+| `todo-settings` | ConfigMap | `TODO_GREETING`, from value `greeting` |
 | `todo-api-keys` | Secret, declared | `TODO_API_TOKEN`; the installer creates the Secret |
 | `todo-migrate` | Function (TypeScript), preApply hook | records each call; in 1.1.0 it also rewrites every todo to schema 2 |
 | `todo-warm` | Function (Python), postApply hook | records the release that became current |
+
+With `values/shared.yaml` the App also requires App `todo-shared` ([`apps/todo-shared`](../todo-shared)) at `^1.0.0`:
+its rollout waits until `todo-shared` is Ready at a matching version.
 
 ## Files
 
@@ -26,14 +31,19 @@ as an App template. funcd's `app-todo` Lima lane deploys it on containerd (`just
 - `app-1.1.0.yaml`: the `app.yaml` of version 1.1.0. With `app/resources` it is the 1.1.0 template: a new API image,
   whose todos add `done`, and a new migrate hook that rewrites the todos of 1.0.0 before that API replaces it.
 - `values/e2e.yaml`: the registry of the lane, an OCI layout under `/mnt/funcd-deps`. `values/reinstall.yaml` installs
-  over the stores that a deleted install kept, through `ref`.
+  over the stores that a deleted install kept, through `ref`; a `ref` cannot add a table or a prefix, so the kept stores
+  must come from the same template version. `values/greeting.yaml` changes the greeting, which rolls the API to a new
+  revision; `values/shared.yaml` adds the requirement on `todo-shared`.
 - `grants.yaml`: the RolesAssignment that lets the migrate hook write table `todos`, which the API owns. An App
   declares no IAM kind, so it is applied beside the App.
+- `secret.yaml`: a test fixture, Secret `todo-api-keys` with the lane's test-only token.
+- `fixtures/`: what the lane applies to test one scenario each: a Policy that forbids the planner to read its table,
+  and an App whose Workflow step binds a store its Workflow does not declare, which apply refuses.
 - `functions/ts`, `functions/py`: the function sources with their `funcdctl.yaml` contracts. The TypeScript bundles
   (`*.mjs`) are committed; rebuild them with `npm ci && npm run build`. Each Python function is one file; check them
   with `uv run mypy` and `uv run ruff check`.
 - `web/`: the static site, pushed with `funcdctl push --site`.
-- `funcdconfig.yaml`: the daemon config of the lane.
+- `funcdconfig.yaml`: the daemon config of the lane, with short supervision, liveness, blob poll and log flush times.
 
 ## Install
 

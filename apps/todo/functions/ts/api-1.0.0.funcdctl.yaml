@@ -12,13 +12,19 @@ bindings:
     - alias: warm
       store: todo-cache
       table: warm
+    - alias: uploads
+      store: todo-store
+      table: uploads
   blob:
     - alias: files
       bucket: todo-files
       prefix: attachments
     - alias: uploads
-      bucket: todo-tmp
+      bucket: todo-files
       prefix: uploads
+    - alias: copies
+      bucket: todo-tmp
+      prefix: copies
   config:
     - todo-settings
   secrets:
@@ -34,9 +40,15 @@ contract:
           - add
           - list
           - get
+          - attach
+          - hang
       title:
         type: string
       id:
+        type: string
+      name:
+        type: string
+      content:
         type: string
       token:
         type: string
@@ -67,6 +79,19 @@ contract:
         type:
           - string
           - "null"
+      uploads:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          properties:
+            name:
+              type: string
+            size:
+              type: integer
+          required:
+            - name
+            - size
       migration:
         type:
           - object

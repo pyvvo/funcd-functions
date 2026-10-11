@@ -14,6 +14,16 @@ auth:
     - default
 runtime:
   mode: containerd
+  # A replica silent on its liveness for 6 s is replaced, so the lane sees a hung API restarted within seconds
+  # (funcd ADR-0215); the timeout is at least twice the supervision period.
+  supervisionPeriod: 2s
+  livenessTimeout: 6s
+eventing:
+  # The blob EventSource of the uploads lists its prefix every 2 s instead of 15 s.
+  blobPollInterval: 2s
+funclog:
+  # A function's log lines reach funcdctl logs within 2 s instead of 10 s.
+  segmentMaxAge: 2s
 kvstore:
   engine: badger
 log:

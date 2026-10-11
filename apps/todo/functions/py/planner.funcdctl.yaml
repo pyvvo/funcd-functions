@@ -13,6 +13,10 @@ contract:
     properties:
       tick:
         type: string
+      wait:
+        type: number
+        minimum: 0
+        maximum: 60
     required:
       - tick
   output:

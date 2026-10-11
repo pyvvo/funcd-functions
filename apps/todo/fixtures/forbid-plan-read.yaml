@@ -1,0 +1,10 @@
+# A test fixture of funcd's app-todo lane (funcd ADR-0215): it forbids the planner to read table plans, which the
+# planner binds, so the planner's readiness reports that binding and the App names the planner. The lane deletes it.
+apiVersion: funcd.io/v1alpha1
+kind: Policy
+metadata:
+  name: todo-planner-reads-no-plans
+  namespace: default
+  resourceGroup: todo
+spec:
+  cedar: forbid(principal == Function::"default/todo-planner", action == Action::"kv::read", resource == KVTable::"default/todo-plans/plans");

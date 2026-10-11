@@ -1,15 +1,19 @@
 // The todo API, version 1.1.0. A todo is a schema-2 record of table todos, which adds done; list returns only schema-2
 // todos and counts the others as unmigrated, so a todo of 1.0.0 shows only once the 1.1.0 migrate hook rewrote it.
+// attach, get's uploads and hang are those of 1.0.0.
 import type { CloudEvent, FunctionContext } from '@funcd-dev/shim';
 
 import type { MigrationRecord, ReleaseRecord, TodoRecord } from './records';
+import { attach, hang, requireToken, type Upload, uploadsOf } from './shared';
 
 const version = '1.1.0';
 
 export interface FuncInput {
-  op: 'add' | 'list' | 'get';
+  op: 'add' | 'list' | 'get' | 'attach' | 'hang';
   title?: string;
   id?: string;
+  name?: string;
+  content?: string;
   token?: string;
 }
 
@@ -25,6 +29,7 @@ export interface FuncOutput {
   todos?: Todo[];
   unmigrated?: number;
   attachment?: string | null;
+  uploads?: Upload[];
   migration?: MigrationRecord | null;
   release?: ReleaseRecord | null;
   greeting?: string;
@@ -40,6 +45,13 @@ export async function handle(ctx: FunctionContext, event: CloudEvent<FuncInput>)
       return add(ctx, input);
     case 'get':
       return get(ctx, input.id ?? '');
+    case 'attach':
+      requireToken('attach', input.token);
+      await attach(ctx, input.id ?? '', input.name ?? '', input.content ?? '');
+      return { version, id: input.id };
+    case 'hang':
+      requireToken('hang', input.token);
+      return hang();
     default:
       return list(ctx);
   }
@@ -54,10 +66,7 @@ function slug(title: string): string {
 }
 
 async function add(ctx: FunctionContext, input: FuncInput): Promise<FuncOutput> {
-  const token = process.env.TODO_API_TOKEN;
-  if (!token || input.token !== token) {
-    throw new Error('add needs the API token');
-  }
+  requireToken('add', input.token);
   const title = input.title ?? '';
   const id = slug(title);
   if (id === '') {
@@ -66,7 +75,7 @@ async function add(ctx: FunctionContext, input: FuncInput): Promise<FuncOutput> 
   const record: TodoRecord = { title, done: false };
   await ctx.kv.put('todos', id, JSON.stringify(record));
   await ctx.blob.put('files', `${id}.txt`, utf8.encode(title));
-  await ctx.blob.put('uploads', `${id}.json`, utf8.encode(JSON.stringify(record)));
+  await ctx.blob.put('copies', `${id}.json`, utf8.encode(JSON.stringify(record)));
   ctx.log('add', id);
   return { version, id };
 }
@@ -78,6 +87,7 @@ async function get(ctx: FunctionContext, id: string): Promise<FuncOutput> {
     version,
     todos: record ? [{ id, title: record.title, done: record.done === true }] : [],
     attachment: file ? new TextDecoder().decode(file) : null,
+    uploads: await uploadsOf(ctx, id),
   };
 }
 

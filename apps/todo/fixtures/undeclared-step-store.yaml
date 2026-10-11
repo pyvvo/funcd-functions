@@ -1,0 +1,20 @@
+# A test fixture of funcd's app-todo lane (funcd ADR-0229): an App whose Workflow step binds table todos of KV store
+# todo-store, which the Workflow does not declare. A step binds only its Workflow's own stores (funcd ADR-0178), as
+# the collect step of todo-plan works around, so applying this App is refused and stores nothing.
+apiVersion: funcd.io/v1alpha1
+kind: App
+metadata:
+  name: todo-replan
+  namespace: default
+  resourceGroup: todo-replan
+spec:
+  workflows:
+    - name: todo-replan
+      steps:
+        - name: rank
+          function:
+            image: oci-layout:///mnt/funcd-deps/registry/todo-rank:1.0.0
+            kv:
+              - alias: todos
+                store: todo-store
+                table: todos

@@ -8,5 +8,5 @@ buckets:
   - name: ${{ app.name + "-tmp" }}
     deletion: delete
     prefixes:
-      - name: uploads
+      - name: copies
         owner: ${{ app.name + "-api" }}
