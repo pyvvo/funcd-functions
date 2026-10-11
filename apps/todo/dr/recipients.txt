@@ -1,0 +1,3 @@
+# The age recipients the lane's backups are sealed to: the operator's and a recovery key, whose identity is not kept.
+age1gvngj00ucwlleuk898r0s3umcacr5mxhkv4fy67evygxsmlgpanq43ttm3
+age1263g0rath75xcgy9wh9cd6p9tpdn6wq35t5fa5pajnna4u7tgyhsxd384c

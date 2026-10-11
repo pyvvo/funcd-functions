@@ -1,0 +1,2 @@
+# A test fixture, not a key to protect: the operator's age identity of funcd's app-todo lane, which opens its backups.
+AGE-SECRET-KEY-1RC0785M06DZJ84G5MHUMWZTGFMVYQ494J4DD5J9X8LLS9S0L7E2QJ75SQ5

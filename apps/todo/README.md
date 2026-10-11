@@ -44,6 +44,12 @@ its rollout waits until `todo-shared` is Ready at a matching version.
   with `uv run mypy` and `uv run ruff check`.
 - `web/`: the static site, pushed with `funcdctl push --site`.
 - `funcdconfig.yaml`: the daemon config of the lane, with short supervision, liveness, blob poll and log flush times.
+- `dr/`: the test fixtures of the lane's disaster-recovery block (funcd FEAT-0009). `funcdconfig.yaml` is the lane's
+  config with a platform backup and a KV backup to an S3 server in the VM, sealed to the two age recipients of
+  `recipients.txt`, and static credentials from `admin.token` and `developer.token`. `identity.txt` is the operator's
+  identity, which opens the backups; the recovery key's identity is not kept. `backup.credentials`,
+  `restore.credentials` and `versitygw.env` hold the S3 server's test key. `probe-configmap.yaml` is the object whose
+  version the lane writes back after the restore. None of these is a secret: they exist only in the lane.
 
 ## Install
 

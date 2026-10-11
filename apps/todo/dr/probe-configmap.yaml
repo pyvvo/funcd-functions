@@ -1,0 +1,11 @@
+# The object the lane reads before a backup and writes back after the restore with its old resourceVersion, which
+# conflicts: the restore starts a new timeline in every resource version (funcd ADR-0202).
+apiVersion: funcd.io/v1alpha1
+kind: ConfigMap
+metadata:
+  name: todo-dr-probe
+  namespace: default
+  resourceGroup: todo
+spec:
+  data:
+    WRITTEN: before-the-backup
