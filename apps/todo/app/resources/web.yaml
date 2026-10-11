@@ -1,0 +1,8 @@
+sites:
+  - name: ${{ app.name + "-web" }}
+    image: ${{ images.web }}
+    bucket:
+      name: ${{ app.name + "-web" }}
+    prefix: web
+    ingress:
+      public: true

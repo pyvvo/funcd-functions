@@ -1,0 +1,12 @@
+kv:
+  - name: ${{ app.name + "-cache" }}
+    deletion: delete
+    tables:
+      - name: warm
+        owner: ${{ app.name + "-warm" }}
+buckets:
+  - name: ${{ app.name + "-tmp" }}
+    deletion: delete
+    prefixes:
+      - name: uploads
+        owner: ${{ app.name + "-api" }}

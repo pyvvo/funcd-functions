@@ -1,0 +1,14 @@
+kv:
+  - name: ${{ app.name + "-store" }}
+    deletion: retain
+    tables:
+      - name: todos
+        owner: ${{ app.name + "-api" }}
+      - name: meta
+        owner: ${{ app.name + "-migrate" }}
+buckets:
+  - name: ${{ app.name + "-files" }}
+    deletion: retain
+    prefixes:
+      - name: attachments
+        owner: ${{ app.name + "-api" }}

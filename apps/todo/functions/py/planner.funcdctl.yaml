@@ -1,0 +1,35 @@
+# The client config of the planner (funcd ADR-0122): funcdctl push reads its runtime and contract.
+runtime: python314
+handler: handle
+bindings:
+  kv:
+    - alias: plans
+      store: todo-plans
+      table: plans
+contract:
+  input:
+    type: object
+    additionalProperties: false
+    properties:
+      tick:
+        type: string
+    required:
+      - tick
+  output:
+    type: object
+    additionalProperties: false
+    properties:
+      found:
+        type: boolean
+      tick:
+        type: string
+      plan:
+        type: array
+        items:
+          type: string
+      collected_by:
+        type: string
+      ranked_by:
+        type: string
+    required:
+      - found

@@ -1,0 +1,19 @@
+# The grant the todo App needs beside it (an App declares no IAM kind): the migrate hook rewrites table todos, whose
+# single writer is the API (funcd ADR-0136).
+apiVersion: funcd.io/v1alpha1
+kind: RolesAssignment
+metadata:
+  name: todo-migrate-writes-todos
+  namespace: default
+  resourceGroup: todo
+spec:
+  assignments:
+    - principal:
+        kind: Function
+        name: todo-migrate
+      roleRef:
+        kind: BuiltinRole
+        name: KV Data Writer
+      scope:
+        kind: KVStore
+        name: todo-store/todos
