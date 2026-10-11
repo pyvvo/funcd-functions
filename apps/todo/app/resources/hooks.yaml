@@ -5,10 +5,10 @@ functions:
     image: ${{ images.migrate }}
     kv:
       - alias: todos
-        store: ${{ app.name + "-store" }}
+        store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
         table: todos
       - alias: meta
-        store: ${{ app.name + "-store" }}
+        store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
         table: meta
   - name: ${{ app.name + "-warm" }}
     runtime: python314

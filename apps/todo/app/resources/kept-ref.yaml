@@ -1,4 +1,4 @@
 kv:
-  - ref: ${{ app.name + "-store" }}
+  - ref: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
 buckets:
   - ref: ${{ app.name + "-files" }}
