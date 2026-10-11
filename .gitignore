@@ -3,3 +3,7 @@ node_modules/
 __pycache__/
 .mypy_cache/
 .ruff_cache/
+.direnv/
+.DS_Store
+# scripts/agent/d's cached dev-shell environment
+.cache/

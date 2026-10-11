@@ -22,6 +22,16 @@ module cache, so a change reaches funcd only through a release and a `go get` in
 To test an unreleased change, clone this repository next to funcd and add a local `go.work` in funcd
 (`go work init . ../funcd-functions`). Git ignores it; never commit it.
 
+## Develop
+
+```bash
+nix develop -c just ci
+```
+
+It type-checks and rebuilds every App's TypeScript functions, failing when a committed bundle differs from its
+source, and checks every App's Python functions with ruff and mypy. The dev shell also installs the git hooks. They
+format and lint staged files, check the commit message, and run the checks before a push.
+
 ## License
 
 Apache License 2.0. See [LICENSE](LICENSE).
