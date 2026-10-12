@@ -7,8 +7,15 @@
     "noEmit": true,
     "skipLibCheck": true,
     "verbatimModuleSyntax": true,
-    "types": ["node"],
-    "lib": ["ES2022"]
+    "types": [
+      "node",
+      "vite/client"
+    ],
+    "lib": [
+      "ES2022"
+    ]
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }

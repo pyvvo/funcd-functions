@@ -1,0 +1,17 @@
+# The value sql (funcd ADR-0236): SQLDatabase todo-db, whose schema the migrate hook keeps with Drizzle's migrations,
+# and todo-stats, a SQLModel reader of it. The hook writes through the grant in grants.yaml; the API is the owner.
+configMaps:
+  - name: ${{ app.name + "-sql" }}
+    data:
+      TODO_SQL: "on"
+sql:
+  - name: ${{ app.name + "-db" }}
+    owner: ${{ app.name + "-api" }}
+functions:
+  - name: ${{ app.name + "-stats" }}
+    runtime: python314
+    handler: handle
+    image: ${{ images.stats }}
+    sql:
+      - alias: app
+        database: ${{ app.name + "-db" }}

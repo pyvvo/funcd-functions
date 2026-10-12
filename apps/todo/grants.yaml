@@ -17,3 +17,23 @@ spec:
       scope:
         kind: KVStore
         name: todo-store/todos
+---
+# With the value sql, the migrate hook applies its migrations to todo-db, whose single writer is the API (funcd
+# ADR-0236).
+apiVersion: funcd.io/v1alpha1
+kind: RolesAssignment
+metadata:
+  name: todo-migrate-writes-db
+  namespace: default
+  resourceGroup: todo
+spec:
+  assignments:
+    - principal:
+        kind: Function
+        name: todo-migrate
+      roleRef:
+        kind: BuiltinRole
+        name: SQL Data Writer
+      scope:
+        kind: SQLDatabase
+        name: todo-db

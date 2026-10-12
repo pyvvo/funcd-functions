@@ -9,6 +9,7 @@ images:
   collect: todo-collect:1.0.0
   rank: todo-rank:1.0.0
   intake: todo-intake:1.0.0
+  stats: todo-stats:1.0.0
   web: todo-web:1.0.0
 valuesSchema:
   type: object
@@ -46,9 +47,15 @@ valuesSchema:
     catalog:
       type: boolean
       default: false
+    sql:
+      type: boolean
+      default: false
 when:
   resources/kept.yaml: ${{ values.keptStores !== true }}
   resources/kept-ref.yaml: ${{ values.keptStores === true }}
   resources/requires.yaml: ${{ values.shared === true }}
   resources/backup.yaml: ${{ values.backup === true }}
   resources/catalog.yaml: ${{ values.catalog === true }}
+  resources/hooks-migrate.yaml: ${{ values.sql !== true }}
+  resources/hooks-migrate-sql.yaml: ${{ values.sql === true }}
+  resources/sql.yaml: ${{ values.sql === true }}
