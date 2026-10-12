@@ -13,6 +13,8 @@ contract:
           - add
           - list
           - batch
+          - fill
+          - size
       title:
         type: string
       titles:
@@ -21,6 +23,9 @@ contract:
           type:
             - string
             - "null"
+      megabytes:
+        type: integer
+        minimum: 1
     required:
       - op
   output:
@@ -56,3 +61,7 @@ contract:
           - title
       error:
         type: string
+      blobs:
+        type: integer
+      bytes:
+        type: integer

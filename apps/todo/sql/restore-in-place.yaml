@@ -1,0 +1,17 @@
+# notes-db restored in place from Backup BACKUP: an admin's Restore, which first exports the database as Backup
+# notes-back-before (funcd ADR-0222 Decision 7, ADR-0234).
+apiVersion: funcd.io/v1alpha1
+kind: Restore
+metadata:
+  name: notes-back
+  namespace: default
+  resourceGroup: notes
+spec:
+  backup: BACKUP
+  source:
+    credentialsSecret: todo-backup-reader
+    identitySecret: todo-backup-key
+  members:
+    - kind: SQLDatabase
+      name: notes-db
+      inPlace: true

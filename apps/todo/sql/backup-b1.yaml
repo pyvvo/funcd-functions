@@ -1,0 +1,9 @@
+# A Backup of notes-db the lane creates by hand from its schedule (funcd ADR-0222 Decision 3).
+apiVersion: funcd.io/v1alpha1
+kind: Backup
+metadata:
+  name: notes-b1
+  namespace: default
+  resourceGroup: notes
+spec:
+  schedule: notes-backup

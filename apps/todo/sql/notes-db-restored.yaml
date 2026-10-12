@@ -1,0 +1,8 @@
+# The empty database notes-db is restored into under a new name (funcd ADR-0234). A Restore needs its destination
+# Ready, so the lane applies this first and waits for it.
+apiVersion: funcd.io/v1alpha1
+kind: SQLDatabase
+metadata:
+  name: notes-db-restored
+  namespace: default
+  resourceGroup: notes
