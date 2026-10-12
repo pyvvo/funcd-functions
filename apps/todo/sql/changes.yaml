@@ -1,0 +1,35 @@
+# The change feed of notes-db in funcd's sql lane (funcd ADR-0235): a note added to notes-db fires note-added, and the
+# Sensor copies its title into notes-db-restored through notes-restored, a database no EventSource watches.
+apiVersion: funcd.io/v1alpha1
+kind: EventSource
+metadata:
+  name: notes-changes
+  namespace: default
+  resourceGroup: notes
+spec:
+  sql:
+    database: notes-db
+    events:
+      - name: note-added
+        table: notes
+        "on":
+          - Insert
+---
+apiVersion: funcd.io/v1alpha1
+kind: Sensor
+metadata:
+  name: notes-copy
+  namespace: default
+  resourceGroup: notes
+spec:
+  "on":
+    - name: added
+      source: notes-changes
+      event: note-added
+  do:
+    - name: copy
+      "on": added
+      function: notes-restored
+      input:
+        op: add
+        title: ${{ event.data.after.title }}
