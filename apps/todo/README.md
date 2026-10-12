@@ -35,7 +35,8 @@ its rollout waits until `todo-shared` is Ready at a matching version.
   must come from the same template version. `values/greeting.yaml` changes the greeting, which rolls the API to a new
   revision; `values/shared.yaml` adds the requirement on `todo-shared`; `values/backup.yaml` adds the App's backup schedule
   (`resources/backup.yaml`), every minute to the S3 server of the lane's disaster-recovery block. `values/restored-store.yaml`
-  points the App at the restored copy `todo-store-r` (value `store`), and `values/short-backup-ttl.yaml` keeps its
+  points the App at the restored copy `todo-store-r` (value `store`, which binds the store through `ref`, so only
+  with `values/reinstall.yaml`), and `values/short-backup-ttl.yaml` keeps its
   Backups 2 minutes (value `backupTTL`).
 - `grants.yaml`: the RolesAssignment that lets the migrate hook write table `todos`, which the API owns. An App
   declares no IAM kind, so it is applied beside the App.
