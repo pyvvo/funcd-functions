@@ -2,14 +2,17 @@
   "name": "funcd-functions-todo",
   "private": true,
   "type": "module",
-  "description": "The TypeScript functions of the todo App: the API, its migrate hook and the collect step of its Workflow. vite build bundles each into a self-contained .mjs beside its funcdctl.yaml.",
+  "description": "The TypeScript functions of the todo App: the API, its migrate hook, the collect step of its Workflow and the notes owner of the sql lane. vite build bundles each into a self-contained .mjs beside its funcdctl.yaml.",
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "vite build"
   },
+  "dependencies": {
+    "drizzle-orm": "0.45.3"
+  },
   "devDependencies": {
-    "@funcd-dev/shim": "0.10.0",
-    "@funcd-dev/vite-plugin": "0.10.0",
+    "@funcd-dev/shim": "0.12.0",
+    "@funcd-dev/vite-plugin": "0.12.0",
     "@types/node": "^22.0.0",
     "typescript": "^5.7.0",
     "vite": "^8.3.2"

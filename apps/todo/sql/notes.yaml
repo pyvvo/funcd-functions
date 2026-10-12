@@ -1,0 +1,16 @@
+# The TypeScript owner of notes-db: its Drizzle schema runs through context.sql.
+apiVersion: funcd.io/v1alpha1
+kind: Function
+metadata:
+  name: notes
+  namespace: default
+  resourceGroup: notes
+spec:
+  runtime: nodejs22
+  handler: handle
+  image: oci-layout:///mnt/funcd-deps/registry:notes
+  scaling:
+    minReplicas: 1
+  sql:
+    - alias: app
+      database: notes-db

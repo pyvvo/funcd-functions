@@ -1,0 +1,58 @@
+# The client config of the notes Function (funcd ADR-0122): funcdctl push reads its runtime and contract.
+runtime: nodejs22
+handler: handle
+contract:
+  input:
+    type: object
+    additionalProperties: false
+    properties:
+      op:
+        type: string
+        enum:
+          - init
+          - add
+          - list
+          - batch
+      title:
+        type: string
+      titles:
+        type: array
+        items:
+          type:
+            - string
+            - "null"
+    required:
+      - op
+  output:
+    type: object
+    additionalProperties: false
+    properties:
+      notes:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              type: integer
+            title:
+              type: string
+            done:
+              type: integer
+          required:
+            - id
+            - title
+            - done
+      added:
+        type: object
+        additionalProperties: false
+        properties:
+          id:
+            type: integer
+          title:
+            type: string
+        required:
+          - id
+          - title
+      error:
+        type: string

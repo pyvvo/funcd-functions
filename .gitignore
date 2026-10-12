@@ -7,3 +7,5 @@ __pycache__/
 .DS_Store
 # scripts/agent/d's cached dev-shell environment
 .cache/
+# funcd-bundle's output, built by funcd's lanes
+dist/
