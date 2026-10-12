@@ -1,0 +1,23 @@
+# Test fixtures of the catalog case of funcd's app-todo lane: the Quack token (todo-lane-quack exists only in the lane)
+# and the engine settings of catalog todo-lake, which the todo App declares with value catalog.
+apiVersion: funcd.io/v1alpha1
+kind: Secret
+metadata:
+  name: todo-lake-quack-token
+  namespace: default
+  resourceGroup: todo
+spec:
+  type: Opaque
+  data:
+    QUACK_TOKEN: dG9kby1sYW5lLXF1YWNr
+---
+apiVersion: funcd.io/v1alpha1
+kind: ConfigMap
+metadata:
+  name: todo-lake-engine
+  namespace: default
+  resourceGroup: todo
+spec:
+  data:
+    DUCKDB_MEMORY_LIMIT: 512MB
+    DUCKDB_THREADS: "1"

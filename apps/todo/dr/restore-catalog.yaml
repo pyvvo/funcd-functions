@@ -1,0 +1,30 @@
+# Catalog todo-lake restored from Backup BACKUP, which the lane substitutes, into the empty prefix lake of a new
+# Bucket, and a CatalogService that serves the copy (funcd ADR-0222 Decision 7: the owner points a catalog at it).
+apiVersion: funcd.io/v1alpha1
+kind: Bucket
+metadata:
+  name: todo-lakehouse-r
+  namespace: default
+  resourceGroup: todo
+spec:
+  prefixes:
+    - name: lake
+      owner: todo-lake-r
+---
+apiVersion: funcd.io/v1alpha1
+kind: Restore
+metadata:
+  name: todo-lake-back
+  namespace: default
+  resourceGroup: todo
+spec:
+  backup: BACKUP
+  source:
+    credentialsSecret: todo-backup-reader
+    identitySecret: todo-backup-key
+  members:
+    - kind: CatalogService
+      name: todo-lake
+      asCatalog:
+        bucket: todo-lakehouse-r
+        prefix: lake
