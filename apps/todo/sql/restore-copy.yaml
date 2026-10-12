@@ -1,0 +1,17 @@
+# notes-db restored into notes-db-restored from Backup BACKUP, which the lane substitutes (funcd ADR-0234). No Function
+# binds the destination yet.
+apiVersion: funcd.io/v1alpha1
+kind: Restore
+metadata:
+  name: notes-copy
+  namespace: default
+  resourceGroup: notes
+spec:
+  backup: BACKUP
+  source:
+    credentialsSecret: todo-backup-reader
+    identitySecret: todo-backup-key
+  members:
+    - kind: SQLDatabase
+      name: notes-db
+      as: notes-db-restored

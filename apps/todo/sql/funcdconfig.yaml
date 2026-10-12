@@ -1,5 +1,6 @@
 # The daemon config of funcd's sql lane: containerd with file storage, so each SQL engine keeps its data in a durable
-# directory under /var/lib/funcd/data (funcd ADR-0231).
+# directory under /var/lib/funcd/data (funcd ADR-0231), and static credentials, since an in-place Restore needs an
+# admin (funcd ADR-0222).
 apiVersion: funcd.io/v1alpha1
 kind: FuncdConfig
 server:
@@ -9,9 +10,13 @@ storage:
   mode: file
   dataDir: /var/lib/funcd/data
 auth:
-  token: funcd-dev-token
-  namespaces:
-    - default
+  credentials:
+    - tokenFile: /etc/funcd/tokens/admin
+      role: admin
+    - tokenFile: /etc/funcd/tokens/developer
+      role: developer
+      namespaces:
+        - default
 runtime:
   mode: containerd
   supervisionPeriod: 2s

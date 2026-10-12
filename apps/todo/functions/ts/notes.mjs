@@ -4166,6 +4166,17 @@ async function handle(ctx, event) {
 				return { error: err.message };
 			}
 			return {};
+		case "fill":
+			await ctx.sql.execute("app", ["CREATE TABLE IF NOT EXISTS blobs (v BLOB NOT NULL)", ["WITH RECURSIVE c(x) AS (SELECT 1 UNION ALL SELECT x + 1 FROM c WHERE x < ?) INSERT INTO blobs (v) SELECT zeroblob(1048576) FROM c", [input.megabytes ?? 1]]]);
+			return {};
+		case "size": {
+			const { values } = await ctx.sql.queryValues("app", "SELECT count(*), coalesce(sum(length(v)), 0) FROM blobs");
+			const [blobs, bytes] = values[0];
+			return {
+				blobs,
+				bytes
+			};
+		}
 		default: return { notes: await d.select().from(notes).orderBy(notes.id) };
 	}
 }

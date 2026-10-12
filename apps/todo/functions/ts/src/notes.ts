@@ -45,15 +45,18 @@ function db(ctx: FunctionContext) {
 }
 
 export interface FuncInput {
-  op: 'init' | 'add' | 'list' | 'batch';
+  op: 'init' | 'add' | 'list' | 'batch' | 'fill' | 'size';
   title?: string;
   titles?: (string | null)[];
+  megabytes?: number;
 }
 
 export interface FuncOutput {
   notes?: { id: number; title: string; done: number }[];
   added?: { id: number; title: string };
   error?: string;
+  blobs?: number;
+  bytes?: number;
 }
 
 export async function handle(ctx: FunctionContext, event: CloudEvent<FuncInput>): Promise<FuncOutput> {
@@ -81,6 +84,21 @@ export async function handle(ctx: FunctionContext, event: CloudEvent<FuncInput>)
         return { error: (err as Error).message };
       }
       return {};
+    // fill grows the database by megabytes of 1 MiB rows, generated in the engine, for funcd's backup lane steps.
+    case 'fill':
+      await ctx.sql.execute('app', [
+        'CREATE TABLE IF NOT EXISTS blobs (v BLOB NOT NULL)',
+        [
+          'WITH RECURSIVE c(x) AS (SELECT 1 UNION ALL SELECT x + 1 FROM c WHERE x < ?) INSERT INTO blobs (v) SELECT zeroblob(1048576) FROM c',
+          [input.megabytes ?? 1],
+        ],
+      ]);
+      return {};
+    case 'size': {
+      const { values } = await ctx.sql.queryValues('app', 'SELECT count(*), coalesce(sum(length(v)), 0) FROM blobs');
+      const [blobs, bytes] = values[0] as [number, number];
+      return { blobs, bytes };
+    }
     default:
       return { notes: await d.select().from(notes).orderBy(notes.id) };
   }
