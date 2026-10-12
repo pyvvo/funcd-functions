@@ -5,7 +5,7 @@ functions:
     image: ${{ images.intake }}
     kv:
       - alias: uploads
-        store: ${{ app.name + "-store" }}
+        store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
         table: uploads
 eventSources:
   - name: ${{ app.name + "-uploads" }}

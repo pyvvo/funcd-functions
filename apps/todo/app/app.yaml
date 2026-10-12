@@ -37,6 +37,12 @@ valuesSchema:
     backup:
       type: boolean
       default: false
+    backupTTL:
+      type: string
+      default: 24h
+    store:
+      type: string
+      default: ""
 when:
   resources/kept.yaml: ${{ values.keptStores !== true }}
   resources/kept-ref.yaml: ${{ values.keptStores === true }}

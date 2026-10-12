@@ -3,7 +3,7 @@
 backupSchedules:
   - name: ${{ app.name + "-backup" }}
     schedule: "* * * * *"
-    ttl: 24h
+    ttl: ${{ values.backupTTL }}
     target:
       url: s3://todo-workload?endpoint=http://127.0.0.1:7070&region=us-east-1&use_path_style=true
       credentialsSecret: ${{ app.name + "-backup-writer" }}

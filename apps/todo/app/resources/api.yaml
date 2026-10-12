@@ -5,16 +5,16 @@ functions:
     image: ${{ images.api }}
     kv:
       - alias: todos
-        store: ${{ app.name + "-store" }}
+        store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
         table: todos
       - alias: meta
-        store: ${{ app.name + "-store" }}
+        store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
         table: meta
       - alias: warm
         store: ${{ app.name + "-cache" }}
         table: warm
       - alias: uploads
-        store: ${{ app.name + "-store" }}
+        store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
         table: uploads
     blob:
       - alias: files

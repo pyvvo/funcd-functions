@@ -27,6 +27,7 @@ funclog:
 blob:
   target: s3://todo-blob?endpoint=http://127.0.0.1:7070&region=us-east-1&use_path_style=true
   credentialsFile: /opt/lane/dr/backup.credentials
+  versionRetention: 24h
 kvstore:
   engine: badger
   backup:
