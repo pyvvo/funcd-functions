@@ -1,0 +1,51 @@
+# The daemon config of the catalog case of funcd's app-todo lane: dr/funcdconfig.yaml with the S3 gateway and the catalog
+# proxy on the VM's bridge address, which a DuckLake engine reaches its bucket and its callers through (funcd ADR-0086).
+apiVersion: funcd.io/v1alpha1
+kind: FuncdConfig
+server:
+  listenAddr: 127.0.0.1:8080
+  dataPlaneAddr: 127.0.0.1:8081
+storage:
+  mode: file
+  dataDir: /var/lib/funcd/data
+auth:
+  credentials:
+    - tokenFile: /etc/funcd/tokens/admin
+      role: admin
+    - tokenFile: /etc/funcd/tokens/developer
+      role: developer
+      namespaces:
+        - default
+runtime:
+  mode: containerd
+  supervisionPeriod: 2s
+  livenessTimeout: 6s
+eventing:
+  blobPollInterval: 2s
+  # A failing Sensor action is dead-lettered after two quick attempts, so the lane makes one before its backup.
+  deliveryAttempts: 2
+  deliveryBackoffInitial: 200ms
+  deliveryBackoffMax: 1s
+funclog:
+  segmentMaxAge: 2s
+s3gateway:
+  enabled: true
+  listenAddr: 0.0.0.0:9000
+  endpoint: http://10.63.0.1:9000
+catalog:
+  proxyHost: 10.63.0.1
+kvstore:
+  engine: badger
+  backup:
+    enabled: true
+    interval: 10s
+backup:
+  target: s3://todo-backup?endpoint=http://127.0.0.1:7070&region=us-east-1&use_path_style=true
+  credentialsFile: /opt/lane/dr/backup.credentials
+  interval: 20s
+  encryption:
+    recipients:
+      - /opt/lane/dr/recipients.txt
+log:
+  format: text
+  level: info

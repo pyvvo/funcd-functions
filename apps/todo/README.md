@@ -37,7 +37,8 @@ its rollout waits until `todo-shared` is Ready at a matching version.
   (`resources/backup.yaml`), every minute to the S3 server of the lane's disaster-recovery block. `values/restored-store.yaml`
   points the App at the restored copy `todo-store-r` (value `store`, which binds the store through `ref`, so only
   with `values/reinstall.yaml`), and `values/short-backup-ttl.yaml` keeps its
-  Backups 2 minutes (value `backupTTL`).
+  Backups 2 minutes (value `backupTTL`). `values/catalog.yaml` adds the DuckLake catalog `todo-lake`
+  and its bucket `todo-lakehouse` (`resources/catalog.yaml`), so the App's backups copy a catalog.
 - `grants.yaml`: the RolesAssignment that lets the migrate hook write table `todos`, which the API owns. An App
   declares no IAM kind, so it is applied beside the App.
 - `secret.yaml`: a test fixture, Secret `todo-api-keys` with the lane's test-only token.
@@ -55,7 +56,9 @@ its rollout waits until `todo-shared` is Ready at a matching version.
   `restore.credentials` and `versitygw.env` hold the S3 server's test key. `probe-configmap.yaml` is the object whose
   version the lane writes back after the restore. `workload-secrets.yaml` holds the S3 key and the identity of the
   App's own backups; `restore-copy.yaml`, `restore-not-empty.yaml` and `restore-in-place.yaml` restore a Backup whose
-  name the lane fills in. `funcdconfig-blob-s3.yaml` puts the blob store itself on the S3 server.
+  name the lane fills in. `funcdconfig-blob-s3.yaml` puts the blob store itself on the S3 server. `catalog-fixtures.yaml` holds the catalog's Quack token and
+  engine settings, `restore-catalog.yaml` and `catalog-copy.yaml` restore it into a new bucket and serve the copy, and
+  `funcdconfig-catalog.yaml` turns on the S3 gateway and the catalog proxy the engine needs.
   `dead-letter-sensor.yaml` fails on every upload, so the lane has a dead letter to back up and restore. None of these is a
   secret: they exist only in the lane.
 
