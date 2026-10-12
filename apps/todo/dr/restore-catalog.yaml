@@ -1,5 +1,5 @@
 # Catalog todo-lake restored from Backup BACKUP, which the lane substitutes, into the empty prefix lake of a new
-# Bucket, and a CatalogService that serves the copy (funcd ADR-0222 Decision 7: the owner points a catalog at it).
+# Bucket (funcd ADR-0222 Decision 7); catalog-copy.yaml is the CatalogService the owner then points at it.
 apiVersion: funcd.io/v1alpha1
 kind: Bucket
 metadata:

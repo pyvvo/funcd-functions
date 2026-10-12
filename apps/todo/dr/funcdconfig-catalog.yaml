@@ -1,4 +1,4 @@
-# The daemon config of the catalog case of funcd's app-todo lane: funcdconfig.yaml with the S3 gateway and the catalog
+# The daemon config of the catalog case of funcd's app-todo lane: dr/funcdconfig.yaml with the S3 gateway and the catalog
 # proxy on the VM's bridge address, which a DuckLake engine reaches its bucket and its callers through (funcd ADR-0086).
 apiVersion: funcd.io/v1alpha1
 kind: FuncdConfig
