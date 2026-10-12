@@ -20,6 +20,7 @@ as an App template. funcd's `app-todo` Lima lane deploys it on containerd (`just
 | `todo-api-keys` | Secret, declared | `TODO_API_TOKEN`; the installer creates the Secret |
 | `todo-migrate` | Function (TypeScript), preApply hook | records each call; in 1.1.0 it also rewrites every todo to schema 2 |
 | `todo-warm` | Function (Python), postApply hook | records the release that became current |
+| `todo-db`, `todo-stats` | SQLDatabase, Function (Python) | with value `sql`: the database the migrate hook keeps with Drizzle's migrations (table `_migrations`), owned by the API, and a SQLModel reader that counts its todos and migrations |
 
 With `values/shared.yaml` the App also requires App `todo-shared` ([`apps/todo-shared`](../todo-shared)) at `^1.0.0`:
 its rollout waits until `todo-shared` is Ready at a matching version.
@@ -38,9 +39,14 @@ its rollout waits until `todo-shared` is Ready at a matching version.
   points the App at the restored copy `todo-store-r` (value `store`, which binds the store through `ref`, so only
   with `values/reinstall.yaml`), and `values/short-backup-ttl.yaml` keeps its
   Backups 2 minutes (value `backupTTL`). `values/catalog.yaml` adds the DuckLake catalog `todo-lake`
-  and its bucket `todo-lakehouse` (`resources/catalog.yaml`), so the App's backups copy a catalog.
-- `grants.yaml`: the RolesAssignment that lets the migrate hook write table `todos`, which the API owns. An App
-  declares no IAM kind, so it is applied beside the App.
+  and its bucket `todo-lakehouse` (`resources/catalog.yaml`), so the App's backups copy a catalog. `values/sql.yaml`
+  adds `todo-db` and `todo-stats` (`resources/sql.yaml`) and binds the migrate hook to `todo-db`
+  (`resources/hooks-migrate-sql.yaml` in place of `resources/hooks-migrate.yaml`). The hook then applies the migrations
+  drizzle-kit generated from `functions/ts/src/db/schema-<version>.ts` into `functions/ts/drizzle/<version>`: 1.0.0
+  creates `todos`, 1.1.0 adds `note`. Generate a version with `DRIZZLE_VERSION=<version> npx drizzle-kit generate`,
+  starting from a copy of the previous version's folder.
+- `grants.yaml`: the RolesAssignments that let the migrate hook write table `todos` and, with value `sql`, database
+  `todo-db`, which the API owns. An App declares no IAM kind, so they are applied beside the App.
 - `secret.yaml`: a test fixture, Secret `todo-api-keys` with the lane's test-only token.
 - `fixtures/`: what the lane applies to test one scenario each: a Policy that forbids the planner to read its table,
   and an App whose Workflow step binds a store its Workflow does not declare, which apply refuses.

@@ -3,7 +3,19 @@
 // nothing left to rewrite.
 import type { CloudEvent, FunctionContext } from '@funcd-dev/shim';
 
+import { bundled, migrateSQL } from './db/migrate';
 import type { HookInput, MigrationRecord, TodoRecord } from './records';
+
+// The migrations drizzle-kit generated for this version, applied when the App's value sql gives the hook TODO_SQL=on
+// and its binding app to todo-db (funcd ADR-0236).
+const migrations = bundled(
+  import.meta.glob(['../drizzle/1.1.0/*.sql', '../drizzle/1.1.0/meta/_journal.json'], {
+    query: '?raw',
+    import: 'default',
+    eager: true,
+  }),
+  'drizzle/1.1.0',
+);
 
 export interface FuncOutput {
   migrated: number;
@@ -12,6 +24,9 @@ export interface FuncOutput {
 export async function handle(ctx: FunctionContext, event: CloudEvent<HookInput>): Promise<FuncOutput> {
   if (!event.data) {
     throw new Error('a hook call carries its input');
+  }
+  if (process.env.TODO_SQL === 'on') {
+    ctx.log('migrate', 'sql', await migrateSQL(ctx, 'app', migrations));
   }
   let migrated = 0;
   for (const id of await ctx.kv.list('todos')) {

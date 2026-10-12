@@ -1,0 +1,13 @@
+# The migrate hook without the value sql; hooks-migrate-sql.yaml is the same hook bound to todo-db.
+functions:
+  - name: ${{ app.name + "-migrate" }}
+    runtime: nodejs22
+    handler: handle
+    image: ${{ images.migrate }}
+    kv:
+      - alias: todos
+        store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
+        table: todos
+      - alias: meta
+        store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
+        table: meta

@@ -4124,29 +4124,27 @@ function drizzle(callback, batchCallback, config) {
 	return db;
 }
 //#endregion
+//#region src/db/proxy.ts
+var reads = /^\s*(select|with)\b/i;
+async function rows(ctx, alias, query, params, method) {
+	const p = params;
+	const values = reads.test(query) ? (await ctx.sql.queryValues(alias, query, p)).values : (await ctx.sql.execute(alias, query, p)).values ?? [];
+	return method === "get" ? values[0] ?? [] : values;
+}
+function proxyDB(ctx, alias) {
+	return drizzle(async (query, params, method) => ({ rows: await rows(ctx, alias, query, params, method) }), async (queries) => {
+		return (await ctx.sql.execute(alias, queries.map((q) => [q.sql, q.params]))).map((r, i) => ({ rows: queries[i].method === "get" ? r.values?.[0] ?? [] : r.values ?? [] }));
+	});
+}
+//#endregion
 //#region src/notes.ts
 var notes = sqliteTable("notes", {
 	id: integer("id").primaryKey({ autoIncrement: true }),
 	title: text("title").notNull(),
 	done: integer("done").notNull().default(0)
 });
-var reads = /^\s*(select|with)\b/i;
-async function rows(ctx, query, params, method) {
-	const p = params;
-	if (reads.test(query)) {
-		const { values } = await ctx.sql.queryValues("app", query, p);
-		return method === "get" ? values[0] ?? [] : values;
-	}
-	const values = (await ctx.sql.execute("app", query, p)).values ?? [];
-	return method === "get" ? values[0] ?? [] : values;
-}
-function db(ctx) {
-	return drizzle(async (query, params, method) => ({ rows: await rows(ctx, query, params, method) }), async (queries) => {
-		return (await ctx.sql.execute("app", queries.map((q) => [q.sql, q.params]))).map((r, i) => ({ rows: queries[i].method === "get" ? r.values?.[0] ?? [] : r.values ?? [] }));
-	});
-}
 async function handle(ctx, event) {
-	const d = db(ctx);
+	const d = proxyDB(ctx, "app");
 	const input = event.data ?? { op: "list" };
 	switch (input.op) {
 		case "init":

@@ -1,15 +1,4 @@
 functions:
-  - name: ${{ app.name + "-migrate" }}
-    runtime: nodejs22
-    handler: handle
-    image: ${{ images.migrate }}
-    kv:
-      - alias: todos
-        store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
-        table: todos
-      - alias: meta
-        store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
-        table: meta
   - name: ${{ app.name + "-warm" }}
     runtime: python314
     handler: handle

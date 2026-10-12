@@ -1,0 +1,19 @@
+# The migrate hook with the value sql (funcd ADR-0236): TODO_SQL=on from ConfigMap todo-sql and the binding app to
+# todo-db make it apply its Drizzle migrations too.
+functions:
+  - name: ${{ app.name + "-migrate" }}
+    runtime: nodejs22
+    handler: handle
+    image: ${{ images.migrate }}
+    kv:
+      - alias: todos
+        store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
+        table: todos
+      - alias: meta
+        store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
+        table: meta
+    config:
+      - ${{ app.name + "-sql" }}
+    sql:
+      - alias: app
+        database: ${{ app.name + "-db" }}
