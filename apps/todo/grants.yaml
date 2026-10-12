@@ -18,8 +18,8 @@ spec:
         kind: KVStore
         name: todo-store/todos
 ---
-# With the value sql, the migrate hook applies its migrations to todo-db, whose single writer is the API (funcd
-# ADR-0236).
+# With the value sql, the migrate hook applies its migrations to todo-db, which no other function writes (funcd
+# ADR-0233, ADR-0236).
 apiVersion: funcd.io/v1alpha1
 kind: RolesAssignment
 metadata:
