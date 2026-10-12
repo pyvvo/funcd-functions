@@ -11,6 +11,7 @@ export default defineConfig({
         'migrate-1.0.0': 'src/migrate-1.0.0.ts',
         'migrate-1.1.0': 'src/migrate-1.1.0.ts',
         collect: 'src/collect.ts',
+        notes: 'src/notes.ts',
       },
       outDir: '.',
     }),

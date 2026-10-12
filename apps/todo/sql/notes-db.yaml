@@ -1,0 +1,10 @@
+# The SQL database of funcd's sql lane (funcd ADR-0232, ADR-0233): one rqlite engine with durable storage, written by
+# its owner, the TypeScript notes Function.
+apiVersion: funcd.io/v1alpha1
+kind: SQLDatabase
+metadata:
+  name: notes-db
+  namespace: default
+  resourceGroup: notes
+spec:
+  owner: notes

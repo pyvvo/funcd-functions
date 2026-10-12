@@ -1,0 +1,16 @@
+# The Python reader of notes-db: it binds the database but is not its owner, so it reads and cannot write.
+apiVersion: funcd.io/v1alpha1
+kind: Function
+metadata:
+  name: notes-report
+  namespace: default
+  resourceGroup: notes
+spec:
+  runtime: python314
+  handler: handle
+  image: oci-layout:///mnt/funcd-deps/registry:notes-report
+  scaling:
+    minReplicas: 1
+  sql:
+    - alias: app
+      database: notes-db
