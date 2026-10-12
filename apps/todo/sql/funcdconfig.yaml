@@ -17,9 +17,6 @@ auth:
       role: developer
       namespaces:
         - default
-catalog:
-  # The bridge gateway, where the engines post their changes (funcd ADR-0235), reachable from their netns.
-  proxyHost: 10.63.0.1
 runtime:
   mode: containerd
   supervisionPeriod: 2s
