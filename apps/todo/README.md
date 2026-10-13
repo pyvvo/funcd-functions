@@ -72,8 +72,8 @@ its rollout waits until `todo-shared` is Ready at a matching version.
   name the lane fills in. `funcdconfig-blob-s3.yaml` puts the blob store itself on the S3 server. `catalog-fixtures.yaml` holds the catalog's Quack token and
   engine settings, `restore-catalog.yaml` and `catalog-copy.yaml` restore it into a new bucket and serve the copy, and
   `funcdconfig-catalog.yaml` turns on the S3 gateway and the catalog proxy the engine needs.
-  `restore-database.yaml` and `restore-database-in-place.yaml` restore `todo-db` of 1.2.0 under a new name, with the grants
-  of its writers, and in place. `dead-letter-sensor.yaml` fails on every upload, so the lane has a dead letter to back up and restore. None of these is a
+  `database-copy.yaml` is the empty database `todo-db-r` with the grants of its writers, which `restore-database.yaml`
+  fills with `todo-db` of 1.2.0 once it is Ready; `restore-database-in-place.yaml` restores `todo-db` in place. `dead-letter-sensor.yaml` fails on every upload, so the lane has a dead letter to back up and restore. None of these is a
   secret: they exist only in the lane.
 
 ## Install
