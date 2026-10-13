@@ -1,0 +1,17 @@
+# From version 1.2.0, todo-db restored under a new name from Backup BACKUP, which the lane substitutes (funcd
+# ADR-0234): into todo-db-r of dr/database-copy.yaml, once it is Ready.
+apiVersion: funcd.io/v1alpha1
+kind: Restore
+metadata:
+  name: todo-db-copy
+  namespace: default
+  resourceGroup: todo
+spec:
+  backup: BACKUP
+  source:
+    credentialsSecret: todo-backup-reader
+    identitySecret: todo-backup-key
+  members:
+    - kind: SQLDatabase
+      name: todo-db
+      as: todo-db-r

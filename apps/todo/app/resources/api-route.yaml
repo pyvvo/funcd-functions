@@ -1,0 +1,6 @@
+routes:
+  - name: ${{ app.name + "-api" }}
+    rules:
+      - path: /api
+        backend:
+          function: ${{ app.name + "-api" }}

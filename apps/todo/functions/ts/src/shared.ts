@@ -1,5 +1,5 @@
-// The operations that both versions of the API share: the token check, an upload, the uploads the intake Function
-// recorded, and the call that hangs the API for funcd's liveness check.
+// The operations the versions of the API share: the token check, an upload, the uploads the intake Function recorded
+// in KV, and the call that hangs the API for funcd's liveness check.
 import type { FunctionContext } from '@funcd-dev/shim';
 
 import type { UploadRecord } from './records';
@@ -20,12 +20,17 @@ export function requireToken(op: string, token: string | undefined): void {
   }
 }
 
-// attach puts content under uploads/<id>/<name> of Bucket todo-files. The blob EventSource todo-uploads fires for the
-// object, and its Sensor hands it to the intake Function, which records it.
+// attach puts content under uploads/<id>/<name> of Bucket todo-files for a todo of KV table todos (1.0.0, 1.1.0).
 export async function attach(ctx: FunctionContext, id: string, name: string, content: string): Promise<void> {
   if (!(await ctx.kv.getJSON('todos', id))) {
     throw new Error(`attach needs an existing todo, not "${id}"`);
   }
+  await putUpload(ctx, id, name, content);
+}
+
+// putUpload puts content under uploads/<id>/<name> of Bucket todo-files. The blob EventSource todo-uploads fires for
+// the object, and its Sensor hands it to the intake Function, which records it.
+export async function putUpload(ctx: FunctionContext, id: string, name: string, content: string): Promise<void> {
   if (!/^[A-Za-z0-9_-][A-Za-z0-9._-]*$/.test(name)) {
     throw new Error('attach needs a file name of letters, digits, dots, dashes and underscores, not starting with a dot');
   }

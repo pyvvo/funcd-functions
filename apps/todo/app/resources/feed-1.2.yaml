@@ -1,0 +1,36 @@
+# From version 1.2.0, a row inserted into table todos of the App's database fires event added (funcd ADR-0235), and
+# Sensor todo-notify hands it to todo-notify, which records the todo in table added of KVStore todo-feed.
+kv:
+  - name: ${{ app.name + "-feed" }}
+    deletion: delete
+    tables:
+      - name: added
+        owner: ${{ app.name + "-notify" }}
+functions:
+  - name: ${{ app.name + "-notify" }}
+    runtime: python314
+    handler: handle
+    image: ${{ images.notify }}
+    kv:
+      - alias: added
+        store: ${{ app.name + "-feed" }}
+        table: added
+eventSources:
+  - name: ${{ app.name + "-changes" }}
+    sql:
+      database: '${{ values.database !== "" ? values.database : app.name + "-db" }}'
+      events:
+        - name: added
+          table: todos
+          "on":
+            - Insert
+sensors:
+  - name: ${{ app.name + "-notify" }}
+    "on":
+      - name: added
+        source: ${{ app.name + "-changes" }}
+        event: added
+    do:
+      - name: record
+        "on": added
+        function: ${{ app.name + "-notify" }}

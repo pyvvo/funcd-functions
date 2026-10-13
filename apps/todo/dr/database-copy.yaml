@@ -1,0 +1,38 @@
+# From version 1.2.0, the database a Restore fills with todo-db under a new name (dr/restore-database.yaml): an empty
+# SQLDatabase todo-db-r that the API owns, and the grants of its other writers. A Restore needs its destination Ready
+# (funcd ADR-0234 Decision 3), so the lane applies this first.
+apiVersion: funcd.io/v1alpha1
+kind: SQLDatabase
+metadata:
+  name: todo-db-r
+  namespace: default
+  resourceGroup: todo
+spec:
+  owner: todo-api
+---
+apiVersion: funcd.io/v1alpha1
+kind: RolesAssignment
+metadata:
+  name: todo-writers-db-r
+  namespace: default
+  resourceGroup: todo
+spec:
+  assignments:
+    - principal:
+        kind: Function
+        name: todo-migrate
+      roleRef:
+        kind: BuiltinRole
+        name: SQL Data Writer
+      scope:
+        kind: SQLDatabase
+        name: todo-db-r
+    - principal:
+        kind: Function
+        name: todo-intake
+      roleRef:
+        kind: BuiltinRole
+        name: SQL Data Writer
+      scope:
+        kind: SQLDatabase
+        name: todo-db-r

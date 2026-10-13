@@ -1,0 +1,6 @@
+# From version 1.2.0, SQLDatabase todo-db holds the todos and their upload records: the API owns it, and a delete of
+# the App keeps it, as it keeps todo-store (funcd ADR-0236).
+sql:
+  - name: ${{ app.name + "-db" }}
+    owner: ${{ app.name + "-api" }}
+    deletion: retain

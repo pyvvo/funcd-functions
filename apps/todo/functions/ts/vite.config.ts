@@ -8,8 +8,10 @@ export default defineConfig({
       functions: {
         'api-1.0.0': 'src/api-1.0.0.ts',
         'api-1.1.0': 'src/api-1.1.0.ts',
+        'api-1.2.0': 'src/api-1.2.0.ts',
         'migrate-1.0.0': 'src/migrate-1.0.0.ts',
         'migrate-1.1.0': 'src/migrate-1.1.0.ts',
+        'migrate-1.2.0': 'src/migrate-1.2.0.ts',
         collect: 'src/collect.ts',
         notes: 'src/notes.ts',
       },

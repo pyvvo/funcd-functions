@@ -1,0 +1,34 @@
+# The API from version 1.2.0: its todos and their upload records are in todo-db (funcd ADR-0233); KV keeps the
+# migration record, the release record and the todos the change feed reported.
+functions:
+  - name: ${{ app.name + "-api" }}
+    runtime: nodejs22
+    handler: handle
+    image: ${{ images.api }}
+    sql:
+      - alias: app
+        database: '${{ values.database !== "" ? values.database : app.name + "-db" }}'
+    kv:
+      - alias: meta
+        store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
+        table: meta
+      - alias: warm
+        store: ${{ app.name + "-cache" }}
+        table: warm
+      - alias: added
+        store: ${{ app.name + "-feed" }}
+        table: added
+    blob:
+      - alias: files
+        bucket: ${{ app.name + "-files" }}
+        prefix: attachments
+      - alias: uploads
+        bucket: ${{ app.name + "-files" }}
+        prefix: uploads
+      - alias: copies
+        bucket: ${{ app.name + "-tmp" }}
+        prefix: copies
+    config:
+      - ${{ app.name + "-settings" }}
+    secrets:
+      - ${{ app.name + "-api-keys" }}

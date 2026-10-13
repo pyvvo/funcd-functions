@@ -7,20 +7,21 @@ as an App template. funcd's `app-todo` Lima lane deploys it on containerd (`just
 
 | Part | Kind | What it does |
 |---|---|---|
-| `todo-api` | Function (TypeScript) and Route `/api` | adds, lists and reads todos; `attach` uploads a file of a todo, and `get` lists the uploads the intake recorded. Adding, attaching and `hang` need the token of Secret `todo-api-keys`; `hang` blocks the API's event loop, for funcd's liveness check |
+| `todo-api` | Function (TypeScript) and Route `/api` | adds, lists and reads todos; `attach` uploads a file of a todo, and `get` lists the uploads the intake recorded. Adding, attaching and `hang` need the token of Secret `todo-api-keys`; `hang` blocks the API's event loop, for funcd's liveness check. From 1.2.0 the todos and their uploads are rows of `todo-db`, queried with Drizzle: `done` marks a todo done, `list` can keep only the done or the open todos and counts both, `get` reads a todo with its uploads in one join, and `list` names the todos the change feed reported |
 | `todo-planner` | Function (Python) | returns the plan that Workflow `todo-plan` stored for a tick; a call can wait for the plan, and a wait past the planner's 2 s `timeout` is stopped. The timeout also bounds the call that wakes the planner |
 | `todo-plan` | Workflow | `collect` (TypeScript) reads the todos' attachments, `rank` (Python) orders them into its own KV store `todo-plans` |
 | `todo-plan-timer`, `todo-plan-schedule` | EventSource, Sensor | a cron timer in a time zone that starts `todo-plan` |
 | `todo-uploads`, `todo-upload-intake` | EventSource, Sensor | an object under `uploads/` in `todo-files` fires event `uploaded`, which the Sensor hands to `todo-intake` |
-| `todo-intake` | Function (Python) | records each upload in table `uploads` of `todo-store` |
+| `todo-intake` | Function (Python) | records each upload in table `uploads` of `todo-store`; from 1.2.0 (`intake_sql.py`) in table `uploads` of `todo-db`, under its todo |
 | `todo-web` | Site | a static page that lists the todos through `/api` |
 | `todo-store`, `todo-files` | KVStore, Bucket | the todos, the upload records, and the attachments and uploads; `deletion: retain` |
 | `todo-cache`, `todo-tmp` | KVStore, Bucket | the release record and a copy of each todo; `deletion: delete` |
 | `todo-settings` | ConfigMap | `TODO_GREETING`, from value `greeting` |
 | `todo-api-keys` | Secret, declared | `TODO_API_TOKEN`; the installer creates the Secret |
-| `todo-migrate` | Function (TypeScript), preApply hook | records each call; in 1.1.0 it also rewrites every todo to schema 2 |
+| `todo-migrate` | Function (TypeScript), preApply hook | records each call; in 1.1.0 it also rewrites every todo to schema 2; in 1.2.0 it migrates `todo-db` and copies the todos and upload records of KV into it, each only when absent, and keeps the KV records, so a rollback to 1.1.0 still runs, without the todos added since |
 | `todo-warm` | Function (Python), postApply hook | records the release that became current |
-| `todo-db`, `todo-stats` | SQLDatabase, Function (Python) | with value `sql`: the database the migrate hook keeps with Drizzle's migrations (table `_migrations`), owned by the API, and a SQLModel reader that counts its todos and migrations |
+| `todo-db`, `todo-stats` | SQLDatabase, Function (Python) | with value `sql` (1.0.0 and 1.1.0): the database the migrate hook keeps with Drizzle's migrations (table `_migrations`), which no other function writes, and a SQLModel reader that counts its todos and migrations. From 1.2.0 `todo-db` holds the todos and their uploads: the API owns it, `deletion: retain` keeps it as it keeps `todo-store`, and value `database` binds another database through `ref` instead |
+| `todo-changes`, `todo-notify`, `todo-feed` | EventSource (sql), Sensor and Function (Python), KVStore | from 1.2.0: a row inserted into table `todos` of `todo-db` fires event `added` (funcd ADR-0235), and `todo-notify` records the todo in table `added` of `todo-feed`, under its slug |
 
 With `values/shared.yaml` the App also requires App `todo-shared` ([`apps/todo-shared`](../todo-shared)) at `^1.0.0`:
 its rollout waits until `todo-shared` is Ready at a matching version.
@@ -45,8 +46,14 @@ its rollout waits until `todo-shared` is Ready at a matching version.
   drizzle-kit generated from `functions/ts/src/db/schema-<version>.ts` into `functions/ts/drizzle/<version>`: 1.0.0
   creates `todos`, 1.1.0 adds `note`. Generate a version with `DRIZZLE_VERSION=<version> npx drizzle-kit generate`,
   starting from a copy of the previous version's folder.
-- `grants.yaml`: the RolesAssignments that let the migrate hook write table `todos` and, with value `sql`, database
-  `todo-db`, which the API owns. An App declares no IAM kind, so they are applied beside the App.
+- `app-1.2.0.yaml`: the `app.yaml` of version 1.2.0, where `todo-db` holds the todos and their uploads. With
+  `app/resources` it is the 1.2.0 template: its `when` map leaves out the KV parts of the API, the intake and the migrate
+  hook (`api.yaml`, `intake.yaml`, `hooks-migrate*.yaml`, `sql.yaml`) and takes the `*-1.2.yaml` files in their place;
+  1.0.0 and 1.1.0 leave the `*-1.2.yaml` files out. Its migrations are `functions/ts/drizzle/1.2.0`: 1.2.0 adds `slug`
+  and table `uploads`. `values/restored-database.yaml` points 1.2.0 at the restored copy `todo-db-r` (value
+  `database`).
+- `grants.yaml`: the RolesAssignments that let the migrate hook write table `todos` and database `todo-db`, and the
+  intake write `todo-db` from 1.2.0. An App declares no IAM kind, so they are applied beside the App.
 - `secret.yaml`: a test fixture, Secret `todo-api-keys` with the lane's test-only token.
 - `fixtures/`: what the lane applies to test one scenario each: a Policy that forbids the planner to read its table,
   and an App whose Workflow step binds a store its Workflow does not declare, which apply refuses.
@@ -65,7 +72,8 @@ its rollout waits until `todo-shared` is Ready at a matching version.
   name the lane fills in. `funcdconfig-blob-s3.yaml` puts the blob store itself on the S3 server. `catalog-fixtures.yaml` holds the catalog's Quack token and
   engine settings, `restore-catalog.yaml` and `catalog-copy.yaml` restore it into a new bucket and serve the copy, and
   `funcdconfig-catalog.yaml` turns on the S3 gateway and the catalog proxy the engine needs.
-  `dead-letter-sensor.yaml` fails on every upload, so the lane has a dead letter to back up and restore. None of these is a
+  `database-copy.yaml` is the empty database `todo-db-r` with the grants of its writers, which `restore-database.yaml`
+  fills with `todo-db` of 1.2.0 once it is Ready; `restore-database-in-place.yaml` restores `todo-db` in place. `dead-letter-sensor.yaml` fails on every upload, so the lane has a dead letter to back up and restore. None of these is a
   secret: they exist only in the lane.
 
 ## Install

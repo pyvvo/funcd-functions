@@ -8,6 +8,9 @@ function requireToken(op, token) {
 }
 async function attach(ctx, id, name, content) {
 	if (!await ctx.kv.getJSON("todos", id)) throw new Error(`attach needs an existing todo, not "${id}"`);
+	await putUpload(ctx, id, name, content);
+}
+async function putUpload(ctx, id, name, content) {
 	if (!/^[A-Za-z0-9_-][A-Za-z0-9._-]*$/.test(name)) throw new Error("attach needs a file name of letters, digits, dots, dashes and underscores, not starting with a dot");
 	await ctx.blob.put("uploads", `${id}/${name}`, utf8$1.encode(content));
 	ctx.log("attach", id, name);

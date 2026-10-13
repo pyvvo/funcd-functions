@@ -1,0 +1,17 @@
+# From version 1.2.0, todo-db restored in place from Backup BACKUP: an admin's Restore, which first exports it as
+# Backup todo-db-back-before and holds the namespace during the load (funcd ADR-0222 Decision 7, ADR-0234).
+apiVersion: funcd.io/v1alpha1
+kind: Restore
+metadata:
+  name: todo-db-back
+  namespace: default
+  resourceGroup: todo
+spec:
+  backup: BACKUP
+  source:
+    credentialsSecret: todo-backup-reader
+    identitySecret: todo-backup-key
+  members:
+    - kind: SQLDatabase
+      name: todo-db
+      inPlace: true

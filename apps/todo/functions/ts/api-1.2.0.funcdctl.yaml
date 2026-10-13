@@ -1,0 +1,168 @@
+# The client config of the 1.2.0 API (funcd ADR-0122): funcdctl push reads its runtime and contract.
+runtime: nodejs22
+handler: handle
+bindings:
+  sql:
+    - alias: app
+      database: todo-db
+  kv:
+    - alias: meta
+      store: todo-store
+      table: meta
+    - alias: warm
+      store: todo-cache
+      table: warm
+    - alias: added
+      store: todo-feed
+      table: added
+  blob:
+    - alias: files
+      bucket: todo-files
+      prefix: attachments
+    - alias: uploads
+      bucket: todo-files
+      prefix: uploads
+    - alias: copies
+      bucket: todo-tmp
+      prefix: copies
+  config:
+    - todo-settings
+  secrets:
+    - todo-api-keys
+contract:
+  input:
+    type: object
+    additionalProperties: false
+    properties:
+      op:
+        type: string
+        enum:
+          - add
+          - list
+          - get
+          - done
+          - attach
+          - hang
+      title:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      content:
+        type: string
+      token:
+        type: string
+      done:
+        type: boolean
+    required:
+      - op
+  output:
+    type: object
+    additionalProperties: false
+    properties:
+      version:
+        type: string
+      id:
+        type: string
+      todos:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              type: string
+            title:
+              type: string
+            done:
+              type: boolean
+          required:
+            - id
+            - title
+            - done
+      counts:
+        type: object
+        additionalProperties: false
+        properties:
+          open:
+            type: integer
+          done:
+            type: integer
+        required:
+          - open
+          - done
+      attachment:
+        type:
+          - string
+          - "null"
+      uploads:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          properties:
+            name:
+              type: string
+            size:
+              type: integer
+          required:
+            - name
+            - size
+      migration:
+        type:
+          - object
+          - "null"
+        additionalProperties: false
+        properties:
+          by:
+            type: string
+          event:
+            type: string
+          app:
+            type: string
+          from:
+            type: string
+          to:
+            type: string
+          fromVersion:
+            type: string
+          toVersion:
+            type: string
+          migrated:
+            type: integer
+        required:
+          - by
+          - event
+          - app
+          - to
+          - migrated
+      release:
+        type:
+          - object
+          - "null"
+        additionalProperties: false
+        properties:
+          by:
+            type: string
+          event:
+            type: string
+          revision:
+            type: string
+          version:
+            type: string
+        required:
+          - by
+          - event
+          - revision
+          - version
+      notified:
+        type: array
+        items:
+          type: string
+      greeting:
+        type: string
+      tokenSet:
+        type: boolean
+    required:
+      - version
