@@ -18,10 +18,8 @@ contract:
         type: string
       rowId:
         type: integer
-      before:
-        type: object
-      after:
-        type: object
+      before: {}
+      after: {}
       index:
         type: integer
       commitTimestamp:
