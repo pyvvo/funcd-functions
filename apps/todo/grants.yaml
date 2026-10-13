@@ -18,8 +18,8 @@ spec:
         kind: KVStore
         name: todo-store/todos
 ---
-# With the value sql, the migrate hook applies its migrations to todo-db, which no other function writes (funcd
-# ADR-0233, ADR-0236).
+# The migrate hook writes todo-db: with the value sql it applies its migrations, and from 1.2.0 it also copies the
+# todos and upload records of KV into it (funcd ADR-0233, ADR-0236). From 1.2.0 the API owns todo-db.
 apiVersion: funcd.io/v1alpha1
 kind: RolesAssignment
 metadata:
@@ -31,6 +31,25 @@ spec:
     - principal:
         kind: Function
         name: todo-migrate
+      roleRef:
+        kind: BuiltinRole
+        name: SQL Data Writer
+      scope:
+        kind: SQLDatabase
+        name: todo-db
+---
+# From 1.2.0 the intake records each upload in table uploads of todo-db (funcd ADR-0233).
+apiVersion: funcd.io/v1alpha1
+kind: RolesAssignment
+metadata:
+  name: todo-intake-writes-db
+  namespace: default
+  resourceGroup: todo
+spec:
+  assignments:
+    - principal:
+        kind: Function
+        name: todo-intake
       roleRef:
         kind: BuiltinRole
         name: SQL Data Writer

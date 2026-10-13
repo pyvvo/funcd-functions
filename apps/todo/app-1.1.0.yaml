@@ -59,3 +59,10 @@ when:
   resources/hooks-migrate.yaml: ${{ values.sql !== true }}
   resources/hooks-migrate-sql.yaml: ${{ values.sql === true }}
   resources/sql.yaml: ${{ values.sql === true }}
+  # The parts of version 1.2.0 (app-1.2.0.yaml), which this version never renders.
+  resources/api-1.2.yaml: ${{ false }}
+  resources/intake-1.2.yaml: ${{ false }}
+  resources/hooks-migrate-1.2.yaml: ${{ false }}
+  resources/db-1.2.yaml: ${{ false }}
+  resources/db-ref-1.2.yaml: ${{ false }}
+  resources/feed-1.2.yaml: ${{ false }}

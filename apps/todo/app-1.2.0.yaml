@@ -1,0 +1,67 @@
+name: todo
+version: 1.2.0
+registry: ${{ values.registry }}
+images:
+  api: todo-api:1.2.0
+  migrate: todo-migrate:1.2.0
+  warm: todo-warm:1.0.0
+  planner: todo-planner:1.0.0
+  collect: todo-collect:1.0.0
+  rank: todo-rank:1.0.0
+  intake: todo-intake:1.2.0
+  notify: todo-notify:1.2.0
+  web: todo-web:1.0.0
+valuesSchema:
+  type: object
+  properties:
+    registry:
+      type: string
+      default: registry.example
+    greeting:
+      type: string
+      default: hello from the todo App
+    schedule:
+      type: object
+      properties:
+        cron:
+          type: string
+          default: "0 6 * * *"
+        timeZone:
+          type: string
+          default: Asia/Kathmandu
+    keptStores:
+      type: boolean
+      default: false
+    shared:
+      type: boolean
+      default: false
+    backup:
+      type: boolean
+      default: false
+    backupTTL:
+      type: string
+      default: 24h
+    store:
+      type: string
+      default: ""
+    catalog:
+      type: boolean
+      default: false
+    database:
+      type: string
+      default: ""
+when:
+  resources/kept.yaml: ${{ values.keptStores !== true }}
+  resources/kept-ref.yaml: ${{ values.keptStores === true }}
+  resources/requires.yaml: ${{ values.shared === true }}
+  resources/backup.yaml: ${{ values.backup === true }}
+  resources/catalog.yaml: ${{ values.catalog === true }}
+  # Version 1.2.0 keeps its todos and upload records in todo-db: the parts of 1.0.0 and 1.1.0 that hold them in KV,
+  # and value sql, are left out.
+  resources/api.yaml: ${{ false }}
+  resources/intake.yaml: ${{ false }}
+  resources/hooks-migrate.yaml: ${{ false }}
+  resources/hooks-migrate-sql.yaml: ${{ false }}
+  resources/sql.yaml: ${{ false }}
+  resources/db-1.2.yaml: ${{ values.database === "" }}
+  resources/db-ref-1.2.yaml: ${{ values.database !== "" }}

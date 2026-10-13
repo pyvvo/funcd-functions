@@ -30,9 +30,3 @@ functions:
       - ${{ app.name + "-settings" }}
     secrets:
       - ${{ app.name + "-api-keys" }}
-routes:
-  - name: ${{ app.name + "-api" }}
-    rules:
-      - path: /api
-        backend:
-          function: ${{ app.name + "-api" }}

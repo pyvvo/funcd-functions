@@ -1,0 +1,4 @@
+# With value database, the App binds that existing SQLDatabase through ref instead of todo-db: the copy a Restore
+# made, or a database a deleted install kept (funcd ADR-0236).
+sql:
+  - ref: ${{ values.database }}

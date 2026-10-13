@@ -7,20 +7,3 @@ functions:
       - alias: uploads
         store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
         table: uploads
-eventSources:
-  - name: ${{ app.name + "-uploads" }}
-    blob:
-      bucket: ${{ app.name + "-files" }}
-      events:
-        - name: uploaded
-          prefix: uploads/
-sensors:
-  - name: ${{ app.name + "-upload-intake" }}
-    "on":
-      - name: uploaded
-        source: ${{ app.name + "-uploads" }}
-        event: uploaded
-    do:
-      - name: record
-        "on": uploaded
-        function: ${{ app.name + "-intake" }}

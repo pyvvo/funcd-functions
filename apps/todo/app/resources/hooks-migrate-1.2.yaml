@@ -1,0 +1,20 @@
+# The migrate hook of version 1.2.0: it migrates todo-db and copies the todos and upload records of KV into it,
+# through its grant in grants.yaml.
+functions:
+  - name: ${{ app.name + "-migrate" }}
+    runtime: nodejs22
+    handler: handle
+    image: ${{ images.migrate }}
+    kv:
+      - alias: todos
+        store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
+        table: todos
+      - alias: meta
+        store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
+        table: meta
+      - alias: uploads
+        store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
+        table: uploads
+    sql:
+      - alias: app
+        database: '${{ values.database !== "" ? values.database : app.name + "-db" }}'

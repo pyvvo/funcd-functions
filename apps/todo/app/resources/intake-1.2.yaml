@@ -1,0 +1,9 @@
+# The intake from version 1.2.0: it records each upload in table uploads of todo-db, through its grant in grants.yaml.
+functions:
+  - name: ${{ app.name + "-intake" }}
+    runtime: python314
+    handler: handle
+    image: ${{ images.intake }}
+    sql:
+      - alias: app
+        database: '${{ values.database !== "" ? values.database : app.name + "-db" }}'
