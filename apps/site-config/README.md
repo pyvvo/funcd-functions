@@ -16,20 +16,21 @@ starts. The bundle never changes between environments; only the values file does
 | `values/staging.yaml`, `values/prod.yaml` | One host and one API address per environment |
 | `values/new-dashboard.yaml` | Turns the flag on |
 | `values/e2e.yaml` | The lane's registry |
+| `sites/preview.yaml` | The same build as a standalone Site at the path `/preview`, which the lane deploys beside the App |
 
-## Fetching config.json
+## One build at any path
 
-Fetch it from the base path the bundle is built for, never relative to the page: on a deep link such as `/vehicles/42`,
-`config.json` would resolve to `/vehicles/config.json`, which the SPA fallback answers with the index. This app has no
-bundler and is built for `/`: `index.html` loads `/app.js`, which resolves `config.json` against its own URL. With a
-bundler, use its base:
+The Site sets `ingress.baseHref: true`, so funcd serves its index with the Site's mount as `<base href>`: `/` on
+a host, `/preview/` at the path `/preview`. The app uses relative URLs only (`app.js`, `config.json`), so the same build
+runs at any path, deep links such as `/preview/vehicles/42` included. With a bundler, build with relative URLs (Vite
+`base: './'`) and read the base from the document:
 
 ```js
-// Vite
-const config = await (await fetch(`${import.meta.env.BASE_URL}config.json`)).json();
-// an app that sets <base href>, such as Angular
 const config = await (await fetch(new URL('config.json', document.baseURI))).json();
+const basename = new URL(document.baseURI).pathname; // the router's basename
 ```
+
+An Angular app reads `<base href>` already.
 
 ## Deploy
 

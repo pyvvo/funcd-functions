@@ -1,0 +1,19 @@
+apiVersion: funcd.io/v1alpha1
+kind: Site
+metadata:
+  name: site-config-preview
+  namespace: staging
+  resourceGroup: site-config
+spec:
+  image: oci-layout:///mnt/funcd-deps/registry/site-config-web:1.0.0
+  bucket:
+    name: site-config-preview
+  prefix: web
+  spa: true
+  ingress:
+    path: /preview
+    public: true
+    baseHref: true
+  runtimeConfig:
+    values:
+      API_URL: https://api.preview.example

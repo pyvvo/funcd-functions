@@ -1,6 +1,6 @@
-// config.json sits at the root of the bundle, beside this script; a URL relative to the page would miss it on a deep
-// link, where the SPA fallback answers with the index (funcd ADR-0239).
-const res = await fetch(new URL('config.json', import.meta.url), { cache: 'no-cache' });
+// The Site sets ingress.baseHref, so the index carries the Site's mount as its base (funcd ADR-0239), and
+// config.json resolves under the mount at any path and on a deep link.
+const res = await fetch(new URL('config.json', document.baseURI), { cache: 'no-cache' });
 if (!res.ok) {
   throw new Error(`config.json: ${res.status}`);
 }

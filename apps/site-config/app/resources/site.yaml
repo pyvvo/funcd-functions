@@ -8,6 +8,7 @@ sites:
     ingress:
       host: ${{ values.host }}
       public: true
+      baseHref: true
     runtimeConfig:
       values:
         API_URL: ${{ values.api.url }}
