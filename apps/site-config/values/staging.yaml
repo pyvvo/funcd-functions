@@ -1,0 +1,3 @@
+host: site-config.staging.test
+api:
+  url: https://api.staging.example

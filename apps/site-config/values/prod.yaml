@@ -1,0 +1,3 @@
+host: site-config.prod.test
+api:
+  url: https://api.example

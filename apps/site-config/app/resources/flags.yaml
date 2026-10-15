@@ -1,0 +1,4 @@
+configMaps:
+  - name: ${{ app.name + "-flags" }}
+    data:
+      NEW_DASHBOARD: ${{ values.newDashboard }}
