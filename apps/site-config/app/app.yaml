@@ -1,0 +1,26 @@
+name: site-config
+version: 1.0.0
+registry: ${{ values.registry }}
+images:
+  web: site-config-web:1.0.0
+valuesSchema:
+  type: object
+  required:
+    - host
+    - api
+  properties:
+    registry:
+      type: string
+      default: registry.example
+    host:
+      type: string
+    api:
+      type: object
+      required:
+        - url
+      properties:
+        url:
+          type: string
+    newDashboard:
+      type: string
+      default: "false"

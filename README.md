@@ -9,6 +9,8 @@ only a real runtime shows, such as a cold start, a daemon restart, data on disk 
 
 - [`apps/todo`](apps/todo): the to-do App of funcd's App design, deployed by funcd's `app-todo` lane.
 - [`apps/todo-shared`](apps/todo-shared): the App that the to-do App requires, deployed by the same lane.
+- [`apps/site-config`](apps/site-config): one Site build served to two environments, each with its own generated
+  `config.json` (funcd ADR-0239), deployed by funcd's `app-todo` lane.
 
 ## How funcd uses this repository
 
