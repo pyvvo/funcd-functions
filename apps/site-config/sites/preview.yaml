@@ -12,7 +12,8 @@ spec:
   spa: true
   ingress:
     path: /preview
-    public: true
+    auth:
+      mode: open
     baseHref: true
   runtimeConfig:
     values:
