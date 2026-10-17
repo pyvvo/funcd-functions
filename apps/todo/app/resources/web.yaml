@@ -5,4 +5,5 @@ sites:
       name: ${{ app.name + "-web" }}
     prefix: web
     ingress:
-      public: true
+      auth:
+        mode: open

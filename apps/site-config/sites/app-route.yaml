@@ -1,0 +1,40 @@
+# One Route serves the site-config build at a host root and the todo App's API beside it (funcd ADR-0242): the Site is
+# off, so only the Route answers for it, and the Route follows each new build of the Site.
+apiVersion: funcd.io/v1alpha1
+kind: Site
+metadata:
+  name: site-config-app
+  namespace: default
+  resourceGroup: site-config
+spec:
+  image: oci-layout:///mnt/funcd-deps/registry/site-config-web:1.0.0
+  bucket:
+    name: site-config-app
+  prefix: web
+  spa: true
+  ingress:
+    enabled: false
+    path: /
+  runtimeConfig:
+    values:
+      API_URL: https://api.app.example
+---
+apiVersion: funcd.io/v1alpha1
+kind: Route
+metadata:
+  name: site-config-app-route
+  namespace: default
+  resourceGroup: site-config
+spec:
+  host: app.site-config.test
+  rules:
+    - path: /
+      backend:
+        site: site-config-app
+      auth:
+        mode: open
+    - path: /api
+      backend:
+        function: todo-api
+      auth:
+        mode: open
