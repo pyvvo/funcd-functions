@@ -14,7 +14,8 @@ spec:
         - name: rank
           function:
             image: oci-layout:///mnt/funcd-deps/registry/todo-rank:1.0.0
-            kv:
-              - alias: todos
-                store: todo-store
-                table: todos
+            bindings:
+              kv:
+                - alias: todos
+                  store: todo-store
+                  table: todos

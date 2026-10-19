@@ -11,6 +11,7 @@ spec:
   image: oci-layout:///mnt/funcd-deps/registry:notes-report
   scaling:
     minReplicas: 1
-  sql:
-    - alias: app
-      database: notes-db
+  bindings:
+    sql:
+      - alias: app
+        database: notes-db

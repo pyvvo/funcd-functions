@@ -4,7 +4,8 @@ functions:
     handler: handle
     image: ${{ images.planner }}
     timeout: 2s
-    kv:
-      - alias: plans
-        store: ${{ app.name + "-plans" }}
-        table: plans
+    bindings:
+      kv:
+        - alias: plans
+          store: ${{ app.name + "-plans" }}
+          table: plans

@@ -3,7 +3,8 @@ functions:
     runtime: python314
     handler: handle
     image: ${{ images.intake }}
-    kv:
-      - alias: uploads
-        store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
-        table: uploads
+    bindings:
+      kv:
+        - alias: uploads
+          store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
+          table: uploads

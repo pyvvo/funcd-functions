@@ -3,10 +3,11 @@ functions:
     runtime: python314
     handler: handle
     image: ${{ images.warm }}
-    kv:
-      - alias: warm
-        store: ${{ app.name + "-cache" }}
-        table: warm
+    bindings:
+      kv:
+        - alias: warm
+          store: ${{ app.name + "-cache" }}
+          table: warm
 hooks:
   preApply:
     - function: ${{ app.name + "-migrate" }}
