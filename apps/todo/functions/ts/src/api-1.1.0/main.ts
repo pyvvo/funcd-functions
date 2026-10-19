@@ -1,12 +1,12 @@
-// The todo API, version 1.0.0. A todo is a schema-1 record of table todos; add also stores its title as an attachment,
-// which the App keeps when it is deleted, and a copy of the record, which goes with the App. attach uploads a file of a
-// todo, which the intake Function records and get lists; hang blocks the API for funcd's liveness check.
+// The todo API, version 1.1.0. A todo is a schema-2 record of table todos, which adds done; list returns only schema-2
+// todos and counts the others as unmigrated, so a todo of 1.0.0 shows only once the 1.1.0 migrate hook rewrote it.
+// attach, get's uploads and hang are those of 1.0.0.
 import type { CloudEvent, FunctionContext } from '@funcd-dev/shim';
 
-import type { MigrationRecord, ReleaseRecord, TodoRecord } from './records';
-import { attach, hang, requireToken, type Upload, uploadsOf } from './shared';
+import type { MigrationRecord, ReleaseRecord, TodoRecord } from '../records';
+import { attach, hang, requireToken, type Upload, uploadsOf } from '../shared';
 
-const version = '1.0.0';
+const version = '1.1.0';
 
 export interface FuncInput {
   op: 'add' | 'list' | 'get' | 'attach' | 'hang';
@@ -20,12 +20,14 @@ export interface FuncInput {
 export interface Todo {
   id: string;
   title: string;
+  done: boolean;
 }
 
 export interface FuncOutput {
   version: string;
   id?: string;
   todos?: Todo[];
+  unmigrated?: number;
   attachment?: string | null;
   uploads?: Upload[];
   migration?: MigrationRecord | null;
@@ -70,7 +72,7 @@ async function add(ctx: FunctionContext, input: FuncInput): Promise<FuncOutput> 
   if (id === '') {
     throw new Error('add needs a title');
   }
-  const record: TodoRecord = { title };
+  const record: TodoRecord = { title, done: false };
   await ctx.kv.put('todos', id, JSON.stringify(record));
   await ctx.blob.put('files', `${id}.txt`, utf8.encode(title));
   await ctx.blob.put('copies', `${id}.json`, utf8.encode(JSON.stringify(record)));
@@ -83,7 +85,7 @@ async function get(ctx: FunctionContext, id: string): Promise<FuncOutput> {
   const file = await ctx.blob.get('files', `${id}.txt`);
   return {
     version,
-    todos: record ? [{ id, title: record.title }] : [],
+    todos: record ? [{ id, title: record.title, done: record.done === true }] : [],
     attachment: file ? new TextDecoder().decode(file) : null,
     uploads: await uploadsOf(ctx, id),
   };
@@ -91,15 +93,22 @@ async function get(ctx: FunctionContext, id: string): Promise<FuncOutput> {
 
 async function list(ctx: FunctionContext): Promise<FuncOutput> {
   const todos: Todo[] = [];
+  let unmigrated = 0;
   for (const id of (await ctx.kv.list('todos')).sort()) {
     const record = await ctx.kv.getJSON<TodoRecord>('todos', id);
-    if (record) {
-      todos.push({ id, title: record.title });
+    if (!record) {
+      continue;
+    }
+    if (typeof record.done === 'boolean') {
+      todos.push({ id, title: record.title, done: record.done });
+    } else {
+      unmigrated++;
     }
   }
   return {
     version,
     todos,
+    unmigrated,
     migration: await ctx.kv.getJSON<MigrationRecord>('meta', 'last'),
     release: await ctx.kv.getJSON<ReleaseRecord>('warm', 'last'),
     greeting: process.env.TODO_GREETING ?? '',

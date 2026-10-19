@@ -3632,10 +3632,10 @@ function bundled(glob, folder) {
 	return Object.fromEntries(Object.entries(glob).map(([path, text]) => [path.slice(path.indexOf(folder) + folder.length + 1), text]));
 }
 //#endregion
-//#region src/migrate-1.0.0.ts
+//#region src/migrate-1.0.0/main.ts
 var migrations = bundled(/* #__PURE__ */ Object.assign({
-	"../drizzle/1.0.0/0000_todos.sql": _0000_todos_default,
-	"../drizzle/1.0.0/meta/_journal.json": _journal_default
+	"../../drizzle/1.0.0/0000_todos.sql": _0000_todos_default,
+	"../../drizzle/1.0.0/meta/_journal.json": _journal_default
 }), "drizzle/1.0.0");
 async function handle(ctx, event) {
 	if (!event.data) throw new Error("a hook call carries its input");

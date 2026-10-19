@@ -21,8 +21,8 @@ decides on its own. An App here follows funcd's App design, and the lane that de
 | Path | What |
 |---|---|
 | `apps/<app>/` | One example App: its template, values, grants and site. Its README lists its parts |
-| `apps/<app>/functions/ts` | Its TypeScript functions, one npm project. `vite build` bundles each into a `.mjs` beside its `funcdctl.yaml`, and the bundles are committed |
-| `apps/<app>/functions/py` | Its Python functions, one uv project. Each function is one file |
+| `apps/<app>/functions/ts` | Its TypeScript functions, one npm project. `vite build` bundles each `src/<name>/main.ts` into `<name>.mjs` beside its `<name>.contract.yaml`, and the bundles are committed |
+| `apps/<app>/functions/py` | Its Python functions, one uv project. Each is `src/<name>/main.py` with its `<name>.contract.yaml`, listed in `[tool.funcd-bundle.functions]` |
 | `go.mod` | This repo is also a Go module. funcd pins it by git tag |
 
 ## Toolchain

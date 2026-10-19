@@ -4,7 +4,7 @@ import type { CloudEvent, FunctionContext } from '@funcd-dev/shim';
 import { sql } from 'drizzle-orm';
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
-import { proxyDB } from './db/proxy';
+import { proxyDB } from '../db/proxy';
 
 export const notes = sqliteTable('notes', {
   id: integer('id').primaryKey({ autoIncrement: true }),

@@ -4,11 +4,11 @@
 // 1.1.0 API still runs on them (expand, then contract). It records its call under key last of table meta.
 import type { CloudEvent, FunctionContext, SQLStatement } from '@funcd-dev/shim';
 
-import { bundled, migrateSQL } from './db/migrate';
-import type { HookInput, MigrationRecord, TodoRecord, UploadRecord } from './records';
+import { bundled, migrateSQL } from '../db/migrate';
+import type { HookInput, MigrationRecord, TodoRecord, UploadRecord } from '../records';
 
 const migrations = bundled(
-  import.meta.glob(['../drizzle/1.2.0/*.sql', '../drizzle/1.2.0/meta/_journal.json'], {
+  import.meta.glob(['../../drizzle/1.2.0/*.sql', '../../drizzle/1.2.0/meta/_journal.json'], {
     query: '?raw',
     import: 'default',
     eager: true,

@@ -1,0 +1,31 @@
+runtime: python314
+input:
+  type: object
+  additionalProperties: false
+  properties:
+    tick:
+      type: string
+    titles:
+      type: array
+      items:
+        type: string
+    collected_by:
+      type: string
+  required:
+    - tick
+    - titles
+    - collected_by
+output:
+  type: object
+  additionalProperties: false
+  properties:
+    tick:
+      type: string
+    count:
+      type: integer
+    ranked_by:
+      type: string
+  required:
+    - tick
+    - count
+    - ranked_by

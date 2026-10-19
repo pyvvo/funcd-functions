@@ -1,0 +1,18 @@
+runtime: python314
+input:
+  type: object
+  additionalProperties: false
+  properties:
+    op:
+      type: string
+output:
+  type: object
+  additionalProperties: false
+  properties:
+    todos:
+      type: integer
+    migrations:
+      type: integer
+  required:
+    - todos
+    - migrations

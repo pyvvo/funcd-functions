@@ -1,0 +1,19 @@
+runtime: python314
+input:
+  type: object
+  additionalProperties: false
+  properties:
+    op:
+      type: string
+output:
+  type: object
+  additionalProperties: false
+  properties:
+    titles:
+      type: array
+      items:
+        type: string
+    count:
+      type: integer
+    error:
+      type: string

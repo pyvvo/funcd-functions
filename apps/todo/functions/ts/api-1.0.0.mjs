@@ -30,7 +30,7 @@ function hang() {
 	for (;;);
 }
 //#endregion
-//#region src/api-1.0.0.ts
+//#region src/api-1.0.0/main.ts
 var version = "1.0.0";
 var utf8 = new TextEncoder();
 async function handle(ctx, event) {

@@ -5,10 +5,10 @@
 import type { CloudEvent, FunctionContext } from '@funcd-dev/shim';
 import { and, asc, count, eq, isNotNull } from 'drizzle-orm';
 
-import { proxyDB } from './db/proxy';
-import { todos, uploads } from './db/schema-1.2.0';
-import type { MigrationRecord, ReleaseRecord } from './records';
-import { hang, putUpload, requireToken, type Upload } from './shared';
+import { proxyDB } from '../db/proxy';
+import { todos, uploads } from '../db/schema-1.2.0';
+import type { MigrationRecord, ReleaseRecord } from '../records';
+import { hang, putUpload, requireToken, type Upload } from '../shared';
 
 const version = '1.2.0';
 
