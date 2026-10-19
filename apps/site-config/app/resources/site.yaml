@@ -1,5 +1,6 @@
 buckets:
   - name: ${{ app.name + "-web" }}
+    deletion: delete
     prefixes:
       - name: web
 sites:

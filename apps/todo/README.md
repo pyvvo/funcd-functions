@@ -13,7 +13,7 @@ as an App template. funcd's `app-todo` Lima lane deploys it on containerd (`just
 | `todo-plan-timer`, `todo-plan-schedule` | EventSource, Sensor | a cron timer in a time zone that starts `todo-plan` |
 | `todo-uploads`, `todo-upload-intake` | EventSource, Sensor | an object under `uploads/` in `todo-files` fires event `uploaded`, which the Sensor hands to `todo-intake` |
 | `todo-intake` | Function (Python) | records each upload in table `uploads` of `todo-store`; from 1.2.0 (`intake_sql.py`) in table `uploads` of `todo-db`, under its todo |
-| `todo-web` | Site | a static page that lists the todos through `/api`, served from prefix `web` of Bucket `todo-web`, which the App declares |
+| `todo-web` | Site | a static page that lists the todos through `/api`, served from prefix `web` of Bucket `todo-web`, which the App declares with `deletion: delete`: each install materializes the bundle again |
 | `todo-store`, `todo-files` | KVStore, Bucket | the todos, the upload records, and the attachments and uploads; `deletion: retain` |
 | `todo-cache`, `todo-tmp` | KVStore, Bucket | the release record and a copy of each todo; `deletion: delete` |
 | `todo-settings` | ConfigMap | `TODO_GREETING`, from value `greeting` |
