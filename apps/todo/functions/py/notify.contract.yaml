@@ -1,0 +1,32 @@
+runtime: python314
+input:
+  type: object
+  additionalProperties: false
+  properties:
+    op:
+      type: string
+    table:
+      type: string
+    rowId:
+      type: integer
+    before: {}
+    after: {}
+    index:
+      type: integer
+    commitTimestamp:
+      type: integer
+    truncated:
+      type: boolean
+  required:
+    - op
+    - table
+    - rowId
+    - index
+output:
+  type: object
+  additionalProperties: false
+  properties:
+    slug:
+      type: string
+  required:
+    - slug

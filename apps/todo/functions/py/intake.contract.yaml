@@ -1,0 +1,29 @@
+runtime: python314
+input:
+  type: object
+  additionalProperties: false
+  properties:
+    bucket:
+      type: string
+    key:
+      type: string
+    size:
+      type: integer
+    version:
+      type: string
+    time:
+      type: string
+  required:
+    - bucket
+    - key
+    - size
+    - version
+    - time
+output:
+  type: object
+  additionalProperties: false
+  properties:
+    key:
+      type: string
+  required:
+    - key

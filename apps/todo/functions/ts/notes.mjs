@@ -4137,7 +4137,7 @@ function proxyDB(ctx, alias) {
 	});
 }
 //#endregion
-//#region src/notes.ts
+//#region src/notes/main.ts
 var notes = sqliteTable("notes", {
 	id: integer("id").primaryKey({ autoIncrement: true }),
 	title: text("title").notNull(),

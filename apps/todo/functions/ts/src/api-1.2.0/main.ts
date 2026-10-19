@@ -5,10 +5,10 @@
 import type { CloudEvent, FunctionContext } from '@funcd-dev/shim';
 import { and, asc, count, eq, isNotNull } from 'drizzle-orm';
 
-import { proxyDB } from './db/proxy';
-import { todos, uploads } from './db/schema-1.2.0';
-import type { MigrationRecord, ReleaseRecord } from './records';
-import { hang, putUpload, requireToken, type Upload } from './shared';
+import { proxyDB } from '../db/proxy';
+import { todos, uploads } from '../db/schema-1.2.0';
+import type { MigrationRecord, ReleaseRecord } from '../records';
+import { hang, putUpload, requireToken, type Upload } from '../shared';
 
 const version = '1.2.0';
 
@@ -55,12 +55,12 @@ export async function handle(ctx: FunctionContext, event: CloudEvent<FuncInput>)
     case 'done':
       return markDone(ctx, input);
     case 'attach':
-      requireToken('attach', input.token);
+      await requireToken(ctx, 'attach', input.token);
       await mustExist(ctx, 'attach', input.id ?? '');
       await putUpload(ctx, input.id ?? '', input.name ?? '', input.content ?? '');
       return { version, id: input.id };
     case 'hang':
-      requireToken('hang', input.token);
+      await requireToken(ctx, 'hang', input.token);
       return hang();
     default:
       return list(ctx, input.done);
@@ -76,7 +76,7 @@ function slug(title: string): string {
 }
 
 async function add(ctx: FunctionContext, input: FuncInput): Promise<FuncOutput> {
-  requireToken('add', input.token);
+  await requireToken(ctx, 'add', input.token);
   const title = input.title ?? '';
   const id = slug(title);
   if (id === '') {
@@ -93,7 +93,7 @@ async function add(ctx: FunctionContext, input: FuncInput): Promise<FuncOutput> 
 }
 
 async function markDone(ctx: FunctionContext, input: FuncInput): Promise<FuncOutput> {
-  requireToken('done', input.token);
+  await requireToken(ctx, 'done', input.token);
   const id = input.id ?? '';
   const updated = await proxyDB(ctx, 'app')
     .update(todos)
@@ -155,6 +155,6 @@ async function list(ctx: FunctionContext, done: boolean | undefined): Promise<Fu
     release: await ctx.kv.getJSON<ReleaseRecord>('warm', 'last'),
     notified: (await ctx.kv.list('added')).sort(),
     greeting: process.env.TODO_GREETING ?? '',
-    tokenSet: Boolean(process.env.TODO_API_TOKEN),
+    tokenSet: Boolean(await ctx.secret.get('TODO_API_TOKEN')),
   };
 }

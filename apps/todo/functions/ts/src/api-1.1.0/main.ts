@@ -3,8 +3,8 @@
 // attach, get's uploads and hang are those of 1.0.0.
 import type { CloudEvent, FunctionContext } from '@funcd-dev/shim';
 
-import type { MigrationRecord, ReleaseRecord, TodoRecord } from './records';
-import { attach, hang, requireToken, type Upload, uploadsOf } from './shared';
+import type { MigrationRecord, ReleaseRecord, TodoRecord } from '../records';
+import { attach, hang, requireToken, type Upload, uploadsOf } from '../shared';
 
 const version = '1.1.0';
 
@@ -46,11 +46,11 @@ export async function handle(ctx: FunctionContext, event: CloudEvent<FuncInput>)
     case 'get':
       return get(ctx, input.id ?? '');
     case 'attach':
-      requireToken('attach', input.token);
+      await requireToken(ctx, 'attach', input.token);
       await attach(ctx, input.id ?? '', input.name ?? '', input.content ?? '');
       return { version, id: input.id };
     case 'hang':
-      requireToken('hang', input.token);
+      await requireToken(ctx, 'hang', input.token);
       return hang();
     default:
       return list(ctx);
@@ -66,7 +66,7 @@ function slug(title: string): string {
 }
 
 async function add(ctx: FunctionContext, input: FuncInput): Promise<FuncOutput> {
-  requireToken('add', input.token);
+  await requireToken(ctx, 'add', input.token);
   const title = input.title ?? '';
   const id = slug(title);
   if (id === '') {
@@ -112,6 +112,6 @@ async function list(ctx: FunctionContext): Promise<FuncOutput> {
     migration: await ctx.kv.getJSON<MigrationRecord>('meta', 'last'),
     release: await ctx.kv.getJSON<ReleaseRecord>('warm', 'last'),
     greeting: process.env.TODO_GREETING ?? '',
-    tokenSet: Boolean(process.env.TODO_API_TOKEN),
+    tokenSet: Boolean(await ctx.secret.get('TODO_API_TOKEN')),
   };
 }

@@ -1,6 +1,6 @@
 import { createRequire as __funcdCreateRequire } from "node:module";
 __funcdCreateRequire(import.meta.url);
-//#region src/collect.ts
+//#region src/collect/main.ts
 async function handle(ctx, event) {
 	const titles = [];
 	for (const key of await ctx.blob.list("files")) {

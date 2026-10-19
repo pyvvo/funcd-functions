@@ -1,0 +1,31 @@
+runtime: python314
+input:
+  type: object
+  additionalProperties: false
+  properties:
+    tick:
+      type: string
+    wait:
+      type: number
+      minimum: 0
+      maximum: 60
+  required:
+    - tick
+output:
+  type: object
+  additionalProperties: false
+  properties:
+    found:
+      type: boolean
+    tick:
+      type: string
+    plan:
+      type: array
+      items:
+        type: string
+    collected_by:
+      type: string
+    ranked_by:
+      type: string
+  required:
+    - found

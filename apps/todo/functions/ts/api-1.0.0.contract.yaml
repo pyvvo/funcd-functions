@@ -1,0 +1,116 @@
+runtime: nodejs22
+input:
+  type: object
+  additionalProperties: false
+  properties:
+    op:
+      type: string
+      enum:
+        - add
+        - list
+        - get
+        - attach
+        - hang
+    title:
+      type: string
+    id:
+      type: string
+    name:
+      type: string
+    content:
+      type: string
+    token:
+      type: string
+  required:
+    - op
+output:
+  type: object
+  additionalProperties: false
+  properties:
+    version:
+      type: string
+    id:
+      type: string
+    todos:
+      type: array
+      items:
+        type: object
+        additionalProperties: false
+        properties:
+          id:
+            type: string
+          title:
+            type: string
+        required:
+          - id
+          - title
+    attachment:
+      type:
+        - string
+        - "null"
+    uploads:
+      type: array
+      items:
+        type: object
+        additionalProperties: false
+        properties:
+          name:
+            type: string
+          size:
+            type: integer
+        required:
+          - name
+          - size
+    migration:
+      type:
+        - object
+        - "null"
+      additionalProperties: false
+      properties:
+        by:
+          type: string
+        event:
+          type: string
+        app:
+          type: string
+        from:
+          type: string
+        to:
+          type: string
+        fromVersion:
+          type: string
+        toVersion:
+          type: string
+        migrated:
+          type: integer
+      required:
+        - by
+        - event
+        - app
+        - to
+        - migrated
+    release:
+      type:
+        - object
+        - "null"
+      additionalProperties: false
+      properties:
+        by:
+          type: string
+        event:
+          type: string
+        revision:
+          type: string
+        version:
+          type: string
+      required:
+        - by
+        - event
+        - revision
+        - version
+    greeting:
+      type: string
+    tokenSet:
+      type: boolean
+  required:
+    - version

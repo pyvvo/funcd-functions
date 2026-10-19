@@ -3638,12 +3638,12 @@ function bundled(glob, folder) {
 	return Object.fromEntries(Object.entries(glob).map(([path, text]) => [path.slice(path.indexOf(folder) + folder.length + 1), text]));
 }
 //#endregion
-//#region src/migrate-1.2.0.ts
+//#region src/migrate-1.2.0/main.ts
 var migrations = bundled(/* #__PURE__ */ Object.assign({
-	"../drizzle/1.2.0/0000_todos.sql": _0000_todos_default,
-	"../drizzle/1.2.0/0001_todo_note.sql": _0001_todo_note_default,
-	"../drizzle/1.2.0/0002_todo_slug_uploads.sql": _0002_todo_slug_uploads_default,
-	"../drizzle/1.2.0/meta/_journal.json": _journal_default
+	"../../drizzle/1.2.0/0000_todos.sql": _0000_todos_default,
+	"../../drizzle/1.2.0/0001_todo_note.sql": _0001_todo_note_default,
+	"../../drizzle/1.2.0/0002_todo_slug_uploads.sql": _0002_todo_slug_uploads_default,
+	"../../drizzle/1.2.0/meta/_journal.json": _journal_default
 }), "drizzle/1.2.0");
 var batch = 400;
 var insertTodo = "INSERT INTO todos (slug, title, done) VALUES (?, ?, ?) ON CONFLICT (slug) DO NOTHING";

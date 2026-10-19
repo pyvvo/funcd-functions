@@ -57,9 +57,11 @@ its rollout waits until `todo-shared` is Ready at a matching version.
 - `secret.yaml`: a test fixture, Secret `todo-api-keys` with the lane's test-only token.
 - `fixtures/`: what the lane applies to test one scenario each: a Policy that forbids the planner to read its table,
   and an App whose Workflow step binds a store its Workflow does not declare, which apply refuses.
-- `functions/ts`, `functions/py`: the function sources with their `funcdctl.yaml` contracts. The TypeScript bundles
-  (`*.mjs`) are committed; rebuild them with `npm ci && npm run build`. Each Python function is one file; check them
-  with `uv run mypy` and `uv run ruff check`.
+- `functions/ts`, `functions/py`: the function sources, each `src/<name>/main.ts` or `src/<name>/main.py`, with its
+  `<name>.contract.yaml` (funcd ADR-0247). The TypeScript bundles (`<name>.mjs`, beside their contract files) are
+  committed; rebuild them with `npm ci && npm run build`. The Python functions are listed in `pyproject.toml`'s
+  `[tool.funcd-bundle.functions]`; `uv run funcd-bundle` builds each into `dist/<name>/`. Check them with
+  `uv run mypy` and `uv run ruff check`.
 - `web/`: the static site, pushed with `funcdctl push --site`.
 - `funcdconfig.yaml`: the daemon config of the lane, with short supervision, liveness, blob poll and log flush times.
 - `dr/`: the test fixtures of the lane's disaster-recovery block (funcd FEAT-0009). `funcdconfig.yaml` is the lane's

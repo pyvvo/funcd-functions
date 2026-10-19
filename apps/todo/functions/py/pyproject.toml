@@ -9,12 +9,25 @@ requires-python = ">=3.12"
 dependencies = ["funcd-shim==0.9.0", "sqlalchemy==2.0.54", "sqlmodel==0.0.47"]
 
 [dependency-groups]
-dev = ["funcd-bundle==0.9.0", "mypy>=1.13", "ruff>=0.8"]
+dev = ["funcd-bundle==0.14.0", "mypy>=1.13", "ruff>=0.8"]
+
+# Each function is bundled from its entry (funcd ADR-0247): dist/<name>/ with main.py and <name>.contract.yaml.
+[tool.funcd-bundle.functions]
+intake = "src/intake/main.py"
+intake_sql = "src/intake_sql/main.py"
+notes_report = "src/notes_report/main.py"
+notify = "src/notify/main.py"
+planner = "src/planner/main.py"
+rank = "src/rank/main.py"
+stats = "src/stats/main.py"
+warm = "src/warm/main.py"
 
 [tool.mypy]
 strict = true
 python_version = "3.12"
-files = ["intake.py", "intake_sql.py", "notes_report.py", "notify.py", "planner.py", "rank.py", "stats.py", "warm.py"]
+files = ["src"]
+mypy_path = "src"
+explicit_package_bases = true    # src/<name>/main.py are distinct modules (intake.main, …)
 
 [tool.ruff]
 line-length = 120

@@ -2,13 +2,13 @@
 // key last of table meta, where the API reports it.
 import type { CloudEvent, FunctionContext } from '@funcd-dev/shim';
 
-import { bundled, migrateSQL } from './db/migrate';
-import type { HookInput, MigrationRecord } from './records';
+import { bundled, migrateSQL } from '../db/migrate';
+import type { HookInput, MigrationRecord } from '../records';
 
 // The migrations drizzle-kit generated for this version, applied when the App's value sql gives the hook TODO_SQL=on
 // and its binding app to todo-db (funcd ADR-0236).
 const migrations = bundled(
-  import.meta.glob(['../drizzle/1.0.0/*.sql', '../drizzle/1.0.0/meta/_journal.json'], {
+  import.meta.glob(['../../drizzle/1.0.0/*.sql', '../../drizzle/1.0.0/meta/_journal.json'], {
     query: '?raw',
     import: 'default',
     eager: true,
