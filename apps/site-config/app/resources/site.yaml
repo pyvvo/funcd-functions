@@ -1,9 +1,15 @@
+buckets:
+  - name: ${{ app.name + "-web" }}
+    deletion: delete
+    prefixes:
+      - name: web
 sites:
   - name: ${{ app.name + "-web" }}
     image: ${{ images.web }}
-    bucket:
-      name: ${{ app.name + "-web" }}
-    prefix: web
+    bindings:
+      blob:
+        - bucket: ${{ app.name + "-web" }}
+          prefix: web
     spa: true
     ingress:
       host: ${{ values.host }}

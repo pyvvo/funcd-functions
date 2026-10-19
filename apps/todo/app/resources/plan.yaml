@@ -1,23 +1,25 @@
+kv:
+  - name: ${{ app.name + "-plans" }}
+    deletion: delete
+    tables:
+      - name: plans
+        owner: ${{ app.name + "-plan-rank" }}
 workflows:
   - name: ${{ app.name + "-plan" }}
-    kv:
-      - name: ${{ app.name + "-plans" }}
-        deletion: delete
-        tables:
-          - name: plans
-            owner: rank
     steps:
       - name: collect
         function:
           image: ${{ images.collect }}
-          blob:
-            - alias: files
-              bucket: ${{ app.name + "-files" }}
-              prefix: attachments
+          bindings:
+            blob:
+              - alias: files
+                bucket: ${{ app.name + "-files" }}
+                prefix: attachments
       - name: rank
         function:
           image: ${{ images.rank }}
-          kv:
-            - alias: plans
-              store: ${{ app.name + "-plans" }}
-              table: plans
+          bindings:
+            kv:
+              - alias: plans
+                store: ${{ app.name + "-plans" }}
+                table: plans

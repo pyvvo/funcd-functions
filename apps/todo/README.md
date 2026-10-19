@@ -9,11 +9,11 @@ as an App template. funcd's `app-todo` Lima lane deploys it on containerd (`just
 |---|---|---|
 | `todo-api` | Function (TypeScript) and Route `/api` | adds, lists and reads todos; `attach` uploads a file of a todo, and `get` lists the uploads the intake recorded. Adding, attaching and `hang` need the token of Secret `todo-api-keys`; `hang` blocks the API's event loop, for funcd's liveness check. From 1.2.0 the todos and their uploads are rows of `todo-db`, queried with Drizzle: `done` marks a todo done, `list` can keep only the done or the open todos and counts both, `get` reads a todo with its uploads in one join, and `list` names the todos the change feed reported |
 | `todo-planner` | Function (Python) | returns the plan that Workflow `todo-plan` stored for a tick; a call can wait for the plan, and a wait past the planner's 2 s `timeout` is stopped. The timeout also bounds the call that wakes the planner |
-| `todo-plan` | Workflow | `collect` (TypeScript) reads the todos' attachments, `rank` (Python) orders them into its own KV store `todo-plans` |
+| `todo-plan` | Workflow | `collect` (TypeScript) reads the todos' attachments, `rank` (Python) orders them into KV store `todo-plans`, which the App declares with step Function `todo-plan-rank` as the owner of its table (a part declares no store of its own, funcd ADR-0248); `deletion: delete` |
 | `todo-plan-timer`, `todo-plan-schedule` | EventSource, Sensor | a cron timer in a time zone that starts `todo-plan` |
 | `todo-uploads`, `todo-upload-intake` | EventSource, Sensor | an object under `uploads/` in `todo-files` fires event `uploaded`, which the Sensor hands to `todo-intake` |
 | `todo-intake` | Function (Python) | records each upload in table `uploads` of `todo-store`; from 1.2.0 (`intake_sql.py`) in table `uploads` of `todo-db`, under its todo |
-| `todo-web` | Site | a static page that lists the todos through `/api` |
+| `todo-web` | Site | a static page that lists the todos through `/api`, served from prefix `web` of Bucket `todo-web`, which the App declares with `deletion: delete`: each install materializes the bundle again |
 | `todo-store`, `todo-files` | KVStore, Bucket | the todos, the upload records, and the attachments and uploads; `deletion: retain` |
 | `todo-cache`, `todo-tmp` | KVStore, Bucket | the release record and a copy of each todo; `deletion: delete` |
 | `todo-settings` | ConfigMap | `TODO_GREETING`, from value `greeting` |

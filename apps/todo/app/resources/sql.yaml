@@ -11,6 +11,7 @@ functions:
     runtime: python314
     handler: handle
     image: ${{ images.stats }}
-    sql:
-      - alias: app
-        database: ${{ app.name + "-db" }}
+    bindings:
+      sql:
+        - alias: app
+          database: ${{ app.name + "-db" }}

@@ -5,16 +5,17 @@ functions:
     runtime: nodejs22
     handler: handle
     image: ${{ images.migrate }}
-    kv:
-      - alias: todos
-        store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
-        table: todos
-      - alias: meta
-        store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
-        table: meta
-      - alias: uploads
-        store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
-        table: uploads
-    sql:
-      - alias: app
-        database: '${{ values.database !== "" ? values.database : app.name + "-db" }}'
+    bindings:
+      kv:
+        - alias: todos
+          store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
+          table: todos
+        - alias: meta
+          store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
+          table: meta
+        - alias: uploads
+          store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
+          table: uploads
+      sql:
+        - alias: app
+          database: '${{ values.database !== "" ? values.database : app.name + "-db" }}'

@@ -4,10 +4,11 @@ functions:
     runtime: nodejs22
     handler: handle
     image: ${{ images.migrate }}
-    kv:
-      - alias: todos
-        store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
-        table: todos
-      - alias: meta
-        store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
-        table: meta
+    bindings:
+      kv:
+        - alias: todos
+          store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
+          table: todos
+        - alias: meta
+          store: '${{ values.store !== "" ? values.store : app.name + "-store" }}'
+          table: meta

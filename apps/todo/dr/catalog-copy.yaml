@@ -6,17 +6,18 @@ metadata:
   namespace: default
   resourceGroup: todo
 spec:
-  blob:
-    - alias: lake
-      bucket: todo-lakehouse-r
-      prefix: lake
+  bindings:
+    blob:
+      - alias: lake
+        bucket: todo-lakehouse-r
+        prefix: lake
+    secret:
+      - todo-lake-quack-token
+    config:
+      - todo-lake-engine
   catalog:
     bucket: todo-lakehouse-r
     prefix: lake
   resources:
     cpu: "1"
     memory: 1Gi
-  secrets:
-    - todo-lake-quack-token
-  config:
-    - todo-lake-engine

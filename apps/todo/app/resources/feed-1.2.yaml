@@ -11,10 +11,11 @@ functions:
     runtime: python314
     handler: handle
     image: ${{ images.notify }}
-    kv:
-      - alias: added
-        store: ${{ app.name + "-feed" }}
-        table: added
+    bindings:
+      kv:
+        - alias: added
+          store: ${{ app.name + "-feed" }}
+          table: added
 eventSources:
   - name: ${{ app.name + "-changes" }}
     sql:

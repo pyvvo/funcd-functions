@@ -8,9 +8,12 @@ metadata:
   resourceGroup: site-config
 spec:
   image: oci-layout:///mnt/funcd-deps/registry/site-config-web:1.0.0
-  bucket:
-    name: site-config-app
-  prefix: web
+  buckets:
+    - name: site-config-app
+  bindings:
+    blob:
+      - bucket: site-config-app
+        prefix: web
   spa: true
   ingress:
     enabled: false

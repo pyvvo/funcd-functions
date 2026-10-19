@@ -4,6 +4,7 @@ functions:
     runtime: python314
     handler: handle
     image: ${{ images.intake }}
-    sql:
-      - alias: app
-        database: '${{ values.database !== "" ? values.database : app.name + "-db" }}'
+    bindings:
+      sql:
+        - alias: app
+          database: '${{ values.database !== "" ? values.database : app.name + "-db" }}'

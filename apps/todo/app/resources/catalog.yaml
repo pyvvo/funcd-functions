@@ -7,20 +7,21 @@ buckets:
         owner: ${{ app.name + "-lake" }}
 catalogs:
   - name: ${{ app.name + "-lake" }}
-    blob:
-      - alias: lake
-        bucket: ${{ app.name + "-lakehouse" }}
-        prefix: lake
+    bindings:
+      blob:
+        - alias: lake
+          bucket: ${{ app.name + "-lakehouse" }}
+          prefix: lake
+      secret:
+        - ${{ app.name + "-lake-quack-token" }}
+      config:
+        - ${{ app.name + "-lake-engine" }}
     catalog:
       bucket: ${{ app.name + "-lakehouse" }}
       prefix: lake
     resources:
       cpu: "1"
       memory: 1Gi
-    secrets:
-      - ${{ app.name + "-lake-quack-token" }}
-    config:
-      - ${{ app.name + "-lake-engine" }}
 secrets:
   - name: ${{ app.name + "-lake-quack-token" }}
     description: The Quack token of catalog todo-lake; the lane creates this Secret (dr/catalog-fixtures.yaml)

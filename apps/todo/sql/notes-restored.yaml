@@ -10,5 +10,8 @@ spec:
   handler: handle
   image: oci-layout:///mnt/funcd-deps/registry:notes
   sql:
-    - alias: app
-      database: notes-db-restored
+    - ref: notes-db-restored
+  bindings:
+    sql:
+      - alias: app
+        database: notes-db-restored
