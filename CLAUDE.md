@@ -56,7 +56,8 @@ CI runs the same checks, so never bypass a hook with `--no-verify`.
   squash-merged through a merge queue, which uses the PR title as the commit message on `main`, so
   nobody can edit the message at merge time. The queue checks that exact message again before it
   lands. `main` takes no direct pushes, and the ruleset has no bypass, not even for admins.
-- **Releases are tagged by hand.** There is no release-please: a release is a `vX.Y.Z` tag on `main`,
-  and funcd takes it with `go get github.com/pyvvo/funcd-functions@vX.Y.Z`. From v2.0.0 on, Go requires
+- **Releases come from release-please**, as in funcd-typescript and funcd-python: merging its release PR
+  tags `vX.Y.Z` on `main` (no component prefix) and creates the GitHub release, and funcd takes it with
+  `go get github.com/pyvvo/funcd-functions@vX.Y.Z`. From v2.0.0 on, Go requires
   a `/v2` module path, so stay below v2.
 - YAML is block style, imports sit at the top of the module, and comments explain why, not what.
