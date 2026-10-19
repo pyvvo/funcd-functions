@@ -12,9 +12,10 @@ export interface Upload {
 
 const utf8 = new TextEncoder();
 
-// requireToken refuses a call that changes the App without the token of Secret todo-api-keys.
-export function requireToken(op: string, token: string | undefined): void {
-  const want = process.env.TODO_API_TOKEN;
+// requireToken refuses a call that changes the App without the token of Secret todo-api-keys, read through ctx.secret:
+// a bound Secret is not in the worker environment (funcd ADR-0249).
+export async function requireToken(ctx: FunctionContext, op: string, token: string | undefined): Promise<void> {
+  const want = await ctx.secret.get('TODO_API_TOKEN');
   if (!want || token !== want) {
     throw new Error(`${op} needs the API token`);
   }

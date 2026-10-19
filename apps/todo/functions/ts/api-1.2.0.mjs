@@ -4201,8 +4201,8 @@ var uploads = sqliteTable("uploads", {
 //#endregion
 //#region src/shared.ts
 var utf8$1 = new TextEncoder();
-function requireToken(op, token) {
-	const want = process.env.TODO_API_TOKEN;
+async function requireToken(ctx, op, token) {
+	const want = await ctx.secret.get("TODO_API_TOKEN");
 	if (!want || token !== want) throw new Error(`${op} needs the API token`);
 }
 async function putUpload(ctx, id, name, content) {
@@ -4224,7 +4224,7 @@ async function handle(ctx, event) {
 		case "get": return get(ctx, input.id ?? "");
 		case "done": return markDone(ctx, input);
 		case "attach":
-			requireToken("attach", input.token);
+			await requireToken(ctx, "attach", input.token);
 			await mustExist(ctx, "attach", input.id ?? "");
 			await putUpload(ctx, input.id ?? "", input.name ?? "", input.content ?? "");
 			return {
@@ -4232,7 +4232,7 @@ async function handle(ctx, event) {
 				id: input.id
 			};
 		case "hang":
-			requireToken("hang", input.token);
+			await requireToken(ctx, "hang", input.token);
 			return hang();
 		default: return list(ctx, input.done);
 	}
@@ -4241,7 +4241,7 @@ function slug(title) {
 	return title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 }
 async function add(ctx, input) {
-	requireToken("add", input.token);
+	await requireToken(ctx, "add", input.token);
 	const title = input.title ?? "";
 	const id = slug(title);
 	if (id === "") throw new Error("add needs a title");
@@ -4268,7 +4268,7 @@ async function add(ctx, input) {
 	};
 }
 async function markDone(ctx, input) {
-	requireToken("done", input.token);
+	await requireToken(ctx, "done", input.token);
 	const id = input.id ?? "";
 	if ((await proxyDB(ctx, "app").update(todos).set({ done: 1 }).where(eq(todos.slug, id)).returning({ slug: todos.slug })).length === 0) throw new Error(`done needs an existing todo, not "${id}"`);
 	ctx.log("done", id);
@@ -4330,7 +4330,7 @@ async function list(ctx, done) {
 		release: await ctx.kv.getJSON("warm", "last"),
 		notified: (await ctx.kv.list("added")).sort(),
 		greeting: process.env.TODO_GREETING ?? "",
-		tokenSet: Boolean(process.env.TODO_API_TOKEN)
+		tokenSet: Boolean(await ctx.secret.get("TODO_API_TOKEN"))
 	};
 }
 //#endregion
