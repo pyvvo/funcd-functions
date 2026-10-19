@@ -9,6 +9,8 @@ spec:
   runtime: nodejs22
   handler: handle
   image: oci-layout:///mnt/funcd-deps/registry:notes
+  sql:
+    - ref: notes-db-restored
   bindings:
     sql:
       - alias: app

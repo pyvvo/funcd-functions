@@ -1,11 +1,11 @@
+kv:
+  - name: ${{ app.name + "-plans" }}
+    deletion: delete
+    tables:
+      - name: plans
+        owner: ${{ app.name + "-plan-rank" }}
 workflows:
   - name: ${{ app.name + "-plan" }}
-    kv:
-      - name: ${{ app.name + "-plans" }}
-        deletion: delete
-        tables:
-          - name: plans
-            owner: rank
     steps:
       - name: collect
         function:

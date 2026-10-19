@@ -6,9 +6,12 @@ metadata:
   resourceGroup: site-config
 spec:
   image: oci-layout:///mnt/funcd-deps/registry/site-config-web:1.0.0
-  bucket:
-    name: site-config-preview
-  prefix: web
+  buckets:
+    - name: site-config-preview
+  bindings:
+    blob:
+      - bucket: site-config-preview
+        prefix: web
   spa: true
   ingress:
     path: /preview
