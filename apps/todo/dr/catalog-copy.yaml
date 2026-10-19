@@ -6,6 +6,14 @@ metadata:
   namespace: default
   resourceGroup: todo
 spec:
+  buckets:
+    - ref: todo-lakehouse-r
+  configMaps:
+    - ref: todo-lake-engine
+  secrets:
+    - name: todo-lake-quack-token
+      keys:
+        - QUACK_TOKEN
   bindings:
     blob:
       - alias: lake
