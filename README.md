@@ -19,7 +19,7 @@ funcd pins this repository as a Go module in its `go.mod`, as it pins
 (funcd's ADR-0141). A lane names this module in funcd's `scripts/lanes.yaml`, and funcd reads its files from the Go
 module cache, so a change reaches funcd only through a release and a `go get` in funcd:
 
-1. Change this repository and release it with a tag `vX.Y.Z`.
+1. Change this repository and merge its release-please PR, which tags `vX.Y.Z`.
 2. In funcd, run `go get github.com/pyvvo/funcd-functions@vX.Y.Z` and open a pull request.
 
 To test an unreleased change, clone this repository next to funcd and add a local `go.work` in funcd
