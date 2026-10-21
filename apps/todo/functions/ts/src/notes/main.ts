@@ -4,7 +4,7 @@ import type { CloudEvent, FunctionContext } from '@funcd-dev/shim';
 import { sql } from 'drizzle-orm';
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
-import { proxyDB } from '../db/proxy';
+import { funcdDrizzle } from '@funcd-dev/drizzle';
 
 export const notes = sqliteTable('notes', {
   id: integer('id').primaryKey({ autoIncrement: true }),
@@ -28,7 +28,7 @@ export interface FuncOutput {
 }
 
 export async function handle(ctx: FunctionContext, event: CloudEvent<FuncInput>): Promise<FuncOutput> {
-  const d = proxyDB(ctx, 'app');
+  const d = funcdDrizzle(ctx);
   const input = event.data ?? { op: 'list' };
   switch (input.op) {
     case 'init':

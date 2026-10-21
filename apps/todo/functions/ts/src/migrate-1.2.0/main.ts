@@ -4,16 +4,16 @@
 // 1.1.0 API still runs on them (expand, then contract). It records its call under key last of table meta.
 import type { CloudEvent, FunctionContext, SQLStatement } from '@funcd-dev/shim';
 
-import { bundled, migrateSQL } from '../db/migrate';
+import { applyMigrations } from '@funcd-dev/drizzle';
 import type { HookInput, MigrationRecord, TodoRecord, UploadRecord } from '../records';
 
-const migrations = bundled(
-  import.meta.glob(['../../drizzle/1.2.0/*.sql', '../../drizzle/1.2.0/meta/_journal.json'], {
+const migrations: Record<string, string> = import.meta.glob(
+  ['../../drizzle/1.2.0/*.sql', '../../drizzle/1.2.0/meta/_journal.json'],
+  {
     query: '?raw',
     import: 'default',
     eager: true,
-  }),
-  'drizzle/1.2.0',
+  },
 );
 
 // The local API takes at most 500 statements per call (funcd ADR-0233).
@@ -33,7 +33,7 @@ export async function handle(ctx: FunctionContext, event: CloudEvent<HookInput>)
   if (!event.data) {
     throw new Error('a hook call carries its input');
   }
-  const applied = await migrateSQL(ctx, 'app', migrations);
+  const applied = await applyMigrations(ctx, migrations);
   const todos: SQLStatement[] = [];
   for (const id of await ctx.kv.list('todos')) {
     const todo = await ctx.kv.getJSON<TodoRecord>('todos', id);

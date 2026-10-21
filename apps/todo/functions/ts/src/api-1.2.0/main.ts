@@ -5,7 +5,7 @@
 import type { CloudEvent, FunctionContext } from '@funcd-dev/shim';
 import { and, asc, count, eq, isNotNull } from 'drizzle-orm';
 
-import { proxyDB } from '../db/proxy';
+import { funcdDrizzle } from '@funcd-dev/drizzle';
 import { todos, uploads } from '../db/schema-1.2.0';
 import type { MigrationRecord, ReleaseRecord } from '../records';
 import { hang, putUpload, requireToken, type Upload } from '../shared';
@@ -82,7 +82,7 @@ async function add(ctx: FunctionContext, input: FuncInput): Promise<FuncOutput> 
   if (id === '') {
     throw new Error('add needs a title');
   }
-  await proxyDB(ctx, 'app')
+  await funcdDrizzle(ctx)
     .insert(todos)
     .values({ slug: id, title, done: 0 })
     .onConflictDoUpdate({ target: todos.slug, set: { title, done: 0 } });
@@ -95,7 +95,7 @@ async function add(ctx: FunctionContext, input: FuncInput): Promise<FuncOutput> 
 async function markDone(ctx: FunctionContext, input: FuncInput): Promise<FuncOutput> {
   await requireToken(ctx, 'done', input.token);
   const id = input.id ?? '';
-  const updated = await proxyDB(ctx, 'app')
+  const updated = await funcdDrizzle(ctx)
     .update(todos)
     .set({ done: 1 })
     .where(eq(todos.slug, id))
@@ -108,7 +108,7 @@ async function markDone(ctx: FunctionContext, input: FuncInput): Promise<FuncOut
 }
 
 async function mustExist(ctx: FunctionContext, op: string, id: string): Promise<void> {
-  const found = await proxyDB(ctx, 'app').select({ id: todos.id }).from(todos).where(eq(todos.slug, id));
+  const found = await funcdDrizzle(ctx).select({ id: todos.id }).from(todos).where(eq(todos.slug, id));
   if (found.length === 0) {
     throw new Error(`${op} needs an existing todo, not "${id}"`);
   }
@@ -116,7 +116,7 @@ async function mustExist(ctx: FunctionContext, op: string, id: string): Promise<
 
 // get reads the todo with its uploads in one join, and its attachment from the bucket.
 async function get(ctx: FunctionContext, id: string): Promise<FuncOutput> {
-  const rows = await proxyDB(ctx, 'app')
+  const rows = await funcdDrizzle(ctx)
     .select({ title: todos.title, done: todos.done, name: uploads.name, size: uploads.size })
     .from(todos)
     .leftJoin(uploads, eq(uploads.todoId, todos.id))
@@ -132,7 +132,7 @@ async function get(ctx: FunctionContext, id: string): Promise<FuncOutput> {
 }
 
 async function list(ctx: FunctionContext, done: boolean | undefined): Promise<FuncOutput> {
-  const db = proxyDB(ctx, 'app');
+  const db = funcdDrizzle(ctx);
   const keep = done === undefined ? isNotNull(todos.slug) : and(isNotNull(todos.slug), eq(todos.done, done ? 1 : 0));
   const rows = await db
     .select({ slug: todos.slug, title: todos.title, done: todos.done })
