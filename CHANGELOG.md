@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.20.0](https://github.com/pyvvo/funcd-functions/compare/v0.19.0...v0.20.0) (2026-10-21)
+
+
+### Features
+
+* **todo:** the todo App's functions use @funcd-dev/drizzle (funcd ADR-0258) ([#24](https://github.com/pyvvo/funcd-functions/issues/24)) ([af082e3](https://github.com/pyvvo/funcd-functions/commit/af082e3a757e57b18c4ef5edb73d181fe85d4cb6))
+
 ## [0.19.0](https://github.com/pyvvo/funcd-functions/compare/v0.18.0...v0.19.0) (2026-10-19)
 
 
