@@ -8,6 +8,7 @@
     "build": "vite build"
   },
   "dependencies": {
+    "@funcd-dev/drizzle": "0.20.0",
     "drizzle-orm": "0.45.3"
   },
   "devDependencies": {

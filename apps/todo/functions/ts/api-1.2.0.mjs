@@ -4169,17 +4169,22 @@ function drizzle(callback, batchCallback, config) {
 	return db;
 }
 //#endregion
-//#region src/db/proxy.ts
+//#region node_modules/@funcd-dev/drizzle/dist/index.js
 var reads = /^\s*(select|with)\b/i;
 async function rows(ctx, alias, query, params, method) {
 	const p = params;
 	const values = reads.test(query) ? (await ctx.sql.queryValues(alias, query, p)).values : (await ctx.sql.execute(alias, query, p)).values ?? [];
 	return method === "get" ? values[0] ?? [] : values;
 }
-function proxyDB(ctx, alias) {
+/**
+* Drizzle's sqlite-proxy database over context.sql's alias (default app). A batch is one execute, all or nothing, and is
+* for writes: a select inside it gets no rows, as execute returns rows only for RETURNING.
+*/
+function funcdDrizzle(ctx, options = {}) {
+	const alias = options.alias ?? "app";
 	return drizzle(async (query, params, method) => ({ rows: await rows(ctx, alias, query, params, method) }), async (queries) => {
 		return (await ctx.sql.execute(alias, queries.map((q) => [q.sql, q.params]))).map((r, i) => ({ rows: queries[i].method === "get" ? r.values?.[0] ?? [] : r.values ?? [] }));
-	});
+	}, { schema: options.schema });
 }
 //#endregion
 //#region src/db/schema-1.2.0.ts
@@ -4245,7 +4250,7 @@ async function add(ctx, input) {
 	const title = input.title ?? "";
 	const id = slug(title);
 	if (id === "") throw new Error("add needs a title");
-	await proxyDB(ctx, "app").insert(todos).values({
+	await funcdDrizzle(ctx).insert(todos).values({
 		slug: id,
 		title,
 		done: 0
@@ -4270,7 +4275,7 @@ async function add(ctx, input) {
 async function markDone(ctx, input) {
 	await requireToken(ctx, "done", input.token);
 	const id = input.id ?? "";
-	if ((await proxyDB(ctx, "app").update(todos).set({ done: 1 }).where(eq(todos.slug, id)).returning({ slug: todos.slug })).length === 0) throw new Error(`done needs an existing todo, not "${id}"`);
+	if ((await funcdDrizzle(ctx).update(todos).set({ done: 1 }).where(eq(todos.slug, id)).returning({ slug: todos.slug })).length === 0) throw new Error(`done needs an existing todo, not "${id}"`);
 	ctx.log("done", id);
 	return {
 		version,
@@ -4278,10 +4283,10 @@ async function markDone(ctx, input) {
 	};
 }
 async function mustExist(ctx, op, id) {
-	if ((await proxyDB(ctx, "app").select({ id: todos.id }).from(todos).where(eq(todos.slug, id))).length === 0) throw new Error(`${op} needs an existing todo, not "${id}"`);
+	if ((await funcdDrizzle(ctx).select({ id: todos.id }).from(todos).where(eq(todos.slug, id))).length === 0) throw new Error(`${op} needs an existing todo, not "${id}"`);
 }
 async function get(ctx, id) {
-	const rows = await proxyDB(ctx, "app").select({
+	const rows = await funcdDrizzle(ctx).select({
 		title: todos.title,
 		done: todos.done,
 		name: uploads.name,
@@ -4303,7 +4308,7 @@ async function get(ctx, id) {
 	};
 }
 async function list(ctx, done) {
-	const db = proxyDB(ctx, "app");
+	const db = funcdDrizzle(ctx);
 	const keep = done === void 0 ? isNotNull(todos.slug) : and(isNotNull(todos.slug), eq(todos.done, done ? 1 : 0));
 	const rows = await db.select({
 		slug: todos.slug,
