@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.21.0](https://github.com/pyvvo/funcd-functions/compare/v0.20.0...v0.21.0) (2026-10-22)
+
+
+### ⚠ BREAKING CHANGES
+
+* the todo App declares a Lake (funcd ADR-0261) ([#26](https://github.com/pyvvo/funcd-functions/issues/26))
+
+### Features
+
+* the todo App declares a Lake (funcd ADR-0261) ([#26](https://github.com/pyvvo/funcd-functions/issues/26)) ([ff6cf83](https://github.com/pyvvo/funcd-functions/commit/ff6cf831158021738d3dd5af87b1e9bffd7a645d))
+
 ## [0.20.0](https://github.com/pyvvo/funcd-functions/compare/v0.19.0...v0.20.0) (2026-10-21)
 
 
