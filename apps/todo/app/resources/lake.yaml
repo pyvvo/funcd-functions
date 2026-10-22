@@ -1,11 +1,11 @@
-# A fixture of funcd's app-todo lane (value catalog): a DuckLake catalog the App owns, so the App's backups copy it.
+# A fixture of funcd's app-todo lane (value lake): a Lake the App owns, so the App's backups copy it.
 buckets:
   - name: ${{ app.name + "-lakehouse" }}
     deletion: retain
     prefixes:
       - name: lake
         owner: ${{ app.name + "-lake" }}
-catalogs:
+lakes:
   - name: ${{ app.name + "-lake" }}
     bindings:
       blob:
@@ -16,7 +16,7 @@ catalogs:
         - ${{ app.name + "-lake-quack-token" }}
       config:
         - ${{ app.name + "-lake-engine" }}
-    catalog:
+    location:
       bucket: ${{ app.name + "-lakehouse" }}
       prefix: lake
     resources:
@@ -24,6 +24,6 @@ catalogs:
       memory: 1Gi
 secrets:
   - name: ${{ app.name + "-lake-quack-token" }}
-    description: The Quack token of catalog todo-lake; the lane creates this Secret (dr/catalog-fixtures.yaml)
+    description: The Quack token of lake todo-lake; the lane creates this Secret (dr/lake-fixtures.yaml)
     keys:
       - QUACK_TOKEN

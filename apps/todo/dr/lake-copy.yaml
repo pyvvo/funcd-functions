@@ -1,6 +1,6 @@
-# The CatalogService that serves the restored copy of catalog todo-lake (dr/restore-catalog.yaml).
+# The Lake that serves the restored copy of lake todo-lake (dr/restore-lake.yaml).
 apiVersion: funcd.io/v1alpha1
-kind: CatalogService
+kind: Lake
 metadata:
   name: todo-lake-r
   namespace: default
@@ -23,7 +23,7 @@ spec:
       - todo-lake-quack-token
     config:
       - todo-lake-engine
-  catalog:
+  location:
     bucket: todo-lakehouse-r
     prefix: lake
   resources:

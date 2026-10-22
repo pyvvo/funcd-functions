@@ -44,7 +44,7 @@ valuesSchema:
     store:
       type: string
       default: ""
-    catalog:
+    lake:
       type: boolean
       default: false
     sql:
@@ -55,7 +55,7 @@ when:
   resources/kept-ref.yaml: ${{ values.keptStores === true }}
   resources/requires.yaml: ${{ values.shared === true }}
   resources/backup.yaml: ${{ values.backup === true }}
-  resources/catalog.yaml: ${{ values.catalog === true }}
+  resources/lake.yaml: ${{ values.lake === true }}
   resources/hooks-migrate.yaml: ${{ values.sql !== true }}
   resources/hooks-migrate-sql.yaml: ${{ values.sql === true }}
   resources/sql.yaml: ${{ values.sql === true }}
