@@ -1,5 +1,5 @@
-# Test fixtures of the catalog case of funcd's app-todo lane: the Quack token (todo-lane-quack exists only in the lane)
-# and the engine settings of catalog todo-lake, which the todo App declares with value catalog.
+# Test fixtures of the lake case of funcd's app-todo lane: the Quack token (todo-lane-quack exists only in the lane)
+# and the engine settings of lake todo-lake, which the todo App declares with value lake.
 apiVersion: funcd.io/v1alpha1
 kind: Secret
 metadata:

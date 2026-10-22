@@ -2,7 +2,7 @@
 
 Example functions and Apps that [funcd](https://github.com/pyvvo/funcd) deploys in its Lima lanes, the end-to-end
 tests that run funcd on containerd. An example App holds the kinds its scenarios need, such as TypeScript and Python
-functions, Workflows, ConfigMaps, Secret declarations and catalogs. Each one is configured to catch a scenario that
+functions, Workflows, ConfigMaps, Secret declarations and lakes. Each one is configured to catch a scenario that
 only a real runtime shows, such as a cold start, a daemon restart, data on disk or the real edge.
 
 ## Apps
