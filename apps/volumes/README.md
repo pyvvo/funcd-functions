@@ -6,7 +6,7 @@ volume image and checks what each volume type keeps.
 | Path | What |
 |---|---|
 | `app/app.yaml` | The template: the `files` image, and `timeout` so a values file can make a new revision |
-| `app/resources/files.yaml` | `volumes-files`, with a `local` volume `data` and an `emptyDir` `scratch` of 1 MiB each, and `volumes-peer`, with its own `local` volume `data`, both from the `files` image |
+| `app/resources/files.yaml` | `volumes-files`, with a `local` volume `data` (`size: 1MiB`) and an `emptyDir` `scratch` (`sizeBytes: 1048576`), and `volumes-peer`, with its own `local` volume `data` (`size: 1Mi`), both from the `files` image (funcd ADR-0266 takes both size forms) |
 | `functions/ts/src/files/main.ts` | The `files` function: it writes, reads and lists files in a volume, fills one past its size, lists the directory above it, reports its pid and crashes on request |
 | `values/e2e.yaml` | The lane's registry |
 | `values/redeploy.yaml` | A new `timeout`, so a deploy makes a new revision |

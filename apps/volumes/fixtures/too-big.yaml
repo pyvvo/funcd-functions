@@ -11,4 +11,4 @@ spec:
   volumes:
     - name: data
       type: local
-      sizeBytes: 134217728
+      size: 128Mi
