@@ -1,0 +1,22 @@
+# The workload backup of volumes-files' local volume data in funcd's volumes lane (funcd ADR-0262 Decision 11), to the
+# S3 server the lane runs in its VM, with the todo App's test Secrets of apps/todo/dr/workload-secrets.yaml and sealed to
+# the lane's recipients (apps/todo/dr/recipients.txt). The lane creates its Backups by hand, so the slot is far off.
+apiVersion: funcd.io/v1alpha1
+kind: BackupSchedule
+metadata:
+  name: files-backup
+  namespace: default
+  resourceGroup: volumes
+spec:
+  schedule: "0 3 * * *"
+  timeZone: UTC
+  scope:
+    volumes:
+      - volumes-files/data
+  target:
+    url: s3://todo-workload?endpoint=http://127.0.0.1:7070&region=us-east-1&use_path_style=true
+    credentialsSecret: todo-backup-writer
+  encryption:
+    recipients:
+      - age1gvngj00ucwlleuk898r0s3umcacr5mxhkv4fy67evygxsmlgpanq43ttm3
+      - age1263g0rath75xcgy9wh9cd6p9tpdn6wq35t5fa5pajnna4u7tgyhsxd384c

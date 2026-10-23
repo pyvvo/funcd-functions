@@ -1,0 +1,23 @@
+# The volumes lane's daemon config from its backup step on: the lane's config (../funcdconfig.yaml) with an admin token
+# (the todo App's test fixture apps/todo/dr/admin.token) instead of the developer token, since only an admin restores
+# in place (funcd ADR-0222 Decision 7); the suite's later calls use it too.
+apiVersion: funcd.io/v1alpha1
+kind: FuncdConfig
+server:
+  listenAddr: 127.0.0.1:8080
+  dataPlaneAddr: 127.0.0.1:8081
+storage:
+  mode: file
+  dataDir: /var/lib/funcd/data
+auth:
+  credentials:
+    - tokenFile: /etc/funcd/tokens/admin
+      role: admin
+runtime:
+  mode: containerd
+  supervisionPeriod: 2s
+volumes:
+  capacityBytes: 67108864
+log:
+  format: text
+  level: info
