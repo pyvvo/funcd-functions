@@ -42,6 +42,8 @@ output:
       type: integer
     pid:
       type: integer
+    boot:
+      type: string
     error:
       type: string
     code:

@@ -1,7 +1,9 @@
 // The files Function of the volumes App (funcd ADR-0262). It reaches each of its volumes through the path in
 // FUNCD_VOLUME_<NAME>: data, a local volume kept across workers and redeploys, and scratch, an emptyDir each worker
 // gets empty.
+import { randomUUID } from 'node:crypto';
 import { open, readdir, readFile, writeFile } from 'node:fs/promises';
+import { constants } from 'node:os';
 import { dirname, join } from 'node:path';
 
 import type { CloudEvent, FunctionContext } from '@funcd-dev/shim';
@@ -19,9 +21,13 @@ export interface FuncOutput {
   names?: string[];
   written?: number;
   pid?: number;
+  boot?: string;
   error?: string;
   code?: string;
 }
+
+// boot names this worker: a new worker, after a crash or a redeploy, draws another.
+const boot = randomUUID();
 
 function volumeDir(volume: string): string {
   const dir = process.env[`FUNCD_VOLUME_${volume.toUpperCase()}`];
@@ -31,9 +37,11 @@ function volumeDir(volume: string): string {
   return dir;
 }
 
+// failure names an error's errno: libuv leaves some unnamed, EDQUOT among them ("Unknown system error -122").
 function failure(err: unknown): FuncOutput {
   const e = err as NodeJS.ErrnoException;
-  return { error: e.message, code: e.code ?? 'ERROR' };
+  const named = Object.entries(constants.errno).find(([, n]) => n === -(e.errno ?? 0))?.[0];
+  return { error: e.message, code: named ?? e.code ?? 'ERROR' };
 }
 
 // fill writes bytes of zeros into the volume's file fill, flushed, so a write past the volume's size fails here.
@@ -74,10 +82,10 @@ export async function handle(_ctx: FunctionContext, event: CloudEvent<FuncInput>
       case 'peek':
         return { names: (await readdir(dirname(dir))).sort() };
       case 'info':
-        return { pid: process.pid };
+        return { pid: process.pid, boot };
       case 'crash':
         setTimeout(() => process.exit(1), 50);
-        return { pid: process.pid };
+        return { pid: process.pid, boot };
     }
   } catch (err) {
     return failure(err);
