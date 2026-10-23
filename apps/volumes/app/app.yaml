@@ -1,0 +1,14 @@
+name: volumes
+version: 1.0.0
+registry: ${{ values.registry }}
+images:
+  files: volumes-files:1.0.0
+valuesSchema:
+  type: object
+  properties:
+    registry:
+      type: string
+      default: registry.example
+    timeout:
+      type: string
+      default: 30s

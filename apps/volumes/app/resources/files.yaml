@@ -1,0 +1,21 @@
+functions:
+  - name: ${{ app.name + "-files" }}
+    runtime: nodejs22
+    handler: handle
+    image: ${{ images.files }}
+    timeout: ${{ values.timeout }}
+    volumes:
+      - name: data
+        type: local
+        sizeBytes: 1048576
+      - name: scratch
+        type: emptyDir
+        sizeBytes: 1048576
+  - name: ${{ app.name + "-peer" }}
+    runtime: nodejs22
+    handler: handle
+    image: ${{ images.files }}
+    volumes:
+      - name: data
+        type: local
+        sizeBytes: 1048576
