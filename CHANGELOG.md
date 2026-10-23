@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.23.0](https://github.com/pyvvo/funcd-functions/compare/v0.22.0...v0.23.0) (2026-10-23)
+
+
+### Features
+
+* **volumes:** backup and in-place restore fixtures for funcd's volumes lane ([#30](https://github.com/pyvvo/funcd-functions/issues/30)) ([14e3c9b](https://github.com/pyvvo/funcd-functions/commit/14e3c9b4838b5c016676022a3c2584ecdde638d8))
+
 ## [0.22.0](https://github.com/pyvvo/funcd-functions/compare/v0.21.0...v0.22.0) (2026-10-23)
 
 
