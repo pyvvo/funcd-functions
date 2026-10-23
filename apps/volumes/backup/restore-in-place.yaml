@@ -1,0 +1,19 @@
+# volumes-files' data, lost and reported by DataMissing, restored in place from Backup BACKUP: the Restore stops the
+# Function's workers, empties the volume, loads it, and lets the workers start again (funcd ADR-0262 Decisions 11 and
+# 12).
+apiVersion: funcd.io/v1alpha1
+kind: Restore
+metadata:
+  name: files-back
+  namespace: default
+  resourceGroup: volumes
+spec:
+  backup: BACKUP
+  source:
+    credentialsSecret: todo-backup-reader
+    identitySecret: todo-backup-key
+  members:
+    - kind: Function
+      name: volumes-files
+      volume: data
+      inPlace: true
