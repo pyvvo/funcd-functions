@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.22.0](https://github.com/pyvvo/funcd-functions/compare/v0.21.0...v0.22.0) (2026-10-23)
+
+
+### Features
+
+* **volumes:** an App whose Functions own local and emptyDir volumes ([#28](https://github.com/pyvvo/funcd-functions/issues/28)) ([47a057c](https://github.com/pyvvo/funcd-functions/commit/47a057c116c37fb38a3922f0fe8e9d85c8dd4b58))
+
 ## [0.21.0](https://github.com/pyvvo/funcd-functions/compare/v0.20.0...v0.21.0) (2026-10-22)
 
 
