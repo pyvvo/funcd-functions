@@ -1,0 +1,50 @@
+runtime: nodejs22
+input:
+  type: object
+  additionalProperties: false
+  properties:
+    op:
+      type: string
+      enum:
+        - write
+        - read
+        - list
+        - fill
+        - peek
+        - info
+        - crash
+    volume:
+      type: string
+      enum:
+        - data
+        - scratch
+    name:
+      type: string
+      pattern: ^[a-z0-9][a-z0-9.-]*$
+    text:
+      type: string
+    bytes:
+      type: integer
+      minimum: 1
+  required:
+    - op
+output:
+  type: object
+  additionalProperties: false
+  properties:
+    text:
+      type: string
+    names:
+      type: array
+      items:
+        type: string
+    written:
+      type: integer
+    pid:
+      type: integer
+    boot:
+      type: string
+    error:
+      type: string
+    code:
+      type: string

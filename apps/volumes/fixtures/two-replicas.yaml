@@ -1,0 +1,15 @@
+apiVersion: funcd.io/v1alpha1
+kind: Function
+metadata:
+  name: two-replicas
+  namespace: default
+  resourceGroup: rg1
+spec:
+  runtime: nodejs22
+  handler: handle
+  image: oci-layout:///mnt/funcd-deps/registry/volumes-files:1.0.0
+  replicas: 2
+  volumes:
+    - name: data
+      type: local
+      sizeBytes: 1048576

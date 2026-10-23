@@ -1,0 +1,11 @@
+routes:
+  - name: ${{ app.name + "-files" }}
+    rules:
+      - path: /files
+        backend:
+          function: ${{ app.name + "-files" }}
+  - name: ${{ app.name + "-peer" }}
+    rules:
+      - path: /peer
+        backend:
+          function: ${{ app.name + "-peer" }}
