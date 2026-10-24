@@ -24,9 +24,13 @@ metadata:
 spec:
   prefixes:
     - name: attachments
-      owner: todo-api
+      owner:
+        kind: Function
+        name: todo-api
     - name: uploads
-      owner: todo-api
+      owner:
+        kind: Function
+        name: todo-api
 ---
 apiVersion: funcd.io/v1alpha1
 kind: Restore

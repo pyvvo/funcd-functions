@@ -4,7 +4,9 @@ buckets:
     deletion: retain
     prefixes:
       - name: lake
-        owner: ${{ app.name + "-lake" }}
+        owner:
+          kind: Lake
+          name: ${{ app.name + "-lake" }}
 lakes:
   - name: ${{ app.name + "-lake" }}
     bindings:
