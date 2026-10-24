@@ -9,7 +9,9 @@ metadata:
 spec:
   prefixes:
     - name: lake
-      owner: todo-lake-r
+      owner:
+        kind: Lake
+        name: todo-lake-r
 ---
 apiVersion: funcd.io/v1alpha1
 kind: Restore

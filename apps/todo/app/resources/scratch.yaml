@@ -9,4 +9,6 @@ buckets:
     deletion: delete
     prefixes:
       - name: copies
-        owner: ${{ app.name + "-api" }}
+        owner:
+          kind: Function
+          name: ${{ app.name + "-api" }}

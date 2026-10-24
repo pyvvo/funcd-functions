@@ -13,6 +13,10 @@ buckets:
     deletion: retain
     prefixes:
       - name: attachments
-        owner: ${{ app.name + "-api" }}
+        owner:
+          kind: Function
+          name: ${{ app.name + "-api" }}
       - name: uploads
-        owner: ${{ app.name + "-api" }}
+        owner:
+          kind: Function
+          name: ${{ app.name + "-api" }}
