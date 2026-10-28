@@ -1,0 +1,67 @@
+{
+  "nodes": {
+    "funcd": {
+      "inputs": {
+        "nixpkgs": "nixpkgs",
+        "nixpkgs-lima": "nixpkgs-lima"
+      },
+      "locked": {
+        "lastModified": 1793153667,
+        "narHash": "sha256-kbtVwgY9pz5zFuu9Y5PV6cS7iSH7RIvOvvxFFeMOWpE=",
+        "owner": "pyvvo",
+        "repo": "funcd",
+        "rev": "e5f7c7b5b8e23b87d35693f11acc41935ee29082",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pyvvo",
+        "repo": "funcd",
+        "rev": "e5f7c7b5b8e23b87d35693f11acc41935ee29082",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1781074563,
+        "narHash": "sha256-md8WlXOlfnIeHeOScMTTHFyf2d6iaTwPl2apR5EQ3P4=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "9ae611a455b90cf061d8f332b977e387bda8e1ca",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-lima": {
+      "locked": {
+        "lastModified": 1781074563,
+        "narHash": "sha256-md8WlXOlfnIeHeOScMTTHFyf2d6iaTwPl2apR5EQ3P4=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "9ae611a455b90cf061d8f332b977e387bda8e1ca",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "9ae611a455b90cf061d8f332b977e387bda8e1ca",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "funcd": "funcd",
+        "nixpkgs": [
+          "funcd",
+          "nixpkgs"
+        ]
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}

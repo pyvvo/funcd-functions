@@ -1,0 +1,17 @@
+runtime: python314
+input:
+  type: object
+  additionalProperties: false
+  properties:
+    op:
+      type: string
+output:
+  type: object
+  additionalProperties: false
+  properties:
+    versions:
+      type: object
+      additionalProperties:
+        type: string
+  required:
+    - versions

@@ -1,0 +1,18 @@
+{
+  "name": "exp-0015-render",
+  "private": true,
+  "type": "module",
+  "description": "The TypeScript function of experiment 0015: render inlines lodash 4.17.20, and the project also declares minimist 1.2.5, which no source imports.",
+  "scripts": {
+    "build": "vite build"
+  },
+  "dependencies": {
+    "lodash": "4.17.20",
+    "minimist": "1.2.5"
+  },
+  "devDependencies": {
+    "@funcd-dev/shim": "0.23.0",
+    "@funcd-dev/vite-plugin": "0.23.0",
+    "vite": "8.3.5"
+  }
+}

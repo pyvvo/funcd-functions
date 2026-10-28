@@ -1,0 +1,17 @@
+[project]
+name = "exp-0015-heavy"
+version = "1.0.0"
+description = "The large Python function of experiment 0015: heavy vendors DuckDB and pyarrow, as a data function does, so a scan of its bundle meets a bundle of the size funcd expects."
+authors = [{ name = "The funcd Authors" }]
+requires-python = ">=3.14"
+dependencies = [
+  "funcd-shim==0.18.0",
+  "duckdb==2.0.0",
+  "pyarrow==26.0.0",
+]
+
+[dependency-groups]
+dev = ["funcd-bundle==0.18.0"]
+
+[tool.funcd-bundle.functions]
+heavy = "src/heavy/main.py"
