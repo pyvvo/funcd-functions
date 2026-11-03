@@ -22,6 +22,7 @@ as an App template. funcd's `app-todo` Lima lane deploys it on containerd (`just
 | `todo-warm` | Function (Python), postApply hook | records the release that became current |
 | `todo-db`, `todo-stats` | SQLDatabase, Function (Python) | with value `sql` (1.0.0 and 1.1.0): the database the migrate hook keeps with Drizzle's migrations (table `_migrations`), which no other function writes, and a SQLModel reader that counts its todos and migrations. From 1.2.0 `todo-db` holds the todos and their uploads: the API owns it, `deletion: retain` keeps it as it keeps `todo-store`, and value `database` binds another database through `ref` instead |
 | `todo-changes`, `todo-notify`, `todo-feed` | EventSource (sql), Sensor and Function (Python), KVStore | from 1.2.0: a row inserted into table `todos` of `todo-db` fires event `added` (funcd ADR-0235), and `todo-notify` records the todo in table `added` of `todo-feed`, under its slug |
+| `todo-lake`, `todo-lakehouse`, `todo-lake-sql` | Lake, Bucket and Function (Python) | with value `lake`: a Lake the App owns on prefix `lake` of a Bucket with `deletion: retain`, and a Function that runs one SQL statement on it over Quack and returns the rows, as `lake-reader` of funcd-python's `examples/lake-quack` does, or writes a plain object under the Bucket's prefix `docs`. funcd's lane reads and writes the lake's rows through it |
 
 With `values/shared.yaml` the App also requires App `todo-shared` ([`apps/todo-shared`](../todo-shared)) at `^1.0.0`:
 its rollout waits until `todo-shared` is Ready at a matching version.
@@ -62,6 +63,9 @@ its rollout waits until `todo-shared` is Ready at a matching version.
   committed; rebuild them with `npm ci && npm run build`. The Python functions are listed in `pyproject.toml`'s
   `[tool.funcd-bundle.functions]`; `uv run funcd-bundle` builds each into `dist/<name>/`. Check them with
   `uv run mypy` and `uv run ruff check`.
+- `functions/py-lake`: `lake_sql`, the source of `todo-lake-sql`, in a uv project of its own: funcd-bundle vendors a
+  project's whole dependency closure into each of its functions, and only this one needs DuckDB. Its bundle also holds
+  DuckDB's `quack` and `httpfs` extensions, so `uv run funcd-bundle` needs Docker.
 - `web/`: the static site, pushed with `funcdctl push --site`.
 - `funcdconfig.yaml`: the daemon config of the lane, with short supervision, liveness, blob poll and log flush times.
 - `dr/`: the test fixtures of the lane's disaster-recovery block (funcd FEAT-0009). `funcdconfig.yaml` is the lane's
@@ -74,6 +78,11 @@ its rollout waits until `todo-shared` is Ready at a matching version.
   name the lane fills in. `funcdconfig-blob-s3.yaml` puts the blob store itself on the S3 server. `lake-fixtures.yaml` holds the lake's Quack token and
   engine settings, `restore-lake.yaml` and `lake-copy.yaml` restore it into a new bucket and serve the copy, and
   `funcdconfig-lake.yaml` turns on the S3 gateway and the lake proxy the engine needs.
+  The lane's lake cases (funcd ADR-0312) fill in templates: `schedule-of-bucket.yaml`, `backup-by-hand.yaml`,
+  `bucket-of-prefix.yaml`, `bucket-with-lake.yaml`, `lake-on-prefix.yaml`, `lake-sql.yaml`, `restore-bucket-in-place.yaml`,
+  `restore-bucket-as.yaml`, `restore-lake-in-place.yaml` and `restore-lake-as-location.yaml`.
+  `restore-lake-then-bucket-in-place.yaml` and `restore-bucket-then-lake-in-place.yaml` restore the Lake and its Bucket in
+  place, in each order, `restore-lake-on-bucket-in-place.yaml` is refused, and `lake-long-insert.json` is a long INSERT.
   `database-copy.yaml` is the empty database `todo-db-r` with the grants of its writers, which `restore-database.yaml`
   fills with `todo-db` of 1.2.0 once it is Ready; `restore-database-in-place.yaml` restores `todo-db` in place. `dead-letter-sensor.yaml` fails on every upload, so the lane has a dead letter to back up and restore. None of these is a
   secret: they exist only in the lane.

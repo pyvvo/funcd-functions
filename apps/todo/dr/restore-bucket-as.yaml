@@ -1,0 +1,17 @@
+# Restore NAME of Bucket BUCKET as Bucket TARGET from Backup BACKUP, which the lane fills in. It carries no Lake and
+# leaves TARGET's Lakes (funcd ADR-0312 Decision 4).
+apiVersion: funcd.io/v1alpha1
+kind: Restore
+metadata:
+  name: NAME
+  namespace: default
+  resourceGroup: todo
+spec:
+  backup: BACKUP
+  source:
+    credentialsSecret: todo-backup-reader
+    identitySecret: todo-backup-key
+  members:
+    - kind: Bucket
+      name: BUCKET
+      as: TARGET

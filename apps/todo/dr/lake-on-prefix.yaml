@@ -1,0 +1,32 @@
+# A Lake LAKE on prefix PREFIX of Bucket BUCKET, which the lane fills in, with the engine settings and the Quack token
+# of lake-fixtures.yaml.
+apiVersion: funcd.io/v1alpha1
+kind: Lake
+metadata:
+  name: LAKE
+  namespace: default
+  resourceGroup: todo
+spec:
+  buckets:
+    - ref: BUCKET
+  configMaps:
+    - ref: todo-lake-engine
+  secrets:
+    - name: todo-lake-quack-token
+      keys:
+        - QUACK_TOKEN
+  bindings:
+    blob:
+      - alias: lake
+        bucket: BUCKET
+        prefix: PREFIX
+    secret:
+      - todo-lake-quack-token
+    config:
+      - todo-lake-engine
+  location:
+    bucket: BUCKET
+    prefix: PREFIX
+  resources:
+    cpu: "1"
+    memory: 1Gi

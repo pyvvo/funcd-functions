@@ -1,0 +1,19 @@
+# Restore NAME of Lake LAKE into prefix PREFIX of Bucket BUCKET from Backup BACKUP, which the lane fills in (funcd
+# ADR-0222 Decision 7).
+apiVersion: funcd.io/v1alpha1
+kind: Restore
+metadata:
+  name: NAME
+  namespace: default
+  resourceGroup: todo
+spec:
+  backup: BACKUP
+  source:
+    credentialsSecret: todo-backup-reader
+    identitySecret: todo-backup-key
+  members:
+    - kind: Lake
+      name: LAKE
+      asLocation:
+        bucket: BUCKET
+        prefix: PREFIX

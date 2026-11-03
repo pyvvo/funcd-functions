@@ -1,0 +1,20 @@
+# Bucket todo-lakehouse, then its Lake todo-lake, both in place from Backup todo-lakehouse-b1: the other order of
+# restore-lake-then-bucket-in-place.yaml.
+apiVersion: funcd.io/v1alpha1
+kind: Restore
+metadata:
+  name: todo-bucket-lake-back
+  namespace: default
+  resourceGroup: todo
+spec:
+  backup: todo-lakehouse-b1
+  source:
+    credentialsSecret: todo-backup-reader
+    identitySecret: todo-backup-key
+  members:
+    - kind: Bucket
+      name: todo-lakehouse
+      inPlace: true
+    - kind: Lake
+      name: todo-lake
+      inPlace: true
