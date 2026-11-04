@@ -1,9 +1,8 @@
-# Function LAKE-sql, the Quack client of the App's value lake on another Lake LAKE, which the lane fills in, from the
-# image the App locks.
+# Function fill-lake-sql, the Quack client of lake-sql-of-app.yaml on another Lake fill-lake, which the lane fills in.
 apiVersion: funcd.io/v1alpha1
 kind: Function
 metadata:
-  name: LAKE-sql
+  name: fill-lake-sql
   namespace: default
   resourceGroup: todo
 spec:
@@ -11,8 +10,8 @@ spec:
   handler: handle
   image: oci-layout:///mnt/funcd-deps/registry/todo-lake-sql:1.0.0
   lakes:
-    - ref: LAKE
+    - ref: fill-lake
   bindings:
     lake:
       - alias: lake
-        lake: LAKE
+        lake: fill-lake

@@ -1,8 +1,8 @@
-# A Bucket BUCKET whose prefix gold Lake LAKE owns, which the lane fills in.
+# A Bucket fill-bucket whose prefix gold Lake fill-lake owns, which the lane fills in.
 apiVersion: funcd.io/v1alpha1
 kind: Bucket
 metadata:
-  name: BUCKET
+  name: fill-bucket
   namespace: default
   resourceGroup: todo
 spec:
@@ -10,4 +10,4 @@ spec:
     - name: gold
       owner:
         kind: Lake
-        name: LAKE
+        name: fill-lake

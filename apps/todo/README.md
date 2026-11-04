@@ -22,7 +22,7 @@ as an App template. funcd's `app-todo` Lima lane deploys it on containerd (`just
 | `todo-warm` | Function (Python), postApply hook | records the release that became current |
 | `todo-db`, `todo-stats` | SQLDatabase, Function (Python) | with value `sql` (1.0.0 and 1.1.0): the database the migrate hook keeps with Drizzle's migrations (table `_migrations`), which no other function writes, and a SQLModel reader that counts its todos and migrations. From 1.2.0 `todo-db` holds the todos and their uploads: the API owns it, `deletion: retain` keeps it as it keeps `todo-store`, and value `database` binds another database through `ref` instead |
 | `todo-changes`, `todo-notify`, `todo-feed` | EventSource (sql), Sensor and Function (Python), KVStore | from 1.2.0: a row inserted into table `todos` of `todo-db` fires event `added` (funcd ADR-0235), and `todo-notify` records the todo in table `added` of `todo-feed`, under its slug |
-| `todo-lake`, `todo-lakehouse`, `todo-lake-sql` | Lake, Bucket and Function (Python) | with value `lake`: a Lake the App owns on prefix `lake` of a Bucket with `deletion: retain`, and a Function that runs one SQL statement on it over Quack and returns the rows, as `lake-reader` of funcd-python's `examples/lake-quack` does, or writes a plain object under the Bucket's prefix `docs`. funcd's lane reads and writes the lake's rows through it |
+| `todo-lake`, `todo-lakehouse` | Lake and Bucket | with value `lake`: a Lake the App owns on prefix `lake` of a Bucket with `deletion: retain`, and prefix `docs` beside it for Function `todo-lake-sql` of `dr/lake-sql-of-app.yaml` |
 
 With `values/shared.yaml` the App also requires App `todo-shared` ([`apps/todo-shared`](../todo-shared)) at `^1.0.0`:
 its rollout waits until `todo-shared` is Ready at a matching version.
@@ -78,7 +78,12 @@ its rollout waits until `todo-shared` is Ready at a matching version.
   name the lane fills in. `funcdconfig-blob-s3.yaml` puts the blob store itself on the S3 server. `lake-fixtures.yaml` holds the lake's Quack token and
   engine settings, `restore-lake.yaml` and `lake-copy.yaml` restore it into a new bucket and serve the copy, and
   `funcdconfig-lake.yaml` turns on the S3 gateway and the lake proxy the engine needs.
-  The lane's lake cases (funcd ADR-0312) fill in templates: `schedule-of-bucket.yaml`, `backup-by-hand.yaml`,
+  `lake-sql-of-app.yaml` is Function `todo-lake-sql`, which runs one SQL statement on the App's Lake over Quack and
+  returns the rows, as `lake-reader` of funcd-python's `examples/lake-quack` does, or writes a plain object under the
+  Bucket's prefix `docs`. funcd's lane reads and writes the lake's rows through it, and applies it beside the App: as a
+  part of the App, its image would have to be in the lock of every lane that deploys the App.
+  The lane's lake cases (funcd ADR-0312) fill in templates, whose `fill-` names are valid names, so that each file
+  decodes as it stands: `schedule-of-bucket.yaml`, `backup-by-hand.yaml`,
   `bucket-of-prefix.yaml`, `bucket-with-lake.yaml`, `lake-on-prefix.yaml`, `lake-sql.yaml`, `restore-bucket-in-place.yaml`,
   `restore-bucket-as.yaml`, `restore-lake-in-place.yaml` and `restore-lake-as-location.yaml`.
   `restore-lake-then-bucket-in-place.yaml` and `restore-bucket-then-lake-in-place.yaml` restore the Lake and its Bucket in
