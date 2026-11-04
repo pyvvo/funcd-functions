@@ -1,0 +1,10 @@
+# A Bucket BUCKET whose prefix gold no Lake owns, which the lane fills in.
+apiVersion: funcd.io/v1alpha1
+kind: Bucket
+metadata:
+  name: BUCKET
+  namespace: default
+  resourceGroup: todo
+spec:
+  prefixes:
+    - name: gold

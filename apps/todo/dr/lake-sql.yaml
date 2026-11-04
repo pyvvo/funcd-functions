@@ -1,0 +1,18 @@
+# Function LAKE-sql, the Quack client of the App's value lake on another Lake LAKE, which the lane fills in, from the
+# image the App locks.
+apiVersion: funcd.io/v1alpha1
+kind: Function
+metadata:
+  name: LAKE-sql
+  namespace: default
+  resourceGroup: todo
+spec:
+  runtime: python314
+  handler: handle
+  image: oci-layout:///mnt/funcd-deps/registry/todo-lake-sql:1.0.0
+  lakes:
+    - ref: LAKE
+  bindings:
+    lake:
+      - alias: lake
+        lake: LAKE

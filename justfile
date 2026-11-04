@@ -1,5 +1,6 @@
 # Run every recipe through the pinned dev shell: `nix develop -c just <recipe>`.
-# Each recipe covers every apps/*/functions/ts and apps/*/functions/py, so a new App needs no change here.
+# Each recipe covers every apps/*/functions/ts, apps/*/functions/py and apps/*/functions/py-*, so a new App needs no
+# change here.
 
 python := "3.14"
 
@@ -18,7 +19,7 @@ install:
         v=$(cd "$d" && npm exec -c 'node --version')
         [[ $v == v22.* ]] || { echo "npm runs $d's scripts on node $v, not node 22"; exit 1; }
     done
-    for d in apps/*/functions/py; do
+    for d in apps/*/functions/py apps/*/functions/py-*; do
         echo "== uv sync $d"
         (cd "$d" && uv sync --locked --python {{python}})
     done
@@ -38,7 +39,7 @@ fmt:
     #!/usr/bin/env bash
     set -euo pipefail
     shopt -s nullglob
-    for d in apps/*/functions/py; do
+    for d in apps/*/functions/py apps/*/functions/py-*; do
         (cd "$d" && ruff format . && ruff check --fix .)
     done
 
@@ -52,7 +53,7 @@ check:
         echo "== tsc $d"
         (cd "$d" && npm run typecheck)
     done
-    for d in apps/*/functions/py; do
+    for d in apps/*/functions/py apps/*/functions/py-*; do
         echo "== ruff $d"
         (cd "$d" && ruff format --check . && ruff check .)
         echo "== mypy $d"

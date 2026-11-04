@@ -1,0 +1,29 @@
+runtime: python314
+input:
+  type: object
+  additionalProperties: false
+  properties:
+    sql:
+      type: string
+    put:
+      type: object
+      additionalProperties: false
+      properties:
+        key:
+          type: string
+        content:
+          type: string
+      required:
+        - key
+        - content
+output:
+  type: object
+  additionalProperties: false
+  properties:
+    rows:
+      type: array
+      items:
+        type: array
+        items: {}
+  required:
+    - rows

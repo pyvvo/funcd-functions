@@ -1,0 +1,17 @@
+# Restore NAME of Lake LAKE alone in place from Backup BACKUP, which the lane fills in: an admin's Restore, which first
+# exports as NAME-before and holds the namespace during the load.
+apiVersion: funcd.io/v1alpha1
+kind: Restore
+metadata:
+  name: NAME
+  namespace: default
+  resourceGroup: todo
+spec:
+  backup: BACKUP
+  source:
+    credentialsSecret: todo-backup-reader
+    identitySecret: todo-backup-key
+  members:
+    - kind: Lake
+      name: LAKE
+      inPlace: true

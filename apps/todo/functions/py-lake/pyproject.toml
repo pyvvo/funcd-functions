@@ -1,0 +1,33 @@
+[project]
+name = "funcd-functions-todo-lake"
+version = "1.0.0"
+description = "The lake_sql Function of the todo App's value lake, a project of its own because funcd-bundle vendors a project's whole dependency closure into each of its functions, and only this one needs DuckDB."
+authors = [{ name = "The funcd Authors" }]
+requires-python = ">=3.12"
+# A Quack client is a local DuckDB, at the version of the engine it talks to (funcd images/runtime/duckdb).
+dependencies = ["duckdb==2.0.0", "funcd-shim==0.9.0"]
+
+[dependency-groups]
+dev = ["funcd-bundle==0.14.0", "mypy>=1.13", "ruff>=0.8"]
+
+# Hermetic: the post-install downloads the extensions with the DuckDB vendored for the runtime's platform.
+[tool.funcd-bundle]
+hermetic = true
+post-install = ["python", "scripts/install_extensions.py"]
+
+[tool.funcd-bundle.functions]
+lake_sql = "src/lake_sql/main.py"
+
+[tool.mypy]
+strict = true
+python_version = "3.12"
+files = ["src"]
+mypy_path = "src"
+explicit_package_bases = true
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B"]

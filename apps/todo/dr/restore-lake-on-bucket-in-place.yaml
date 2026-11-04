@@ -1,0 +1,22 @@
+# A Restore that names Bucket todo-lakehouse in place and Lake todo-lake asLocation on it, which validation refuses:
+# listed first, the Lake's copy would go with the Bucket's emptying (funcd ADR-0312 Decision 6).
+apiVersion: funcd.io/v1alpha1
+kind: Restore
+metadata:
+  name: todo-lake-on-bucket
+  namespace: default
+  resourceGroup: todo
+spec:
+  backup: todo-lakehouse-b1
+  source:
+    credentialsSecret: todo-backup-reader
+    identitySecret: todo-backup-key
+  members:
+    - kind: Lake
+      name: todo-lake
+      asLocation:
+        bucket: todo-lakehouse
+        prefix: copy
+    - kind: Bucket
+      name: todo-lakehouse
+      inPlace: true

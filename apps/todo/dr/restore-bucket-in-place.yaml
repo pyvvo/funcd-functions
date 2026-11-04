@@ -1,0 +1,18 @@
+# Restore NAME of Bucket BUCKET alone in place from Backup BACKUP, which the lane fills in: an admin's Restore, which
+# first exports as NAME-before and holds the namespace during the load. It leaves the Bucket's Lakes (funcd ADR-0312
+# Decision 4).
+apiVersion: funcd.io/v1alpha1
+kind: Restore
+metadata:
+  name: NAME
+  namespace: default
+  resourceGroup: todo
+spec:
+  backup: BACKUP
+  source:
+    credentialsSecret: todo-backup-reader
+    identitySecret: todo-backup-key
+  members:
+    - kind: Bucket
+      name: BUCKET
+      inPlace: true

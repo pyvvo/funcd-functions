@@ -1,0 +1,20 @@
+# A schedule SCHEDULE that names only Bucket BUCKET, which the lane fills in: funcd brings in the Bucket's Lakes as
+# their own members (funcd ADR-0312 Decision 3). Its slots fall outside the lane, which runs Backups by hand of it.
+apiVersion: funcd.io/v1alpha1
+kind: BackupSchedule
+metadata:
+  name: SCHEDULE
+  namespace: default
+  resourceGroup: todo
+spec:
+  schedule: 0 3 * * *
+  scope:
+    buckets:
+      - BUCKET
+  target:
+    url: s3://todo-workload?endpoint=http://127.0.0.1:7070&region=us-east-1&use_path_style=true
+    credentialsSecret: todo-backup-writer
+  encryption:
+    recipients:
+      - age1gvngj00ucwlleuk898r0s3umcacr5mxhkv4fy67evygxsmlgpanq43ttm3
+      - age1263g0rath75xcgy9wh9cd6p9tpdn6wq35t5fa5pajnna4u7tgyhsxd384c

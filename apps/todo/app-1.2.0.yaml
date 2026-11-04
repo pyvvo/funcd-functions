@@ -11,6 +11,7 @@ images:
   intake: todo-intake:1.2.0
   notify: todo-notify:1.2.0
   web: todo-web:1.0.0
+  lakesql: todo-lake-sql:1.0.0
 valuesSchema:
   type: object
   properties:

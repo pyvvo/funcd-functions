@@ -1,0 +1,9 @@
+# A Backup NAME by hand of schedule SCHEDULE, which the lane fills in, with no wait for a slot.
+apiVersion: funcd.io/v1alpha1
+kind: Backup
+metadata:
+  name: NAME
+  namespace: default
+  resourceGroup: todo
+spec:
+  schedule: SCHEDULE
