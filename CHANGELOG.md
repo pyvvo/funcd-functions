@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.25.1](https://github.com/pyvvo/funcd-functions/compare/v0.25.0...v0.25.1) (2026-11-04)
+
+
+### Bug Fixes
+
+* **todo:** the lake templates decode as they stand, and value lake locks no image ([#36](https://github.com/pyvvo/funcd-functions/issues/36)) ([db93955](https://github.com/pyvvo/funcd-functions/commit/db93955789422d687af093bb2c0a4f00d309cea5))
+
 ## [0.25.0](https://github.com/pyvvo/funcd-functions/compare/v0.24.0...v0.25.0) (2026-11-04)
 
 
