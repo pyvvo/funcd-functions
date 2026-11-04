@@ -1,5 +1,6 @@
-# A Restore that names Bucket todo-lakehouse in place and Lake todo-lake asLocation on it, which validation refuses:
-# listed first, the Lake's copy would go with the Bucket's emptying (funcd ADR-0312 Decision 6).
+# A Restore that names Bucket todo-lakehouse in place and Lake todo-lake asLocation on Bucket fill-bucket. The lane
+# fills in todo-lakehouse, which validation refuses: listed first, the Lake's copy would go with the Bucket's emptying
+# (funcd ADR-0312 Decision 6).
 apiVersion: funcd.io/v1alpha1
 kind: Restore
 metadata:
@@ -15,7 +16,7 @@ spec:
     - kind: Lake
       name: todo-lake
       asLocation:
-        bucket: todo-lakehouse
+        bucket: fill-bucket
         prefix: copy
     - kind: Bucket
       name: todo-lakehouse

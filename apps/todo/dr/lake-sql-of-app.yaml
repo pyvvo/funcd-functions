@@ -1,0 +1,25 @@
+# Function todo-lake-sql, through which funcd's app-todo lane runs SQL on the App's value lake over Quack and writes a
+# plain object beside it, under prefix docs of its Bucket. The lane applies it once the Lake is there. It stays out of
+# the App, whose lock would then need its image, which holds DuckDB, in every lane that deploys the App.
+apiVersion: funcd.io/v1alpha1
+kind: Function
+metadata:
+  name: todo-lake-sql
+  namespace: default
+  resourceGroup: todo
+spec:
+  runtime: python314
+  handler: handle
+  image: oci-layout:///mnt/funcd-deps/registry/todo-lake-sql:1.0.0
+  lakes:
+    - ref: todo-lake
+  buckets:
+    - ref: todo-lakehouse
+  bindings:
+    lake:
+      - alias: lake
+        lake: todo-lake
+    blob:
+      - alias: docs
+        bucket: todo-lakehouse
+        prefix: docs

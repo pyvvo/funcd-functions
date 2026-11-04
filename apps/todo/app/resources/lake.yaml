@@ -1,5 +1,6 @@
-# A fixture of funcd's app-todo lane (value lake): a Lake the App owns, so the App's backups copy it, and the Function
-# through which the lane runs SQL on it and writes a plain object beside it, under prefix docs of the Bucket.
+# A fixture of funcd's app-todo lane (value lake): a Lake the App owns, so the App's backups copy it, and prefix docs
+# beside it for Function todo-lake-sql (dr/lake-sql-of-app.yaml), through which the lane runs SQL on the Lake and writes
+# a plain object.
 buckets:
   - name: ${{ app.name + "-lakehouse" }}
     deletion: retain
@@ -34,16 +35,3 @@ secrets:
     description: The Quack token of lake todo-lake; the lane creates this Secret (dr/lake-fixtures.yaml)
     keys:
       - QUACK_TOKEN
-functions:
-  - name: ${{ app.name + "-lake-sql" }}
-    runtime: python314
-    handler: handle
-    image: ${{ images.lakesql }}
-    bindings:
-      lake:
-        - alias: lake
-          lake: ${{ app.name + "-lake" }}
-      blob:
-        - alias: docs
-          bucket: ${{ app.name + "-lakehouse" }}
-          prefix: docs

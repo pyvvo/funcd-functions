@@ -11,7 +11,6 @@ images:
   intake: todo-intake:1.0.0
   stats: todo-stats:1.0.0
   web: todo-web:1.0.0
-  lakesql: todo-lake-sql:1.0.0
 valuesSchema:
   type: object
   properties:
