@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.25.0](https://github.com/pyvvo/funcd-functions/compare/v0.24.0...v0.25.0) (2026-11-04)
+
+
+### Features
+
+* **todo:** a Function that runs SQL on the value lake's Lake, and the lake Restores of funcd's lane ([#34](https://github.com/pyvvo/funcd-functions/issues/34)) ([eadc2f6](https://github.com/pyvvo/funcd-functions/commit/eadc2f6d8991faf01b0a1c6e3dae163d3f1f7ea5))
+
 ## [0.24.0](https://github.com/pyvvo/funcd-functions/compare/v0.23.0...v0.24.0) (2026-10-24)
 
 
