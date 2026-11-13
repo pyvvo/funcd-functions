@@ -1,4 +1,4 @@
-// The files Function of the volumes App (funcd ADR-0262). It reaches each of its volumes through the path in
+// The files Function of the volumes App. It reaches each of its volumes through the path in
 // FUNCD_VOLUME_<NAME>: data, a local volume kept across workers and redeploys, and scratch, an emptyDir each worker
 // gets empty.
 import { randomUUID } from 'node:crypto';
