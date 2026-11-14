@@ -1,4 +1,4 @@
-// The Site sets ingress.baseHref, so the index carries the Site's mount as its base (funcd ADR-0239), and
+// The Site sets ingress.baseHref, so the index carries the Site's mount as its base, and
 // config.json resolves under the mount at any path and on a deep link.
 const res = await fetch(new URL('config.json', document.baseURI), { cache: 'no-cache' });
 if (!res.ok) {
