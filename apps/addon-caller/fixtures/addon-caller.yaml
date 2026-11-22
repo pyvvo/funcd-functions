@@ -1,0 +1,14 @@
+apiVersion: funcd.io/v1alpha1
+kind: Function
+metadata:
+  name: addon-caller
+  namespace: default
+  resourceGroup: rg1
+spec:
+  runtime: nodejs22
+  handler: handle
+  image: oci-layout:///mnt/funcd-deps/registry/addon-caller:1.0.0
+  bindings:
+    addon:
+      - alias: echo
+        object: echo
