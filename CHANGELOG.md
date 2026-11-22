@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.26.0](https://github.com/pyvvo/funcd-functions/compare/v0.25.1...v0.26.0) (2026-11-22)
+
+
+### Features
+
+* **addon-caller:** a Function that calls an add-on object's engine through funcd (funcd ADR-0338) ([#39](https://github.com/pyvvo/funcd-functions/issues/39)) ([691cfda](https://github.com/pyvvo/funcd-functions/commit/691cfda52fb21d7c1c911d8cd65cc1c8d601abba))
+
 ## [0.25.1](https://github.com/pyvvo/funcd-functions/compare/v0.25.0...v0.25.1) (2026-11-04)
 
 
