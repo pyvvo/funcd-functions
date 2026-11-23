@@ -2,5 +2,7 @@
 # the App keeps it, as it keeps todo-store (funcd ADR-0236).
 sql:
   - name: ${{ app.name + "-db" }}
-    owner: ${{ app.name + "-api" }}
+    owner:
+      kind: Function
+      name: ${{ app.name + "-api" }}
     deletion: retain

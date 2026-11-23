@@ -8,4 +8,6 @@ metadata:
   namespace: default
   resourceGroup: notes
 spec:
-  owner: notes-restored
+  owner:
+    kind: Function
+    name: notes-restored
