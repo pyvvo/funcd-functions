@@ -5,7 +5,9 @@ kv:
     deletion: delete
     tables:
       - name: added
-        owner: ${{ app.name + "-notify" }}
+        owner:
+          kind: Function
+          name: ${{ app.name + "-notify" }}
 functions:
   - name: ${{ app.name + "-notify" }}
     runtime: python314

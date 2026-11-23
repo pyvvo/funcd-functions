@@ -9,11 +9,17 @@ metadata:
 spec:
   tables:
     - name: todos
-      owner: todo-api
+      owner:
+        kind: Function
+        name: todo-api
     - name: meta
-      owner: todo-migrate
+      owner:
+        kind: Function
+        name: todo-migrate
     - name: uploads
-      owner: todo-intake
+      owner:
+        kind: Function
+        name: todo-intake
 ---
 apiVersion: funcd.io/v1alpha1
 kind: Bucket

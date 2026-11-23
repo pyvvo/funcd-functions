@@ -8,7 +8,9 @@ metadata:
   namespace: default
   resourceGroup: todo
 spec:
-  owner: todo-api
+  owner:
+    kind: Function
+    name: todo-api
 ---
 apiVersion: funcd.io/v1alpha1
 kind: RolesAssignment

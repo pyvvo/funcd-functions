@@ -7,4 +7,6 @@ metadata:
   namespace: default
   resourceGroup: notes
 spec:
-  owner: notes
+  owner:
+    kind: Function
+    name: notes

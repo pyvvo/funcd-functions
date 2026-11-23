@@ -3,7 +3,9 @@ kv:
     deletion: delete
     tables:
       - name: plans
-        owner: ${{ app.name + "-plan-rank" }}
+        owner:
+          kind: Function
+          name: ${{ app.name + "-plan-rank" }}
 workflows:
   - name: ${{ app.name + "-plan" }}
     steps:
