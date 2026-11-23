@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.27.0](https://github.com/pyvvo/funcd-functions/compare/v0.26.0...v0.27.0) (2026-11-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* **apps:** every owner names its kind (funcd ADR-0351) ([#41](https://github.com/pyvvo/funcd-functions/issues/41))
+
+### Features
+
+* **apps:** every owner names its kind (funcd ADR-0351) ([#41](https://github.com/pyvvo/funcd-functions/issues/41)) ([7f2babc](https://github.com/pyvvo/funcd-functions/commit/7f2babcc71bb3aae6d76173eba187badc761ab93))
+
 ## [0.26.0](https://github.com/pyvvo/funcd-functions/compare/v0.25.1...v0.26.0) (2026-11-22)
 
 
