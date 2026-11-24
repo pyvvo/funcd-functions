@@ -1,0 +1,63 @@
+buckets:
+  - name: ${{ app.name + "-state" }}
+    prefixes:
+      - name: stack
+        owner:
+          kind: Job
+          name: ${{ app.name + "-stack" }}
+configMaps:
+  - name: ${{ app.name + "-stack" }}
+    data:
+      INFRASTACK_STATE_BUCKET: ${{ app.name + "-state" }}
+      INFRASTACK_STATE_PREFIX: stack
+      INFRASTACK_OUTPUTS_SECRET: ${{ app.name + "-outputs" }}
+secrets:
+  - name: ${{ app.name + "-outputs" }}
+    keys:
+      - FRP_TOKEN
+  - name: ${{ values.bunnySecret }}
+    keys:
+      - BUNNYNET_API_KEY
+jobs:
+  - name: ${{ app.name + "-stack" }}
+    runtime: opentofu1
+    handler: handle
+    image: ${{ images.module }}
+    timeout: 30m
+    resources:
+      memory: 512Mi
+    approval:
+      bypass: ${{ values.bypass }}
+    bindings:
+      blob:
+        - alias: state
+          bucket: ${{ app.name + "-state" }}
+          prefix: stack
+      config:
+        - ${{ app.name + "-stack" }}
+      secret:
+        - ${{ app.name + "-outputs" }}
+        - ${{ values.bunnySecret }}
+functions:
+  - name: ${{ app.name + "-reconciler" }}
+    runtime: nodejs22
+    handler: reconcile
+    image: ${{ images.reconciler }}
+    bindings:
+      job:
+        - alias: ${{ app.name + "-stack" }}
+          job: ${{ app.name + "-stack" }}
+addons:
+  - name: ${{ app.name + "-stack" }}
+    kind: InfraStack
+    deletion: delete
+    config:
+      job: ${{ app.name + "-stack" }}
+      variables:
+        name: ${{ values.name }}
+        region: ${{ values.region }}
+        image_registry: ${{ values.imageRegistry }}
+        frps_digest: ${{ values.frpsDigest }}
+    functions:
+      - kind: InfraStack
+        ref: ${{ app.name + "-reconciler" }}

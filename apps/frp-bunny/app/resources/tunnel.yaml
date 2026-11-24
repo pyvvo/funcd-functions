@@ -1,0 +1,22 @@
+functions:
+  - name: ${{ app.name + "-hello" }}
+    runtime: nodejs22
+    handler: handle
+    protocol: http
+    image: ${{ images.hello }}
+    ingress:
+      host: ${{ values.host }}
+addons:
+  - name: ${{ app.name + "-tunnel" }}
+    kind: Tunnel
+    config:
+      server: '${{ values.server !== "" ? values.server : values.name + ".b-cdn.net" }}'
+      serverPort: ${{ values.serverPort }}
+      protocol: ${{ values.protocol }}
+      host: ${{ values.name + ".b-cdn.net" }}
+      hostRewrite: ${{ values.host }}
+      edgeAddress: ${{ values.edgeAddress }}
+      edgePort: ${{ values.edgePort }}
+    bindings:
+      secret:
+        - ${{ app.name + "-outputs" }}

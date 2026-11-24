@@ -1,0 +1,38 @@
+# The fake stack's runs: the same input and output as infra/bunny's.
+runtime: opentofu1
+input:
+  type: object
+  additionalProperties: false
+  properties:
+    action:
+      type: string
+      enum:
+        - apply
+        - destroy
+    variables:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        region:
+          type: string
+        image_registry:
+          type: integer
+        frps_tag:
+          type: string
+        frps_digest:
+          type: string
+      required:
+        - name
+        - image_registry
+        - frps_digest
+  required:
+    - action
+    - variables
+output:
+  type: object
+  additionalProperties: false
+  properties:
+    pullzone_host:
+      type: string

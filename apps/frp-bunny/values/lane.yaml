@@ -1,0 +1,12 @@
+# funcd's addon-frp-bunny lane: the fake module, a local frps on the VM's bridge address over websocket, and the edge
+# on the bridge address at the data plane's port.
+registry: oci-layout:///mnt/funcd-deps/registry
+name: frp-lane
+imageRegistry: 0
+frpsDigest: sha256:74a92b46be8cb287636c8fd238eed53c26c915ed51b95c4b430ad4620a247dc2
+host: hello.frp.test
+edgeAddress: 10.63.0.1
+edgePort: 8081
+server: 10.63.0.1
+serverPort: 7000
+protocol: websocket
