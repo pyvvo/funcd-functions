@@ -1,6 +1,6 @@
 # The App's egress, which is no App part, applied before its deploy, so the stack's first run reaches Bunny's API: the
 # stack's Job reaches it, and the Tunnel's engine dials frps behind the pull zone (funcd ADR-0351, ADR-0352). Replace
-# frp-bunny with the App's name and <name> with the values' name.
+# frp-bunny with the App's name and frp-bunny-example with the values' name.
 apiVersion: funcd.io/v1alpha1
 kind: EgressPolicy
 metadata:
@@ -31,6 +31,6 @@ spec:
   rules:
     - to:
         domains:
-          - <name>.b-cdn.net
+          - frp-bunny-example.b-cdn.net
       ports:
         - 443
