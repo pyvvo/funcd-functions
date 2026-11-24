@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.28.0](https://github.com/pyvvo/funcd-functions/compare/v0.27.0...v0.28.0) (2026-11-24)
+
+
+### Features
+
+* **apps:** frp-bunny, a public HTTPS name for a funcd host through frps on Bunny Magic Containers ([#43](https://github.com/pyvvo/funcd-functions/issues/43)) ([7b2ab26](https://github.com/pyvvo/funcd-functions/commit/7b2ab26fe604027eef7a8cece65e85c72c0ef843))
+
 ## [0.27.0](https://github.com/pyvvo/funcd-functions/compare/v0.26.0...v0.27.0) (2026-11-23)
 
 
