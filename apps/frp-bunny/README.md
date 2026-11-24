@@ -48,11 +48,41 @@ against a local frps: funcd's `addon-frp-bunny` lane runs it that way, with `val
 
 ## Before you start
 
-- A funcd on Linux with containerd and `server.network.egress: true`: an add-on's engine leaves its fence only through
-  the egress gateway, under an EgressPolicy that names its object (funcd ADR-0352), and the edge then listens on the
-  bridge address too, which workers reach directly (ADR-0353). `values.edgeAddress` is that bridge address,
-  `10.63.0.1` by default, and `values.edgePort` the data plane's port, `8081` by default. The funcd also needs
-  `s3gateway.enabled: true` for the stack's state, and `addons.registries` listing `ghcr.io` for the add-ons' images.
+- A funcd on Linux with containerd and these keys in its config file:
+
+  ```yaml
+  runtime:
+    mode: containerd
+  server:
+    dataPlaneAddr: 0.0.0.0:8081
+    network:
+      egress: true
+      egressGatewayPort: 15080
+      dnsForwarderPort: 15053
+      dnsResolver: 1.1.1.1:53
+      internalAllow:
+        - 10.63.0.1:9000
+    trustedProxies:
+      - addonKinds:
+          - Tunnel
+  s3gateway:
+    enabled: true
+    listenAddr: 0.0.0.0:9000
+  addons:
+    registries:
+      - ghcr.io
+  ```
+
+  - `server.network.egress`: an add-on's engine leaves its fence only through the egress gateway, under an
+    EgressPolicy that names its object (funcd ADR-0352), and the edge then listens on the bridge address too, which
+    workers reach directly (ADR-0353). `values.edgeAddress` is that bridge address, `10.63.0.1` by default.
+  - `server.dataPlaneAddr` with a fixed port, which `values.edgePort` names, `8081` by default: port 0 changes at
+    each start (ADR-0353 Decision 1).
+  - `server.trustedProxies`: the edge takes the visitor's address from the `X-Forwarded-For` that the Tunnel's
+    engine sets, not the engine's own (ADR-0354).
+  - `server.network.internalAllow` with the S3 gateway on the bridge address, `s3gateway.listenAddr`'s port there,
+    so that the stack's Job reaches its state directly: with egress on, nothing else passes the gateway unnamed.
+  - `s3gateway.enabled` for the stack's state, and `addons.registries` for the add-ons' images.
 - The InfraStack and Tunnel Addons, which an admin registers from a pyvvo/funcd-addons release:
 
   ```sh
