@@ -48,10 +48,11 @@ against a local frps: funcd's `addon-frp-bunny` lane runs it that way, with `val
 
 ## Before you start
 
-- A funcd on containerd with `s3gateway.enabled: true` (the stack's state), `addons.registries` listing `ghcr.io`
-  (the add-ons' images), and `server.dataPlaneAddr` on an address the Tunnel's engine reaches, such as
-  `0.0.0.0:8081`: `values.edgeAddress` is the bridge address, `10.63.0.1` by default, and `values.edgePort` that
-  port, `8081` by default.
+- A funcd on Linux with containerd and `server.network.egress: true`: an add-on's engine leaves its fence only through
+  the egress gateway, under an EgressPolicy that names its object (funcd ADR-0352), and the edge then listens on the
+  bridge address too, which workers reach directly (ADR-0353). `values.edgeAddress` is that bridge address,
+  `10.63.0.1` by default, and `values.edgePort` the data plane's port, `8081` by default. The funcd also needs
+  `s3gateway.enabled: true` for the stack's state, and `addons.registries` listing `ghcr.io` for the add-ons' images.
 - The InfraStack and Tunnel Addons, which an admin registers from a pyvvo/funcd-addons release:
 
   ```sh
