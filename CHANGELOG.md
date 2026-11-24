@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.28.1](https://github.com/pyvvo/funcd-functions/compare/v0.28.0...v0.28.1) (2026-11-24)
+
+
+### Bug Fixes
+
+* **apps:** frp-bunny's EgressPolicy and Secret examples pass funcd's checks ([#45](https://github.com/pyvvo/funcd-functions/issues/45)) ([ff77123](https://github.com/pyvvo/funcd-functions/commit/ff77123cdfe5f0a490e7c4ca79f5c4698aeab18f))
+
 ## [0.28.0](https://github.com/pyvvo/funcd-functions/compare/v0.27.0...v0.28.0) (2026-11-24)
 
 
