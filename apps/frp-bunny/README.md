@@ -8,7 +8,7 @@ OpenTofu run that a person approves, and destroys it the same way when the App g
 
 It needs a funcd with Jobs and their approval (ADR-0347 to ADR-0351), add-on runtimes and engineless kinds (ADR-0344,
 ADR-0345) and the edge behind a tunnel (ADR-0352 to ADR-0354), all merged into funcd on 2026-11-24, and
-pyvvo/funcd-addons v0.5.0.
+pyvvo/funcd-addons v0.5.1.
 
 ```text
 apps/frp-bunny/
@@ -92,8 +92,8 @@ against a local frps: funcd's `addon-frp-bunny` lane runs it that way, with `val
 - The InfraStack and Tunnel Addons, which an admin registers from a pyvvo/funcd-addons release:
 
   ```sh
-  curl -fsSL https://github.com/pyvvo/funcd-addons/releases/download/v0.5.0/infrastack.yaml | funcdctl apply -f -
-  curl -fsSL https://github.com/pyvvo/funcd-addons/releases/download/v0.5.0/tunnel.yaml | funcdctl apply -f -
+  curl -fsSL https://github.com/pyvvo/funcd-addons/releases/download/v0.5.1/infrastack.yaml | funcdctl apply -f -
+  curl -fsSL https://github.com/pyvvo/funcd-addons/releases/download/v0.5.1/tunnel.yaml | funcdctl apply -f -
   ```
 
 - A registry for the App's images, and a pyvvo/funcd-addons checkout for the InfraStack Function.
