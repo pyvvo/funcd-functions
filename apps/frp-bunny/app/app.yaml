@@ -1,0 +1,47 @@
+name: frp-bunny
+version: 0.1.0
+registry: ${{ values.registry }}
+images:
+  module: frp-bunny-module:0.1.0
+  reconciler: infrastack-reconciler:0.1.0
+  hello: frp-bunny-hello:0.1.0
+valuesSchema:
+  type: object
+  properties:
+    registry:
+      type: string
+    name:
+      type: string
+    imageRegistry:
+      type: integer
+    frpsDigest:
+      type: string
+    region:
+      type: string
+      default: DE
+    host:
+      type: string
+    edge:
+      type: string
+    server:
+      type: string
+      default: ""
+    serverPort:
+      type: integer
+      default: 443
+    protocol:
+      type: string
+      default: wss
+    bypass:
+      type: boolean
+      default: false
+    bunnySecret:
+      type: string
+      default: bunny-api
+  required:
+    - registry
+    - name
+    - imageRegistry
+    - frpsDigest
+    - host
+    - edge
