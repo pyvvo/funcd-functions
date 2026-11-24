@@ -6,9 +6,9 @@ over wss, then hands each request to funcd's edge with the host of the App's hel
 experiment 0027, path C. The InfraStack add-on (pyvvo/funcd-addons `infrastack`) applies the Bunny side through an
 OpenTofu run that a person approves, and destroys it the same way when the App goes.
 
-It needs a funcd with Jobs and their approval (ADR-0347 to ADR-0351), add-on runtimes and engineless kinds (ADR-0344,
-ADR-0345) and the edge behind a tunnel (ADR-0352 to ADR-0354), all merged into funcd on 2026-11-24, and
-pyvvo/funcd-addons v0.5.1.
+It needs funcd v0.48.0 or later, with Jobs and their approval (ADR-0347 to ADR-0351), add-on runtimes and engineless
+kinds (ADR-0344, ADR-0345), the edge behind a tunnel (ADR-0352 to ADR-0354) and stacks in Apps (ADR-0357), and
+pyvvo/funcd-addons v0.5.1 or later.
 
 ```text
 apps/frp-bunny/
