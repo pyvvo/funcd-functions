@@ -102,7 +102,8 @@ against a local frps: funcd's `addon-frp-bunny` lane runs it that way, with `val
 
 ## Deploy
 
-1. Set `registry`, `name` and `imageRegistry` in `values/bunny.yaml`, and `<name>` in `egress.yaml`.
+1. Set `registry`, `name` and `imageRegistry` in `values/bunny.yaml`, and put that name in place of `frp-bunny-example`
+   in `egress.yaml`.
 2. Write the Secrets: put the API key in base64 in `secrets.yaml`, then apply it. The App is named `frp-bunny`, so its
    outputs Secret is `frp-bunny-outputs`, which the Job `frp-bunny-stack` owns.
 
