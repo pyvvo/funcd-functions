@@ -6,4 +6,5 @@ name: <name>
 imageRegistry: 0
 frpsDigest: sha256:74a92b46be8cb287636c8fd238eed53c26c915ed51b95c4b430ad4620a247dc2
 host: hello.frp.test
-edge: 10.63.0.1:8081
+edgeAddress: 10.63.0.1
+edgePort: 8081

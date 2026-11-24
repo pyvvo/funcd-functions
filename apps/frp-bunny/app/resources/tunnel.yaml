@@ -15,7 +15,8 @@ addons:
       protocol: ${{ values.protocol }}
       host: ${{ values.name + ".b-cdn.net" }}
       hostRewrite: ${{ values.host }}
-      edge: ${{ values.edge }}
+      edgeAddress: ${{ values.edgeAddress }}
+      edgePort: ${{ values.edgePort }}
     bindings:
       secret:
         - ${{ app.name + "-outputs" }}

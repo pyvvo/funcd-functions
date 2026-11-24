@@ -41,7 +41,7 @@ apps/frp-bunny/
 | `<app>-stack`, a Job | the module on the add-on's OpenTofu runtime; its state lives in the Bucket `<app>-state`, and it writes the sensitive output `FRP_TOKEN` into the Secret `<app>-outputs` |
 | `<app>-reconciler`, a Function | the InfraStack Function, which starts the stack's runs through its binding of the Job |
 | `<app>-hello`, a Function | answers HTTP on the host `values.host` |
-| `<app>-tunnel`, a Tunnel | frpc, with frps at `<name>.b-cdn.net:443` over wss, `FRP_TOKEN` from `<app>-outputs`, the public host `<name>.b-cdn.net`, and the edge at `values.edge` with the Host rewritten to `values.host` |
+| `<app>-tunnel`, a Tunnel | frpc, with frps at `<name>.b-cdn.net:443` over wss, `FRP_TOKEN` from `<app>-outputs`, the public host `<name>.b-cdn.net`, and the edge at `values.edgeAddress` and `values.edgePort` with the Host rewritten to `values.host` |
 
 `infra/fake` has the module's variables and outputs and creates only its token, so the App runs with no Bunny account
 against a local frps: funcd's `addon-frp-bunny` lane runs it that way, with `values/lane.yaml`.
@@ -50,7 +50,8 @@ against a local frps: funcd's `addon-frp-bunny` lane runs it that way, with `val
 
 - A funcd on containerd with `s3gateway.enabled: true` (the stack's state), `addons.registries` listing `ghcr.io`
   (the add-ons' images), and `server.dataPlaneAddr` on an address the Tunnel's engine reaches, such as
-  `0.0.0.0:8081`: `values.edge` is the bridge address and that port, `10.63.0.1:8081` by default.
+  `0.0.0.0:8081`: `values.edgeAddress` is the bridge address, `10.63.0.1` by default, and `values.edgePort` that
+  port, `8081` by default.
 - The InfraStack and Tunnel Addons, which an admin registers from a pyvvo/funcd-addons release:
 
   ```sh

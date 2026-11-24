@@ -21,8 +21,12 @@ valuesSchema:
       default: DE
     host:
       type: string
-    edge:
+    edgeAddress:
       type: string
+      default: 10.63.0.1
+    edgePort:
+      type: integer
+      default: 8081
     server:
       type: string
       default: ""
@@ -44,4 +48,3 @@ valuesSchema:
     - imageRegistry
     - frpsDigest
     - host
-    - edge
