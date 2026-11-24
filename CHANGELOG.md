@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.29.0](https://github.com/pyvvo/funcd-functions/compare/v0.28.1...v0.29.0) (2026-11-24)
+
+
+### Features
+
+* **apps:** frp-bunny pushes its module with funcdctl infra push and reads its outputs with funcdctl infra outputs ([#47](https://github.com/pyvvo/funcd-functions/issues/47)) ([e0622b8](https://github.com/pyvvo/funcd-functions/commit/e0622b8e4278fb0d8b261f0b909e3b77e8f319d4))
+
 ## [0.28.1](https://github.com/pyvvo/funcd-functions/compare/v0.28.0...v0.28.1) (2026-11-24)
 
 
