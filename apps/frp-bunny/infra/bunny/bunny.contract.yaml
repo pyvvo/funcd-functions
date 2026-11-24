@@ -1,5 +1,6 @@
-# The stack's runs (pyvvo/funcd-addons infrastack): the input is the action and the module's variables, the output its
-# plain outputs, none required, since a destroy answers none.
+# The stack's runs (pyvvo/funcd-addons infrastack, funcd ADR-0355): the input is the action and the module's variables;
+# the output is its plain outputs under outputs, or a plan run's finding under plan. funcdctl infra push writes the same
+# contract into the bundle it pushes; this copy is for a push by hand.
 runtime: opentofu1
 input:
   type: object
@@ -10,24 +11,25 @@ input:
       enum:
         - apply
         - destroy
+        - plan
     variables:
       type: object
       additionalProperties: false
       properties:
+        frps_digest:
+          type: string
+        frps_tag:
+          type: string
+        image_registry:
+          type: number
         name:
           type: string
         region:
           type: string
-        image_registry:
-          type: integer
-        frps_tag:
-          type: string
-        frps_digest:
-          type: string
       required:
-        - name
-        - image_registry
         - frps_digest
+        - image_registry
+        - name
   required:
     - action
     - variables
@@ -35,5 +37,30 @@ output:
   type: object
   additionalProperties: false
   properties:
-    pullzone_host:
-      type: string
+    outputs:
+      type: object
+      additionalProperties: false
+      properties:
+        pullzone_host: {}
+    plan:
+      type: object
+      additionalProperties: false
+      properties:
+        add:
+          type: integer
+        change:
+          type: integer
+        destroy:
+          type: integer
+        replace:
+          type: integer
+        resources:
+          type: array
+          items:
+            type: string
+      required:
+        - add
+        - change
+        - destroy
+        - replace
+        - resources
