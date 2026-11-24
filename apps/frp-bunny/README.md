@@ -65,6 +65,7 @@ against a local frps: funcd's `addon-frp-bunny` lane runs it that way, with `val
     trustedProxies:
       - addonKinds:
           - Tunnel
+        header: X-Real-IP
   s3gateway:
     enabled: true
     listenAddr: 0.0.0.0:9000
@@ -78,16 +79,17 @@ against a local frps: funcd's `addon-frp-bunny` lane runs it that way, with `val
     workers reach directly (ADR-0353). `values.edgeAddress` is that bridge address, `10.63.0.1` by default.
   - `server.dataPlaneAddr` with a fixed port, which `values.edgePort` names, `8081` by default: port 0 changes at
     each start (ADR-0353 Decision 1).
-  - `server.trustedProxies`: the edge takes the visitor's address from the `X-Forwarded-For` that the Tunnel's
-    engine sets, not the engine's own (ADR-0354).
+  - `server.trustedProxies`: the edge takes the visitor's address from `X-Real-IP`, which Bunny's pull zone sets to
+    the visitor and frps passes on, not from the engine's own address. `X-Forwarded-For` would not do: frps appends
+    Bunny's edge address to it, which no `cidrs` entry names (ADR-0354 Decisions 1 and 2).
   - `server.network.internalAllow` with the S3 gateway on the bridge address, `s3gateway.listenAddr`'s port there,
     so that the stack's Job reaches its state directly: with egress on, nothing else passes the gateway unnamed.
   - `s3gateway.enabled` for the stack's state, and `addons.registries` for the add-ons' images.
 - The InfraStack and Tunnel Addons, which an admin registers from a pyvvo/funcd-addons release:
 
   ```sh
-  curl -fsSL https://github.com/pyvvo/funcd-addons/releases/download/<version>/infrastack.yaml | funcdctl apply -f -
-  curl -fsSL https://github.com/pyvvo/funcd-addons/releases/download/<version>/tunnel.yaml | funcdctl apply -f -
+  curl -fsSL https://github.com/pyvvo/funcd-addons/releases/download/v0.4.1/infrastack.yaml | funcdctl apply -f -
+  curl -fsSL https://github.com/pyvvo/funcd-addons/releases/download/v0.4.1/tunnel.yaml | funcdctl apply -f -
   ```
 
 - A registry for the App's images, and a pyvvo/funcd-addons checkout for the InfraStack Function.
