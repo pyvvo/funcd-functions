@@ -9,24 +9,25 @@ input:
       enum:
         - apply
         - destroy
+        - plan
     variables:
       type: object
       additionalProperties: false
       properties:
+        frps_digest:
+          type: string
+        frps_tag:
+          type: string
+        image_registry:
+          type: number
         name:
           type: string
         region:
           type: string
-        image_registry:
-          type: integer
-        frps_tag:
-          type: string
-        frps_digest:
-          type: string
       required:
-        - name
-        - image_registry
         - frps_digest
+        - image_registry
+        - name
   required:
     - action
     - variables
@@ -34,5 +35,30 @@ output:
   type: object
   additionalProperties: false
   properties:
-    pullzone_host:
-      type: string
+    outputs:
+      type: object
+      additionalProperties: false
+      properties:
+        pullzone_host: {}
+    plan:
+      type: object
+      additionalProperties: false
+      properties:
+        add:
+          type: integer
+        change:
+          type: integer
+        destroy:
+          type: integer
+        replace:
+          type: integer
+        resources:
+          type: array
+          items:
+            type: string
+      required:
+        - add
+        - change
+        - destroy
+        - replace
+        - resources
