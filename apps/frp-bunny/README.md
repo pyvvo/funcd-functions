@@ -6,9 +6,9 @@ over wss, then hands each request to funcd's edge with the host of the App's hel
 experiment 0027, path C. The InfraStack add-on (pyvvo/funcd-addons `infrastack`) applies the Bunny side through an
 OpenTofu run that a person approves, and destroys it the same way when the App goes.
 
-It needs funcd v0.48.0 or later, with Jobs and their approval (ADR-0347 to ADR-0351), add-on runtimes and engineless
+It needs funcd v0.49.0 or later, with Jobs and their approval (ADR-0347 to ADR-0351), add-on runtimes and engineless
 kinds (ADR-0344, ADR-0345), the edge behind a tunnel (ADR-0352 to ADR-0354) and stacks in Apps (ADR-0357), and
-pyvvo/funcd-addons v0.5.1 or later.
+pyvvo/funcd-addons v0.8.0 or later.
 
 ```text
 apps/frp-bunny/
@@ -41,9 +41,8 @@ apps/frp-bunny/
 
 | Part | What it is |
 |---|---|
-| `<app>-stack`, an InfraStack | the Bunny module `infra/bunny`: frps on Magic Containers and the pull zone in front of it, with `deletion: delete` |
+| `<app>-stack`, an InfraStack | the Bunny module `infra/bunny`: frps on Magic Containers and the pull zone in front of it, with `deletion: delete`; it binds its Job as `stack`, for the Function that funcd creates from the add-on's image (funcd ADR-0358) |
 | `<app>-stack`, a Job | the module on the add-on's OpenTofu runtime; its state lives in the Bucket `<app>-state`, and it writes the sensitive output `FRP_TOKEN` into the Secret `<app>-outputs` |
-| `<app>-reconciler`, a Function | the InfraStack Function, which starts the stack's runs through its binding of the Job |
 | `<app>-hello`, a Function | answers HTTP on the host `values.host` |
 | `<app>-tunnel`, a Tunnel | frpc, with frps at `<name>.b-cdn.net:443` over wss, `FRP_TOKEN` from `<app>-outputs`, the public host `<name>.b-cdn.net`, and the edge at `values.edgeAddress` and `values.edgePort` with the Host rewritten to `values.host` |
 
@@ -120,7 +119,6 @@ against a local frps: funcd's `addon-frp-bunny` lane runs it that way, with `val
    ```sh
    funcdctl infra push infra/bunny <registry>/frp-bunny-module:0.1.0
    funcdctl push hello/hello.mjs <registry>/frp-bunny-hello:0.1.0
-   funcdctl push <funcd-addons>/infrastack/reconciler/infrastack-reconciler.mjs <registry>/infrastack-reconciler:0.1.0
    funcdctl app lock app -f values/bunny.yaml
    funcdctl push --template app <registry>/frp-bunny:0.1.0
    ```
