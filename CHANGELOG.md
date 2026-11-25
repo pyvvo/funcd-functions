@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.30.0](https://github.com/pyvvo/funcd-functions/compare/v0.29.0...v0.30.0) (2026-11-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* **apps:** frp-bunny's Function comes from the InfraStack add-on's image ([#50](https://github.com/pyvvo/funcd-functions/issues/50))
+
+### Features
+
+* **apps:** frp-bunny's Function comes from the InfraStack add-on's image ([#50](https://github.com/pyvvo/funcd-functions/issues/50)) ([2b055ca](https://github.com/pyvvo/funcd-functions/commit/2b055cad2187275588bd0a19b6c0e22000ef45f0))
+
 ## [0.29.0](https://github.com/pyvvo/funcd-functions/compare/v0.28.1...v0.29.0) (2026-11-24)
 
 
