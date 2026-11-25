@@ -38,26 +38,17 @@ jobs:
       secret:
         - ${{ app.name + "-outputs" }}
         - ${{ values.bunnySecret }}
-functions:
-  - name: ${{ app.name + "-reconciler" }}
-    runtime: nodejs22
-    handler: reconcile
-    image: ${{ images.reconciler }}
-    bindings:
-      job:
-        - alias: ${{ app.name + "-stack" }}
-          job: ${{ app.name + "-stack" }}
 addons:
   - name: ${{ app.name + "-stack" }}
     kind: InfraStack
     deletion: delete
+    bindings:
+      job:
+        - alias: stack
+          job: ${{ app.name + "-stack" }}
     config:
-      job: ${{ app.name + "-stack" }}
       variables:
         name: ${{ values.name }}
         region: ${{ values.region }}
         image_registry: ${{ values.imageRegistry }}
         frps_digest: ${{ values.frpsDigest }}
-    functions:
-      - kind: InfraStack
-        ref: ${{ app.name + "-reconciler" }}
