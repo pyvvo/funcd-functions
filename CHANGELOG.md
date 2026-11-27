@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.31.0](https://github.com/pyvvo/funcd-functions/compare/v0.30.0...v0.31.0) (2026-11-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* **frp-bunny:** a Vite page served as the App's Site ([#52](https://github.com/pyvvo/funcd-functions/issues/52))
+
+### Features
+
+* **frp-bunny:** a Vite page served as the App's Site ([#52](https://github.com/pyvvo/funcd-functions/issues/52)) ([b52ab15](https://github.com/pyvvo/funcd-functions/commit/b52ab15d659a09d6832683d437bdea1dcc0fc3d0))
+
 ## [0.30.0](https://github.com/pyvvo/funcd-functions/compare/v0.29.0...v0.30.0) (2026-11-25)
 
 
