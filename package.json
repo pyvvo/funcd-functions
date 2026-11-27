@@ -1,0 +1,8 @@
+{
+  "name": "funcd-functions",
+  "private": true,
+  "description": "The repository's demos, which the demo engine of pyvvo/funcd-skills records with Playwright and its Chromium.",
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}

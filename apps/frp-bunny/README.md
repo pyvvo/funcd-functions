@@ -7,6 +7,9 @@ its hello Function answers at `/api`. Its path is funcd's experiment 0027, path 
 (pyvvo/funcd-addons `infrastack`) applies the Bunny side through an OpenTofu run that a person approves, and destroys
 it the same way when the App goes.
 
+[docs/demo/frp-bunny](../../docs/demo/frp-bunny) records a video of it live on Bunny, from the deploy to the
+destroy, with the demo plugin of pyvvo/funcd-skills.
+
 It needs funcd v0.49.0 or later, with the [features](docs/server-config.md#the-funcd-features) that it builds on, and
 pyvvo/funcd-addons v0.9.0 or later. [Deploy](#deploy) runs it on Bunny.
 

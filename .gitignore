@@ -9,3 +9,8 @@ __pycache__/
 .cache/
 # funcd-bundle's output, built by funcd's lanes
 dist/
+# a demo's generated video, poster and parts: never committed
+docs/demo/*/*.mp4
+docs/demo/*/*.webm
+docs/demo/*/*.png
+docs/demo/*/parts/

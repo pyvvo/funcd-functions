@@ -1,0 +1,13 @@
+name: frp-bunny-demo — funcd in the VM answers the host on 127.0.0.1:8080, through Lima's forwarded port
+testcases:
+  - name: funcd's API lists the Apps of the namespace default
+    steps:
+      - type: http
+        method: GET
+        url: http://127.0.0.1:8080/apis/funcd.io/v1alpha1/namespaces/default/apps
+        headers:
+          Authorization: Bearer funcd-demo-developer
+        retry: 30
+        delay: 2
+        assertions:
+          - result.statuscode ShouldEqual 200

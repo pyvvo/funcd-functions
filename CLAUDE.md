@@ -25,6 +25,7 @@ decides on its own. An App here follows funcd's App design, and the lane that de
 | `apps/<app>/functions/py` | Its Python functions, one uv project. Each is `src/<name>/main.py` with its `<name>.contract.yaml`, listed in `[tool.funcd-bundle.functions]` |
 | `apps/<app>/functions/py-<name>` | A Python function with a dependency the others must not carry, in a uv project of its own: funcd-bundle vendors a project's whole closure into each of its functions |
 | `apps/<app>/web` | Its Site's page: the static files themselves, or an npm project whose `vite build` writes them into `dist/`, which git ignores and `funcdctl push --site` packs |
+| `docs/demo/<demo>` | A demo's manifests, which the demo plugin of pyvvo/funcd-skills plays and records. Its video is generated and never committed; the root `package.json` holds Playwright for the plugin's engine |
 | `go.mod` | This repo is also a Go module. funcd pins it by git tag |
 
 ## Toolchain

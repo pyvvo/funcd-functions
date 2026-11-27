@@ -1,0 +1,42 @@
+# The demo's funcd config: the keys that apps/frp-bunny/README.md lists, as pyvvo/funcd-addons' live frp-bunny lane
+# runs them, and the admin and developer tokens that env/lanes.yaml writes.
+apiVersion: funcd.io/v1alpha1
+kind: FuncdConfig
+server:
+  listenAddr: 127.0.0.1:8080
+  dataPlaneAddr: 0.0.0.0:8081
+  network:
+    egress: true
+    egressGatewayPort: 15080
+    dnsForwarderPort: 15053
+    dnsResolver: 1.1.1.1:53
+    internalAllow:
+      - 10.63.0.1:9000
+  observability:
+    accessLog: true
+  trustedProxies:
+    - addonKinds:
+        - Tunnel
+      header: X-Real-IP
+storage:
+  mode: file
+  dataDir: /var/lib/funcd/data
+auth:
+  credentials:
+    - tokenFile: /etc/funcd/tokens/admin
+      role: admin
+    - tokenFile: /etc/funcd/tokens/developer
+      role: developer
+      namespaces:
+        - default
+runtime:
+  mode: containerd
+s3gateway:
+  enabled: true
+  listenAddr: 0.0.0.0:9000
+addons:
+  registries:
+    - ghcr.io
+log:
+  format: text
+  level: info

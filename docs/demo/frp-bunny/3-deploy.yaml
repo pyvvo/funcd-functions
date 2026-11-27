@@ -1,0 +1,38 @@
+kind: Chapter
+name: deploy
+title: Deploy the App
+detail: push the images, deploy, and the stack applies
+steps:
+  - caption: Each part goes to the registry as an OCI image, the module first
+    detail: funcdctl push
+  - run: funcdctl push infra/bunny $REGISTRY/frp-bunny-module:0.1.0 --entry main.tf
+    hold: 2
+  - run: funcdctl push hello/hello.mjs $REGISTRY/frp-bunny-hello:0.1.0
+    hold: 2
+  - caption: The page goes as a Site image, built by Vite
+    detail: funcdctl push --site
+  - run: (cd web && npm run build)
+    hold: 3
+  - run: funcdctl push --site web/dist $REGISTRY/frp-bunny-web:0.1.0
+    hold: 3
+  - caption: The template goes too, with each image locked by its digest
+    detail: funcdctl app lock, funcdctl push --template
+  - run: funcdctl app lock app -f values/demo.yaml
+    hold: 2
+  - run: funcdctl push --template app $REGISTRY/frp-bunny:0.1.0
+    hold: 3
+  - caption: The deploy prints each part of the App as its state changes
+    detail: funcdctl app deploy
+  - run: funcdctl app deploy $REGISTRY/frp-bunny:0.1.0 -f values/demo.yaml --name frp-bunny
+    hold: 4
+  - caption: "The demo's values set bypass: OpenTofu applies its plan with no approval"
+    detail: "Without bypass, a person approves it: funcdctl infra approve frp-bunny-stack"
+    hold: 6
+  - wait: the stack is Ready
+    url: api:/apis/funcd.io/v1alpha1/namespaces/default/infrastacks/frp-bunny-stack
+    until: "it.status?.phase === 'Ready'"
+    timeout: 900
+    speed: 16
+  - caption: OpenTofu applied the plan, so frps and its pull zone exist on Bunny
+    detail: InfraStack/frp-bunny-stack
+    hold: 5

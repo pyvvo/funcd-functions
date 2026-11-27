@@ -1,0 +1,23 @@
+# funcd on containerd in a Lima VM, as funcd's lanes run it (env/up.sh), which the host's funcdctl reaches on
+# 127.0.0.1:8080. The site api answers the journey's waits from funcd's API (env/api.py); bunny is the App's public name.
+kind: Environment
+name: funcd-vm
+workspace: /tmp/funcd-functions-demo/workspace
+setup: docs/demo/frp-bunny/env/up.sh
+start: docs/demo/frp-bunny/env/start.sh
+teardown: docs/demo/frp-bunny/env/down.sh
+addressBar: true
+sites:
+  api: http://127.0.0.1:18080
+  bunny: https://funcd-tunnel-demo.b-cdn.net
+editor:
+  acceptLicense: true
+  env:
+    FUNCD_SERVER: http://127.0.0.1:8080
+    FUNCD_TOKEN: funcd-demo-developer
+    ADMIN_TOKEN: funcd-demo-admin
+    REGISTRY: oci-layout:///tmp/funcd-functions-demo/registry
+    PATH: /tmp/funcd-functions-demo/bin:${PATH}
+  settings:
+    files.exclude:
+      "**/dist": true
