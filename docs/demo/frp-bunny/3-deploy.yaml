@@ -21,10 +21,10 @@ steps:
     hold: 2
   - run: funcdctl push --template app $REGISTRY/frp-bunny:0.1.0
     hold: 3
-  - caption: The deploy prints each part of the App as its state changes
-    detail: funcdctl app deploy
+  - caption: The deploy draws a live view of the rollout
+    detail: each part, what it waits on, its time and the deadline
   - run: funcdctl app deploy $REGISTRY/frp-bunny:0.1.0 -f values/demo.yaml --name frp-bunny
-    hold: 4
+    hold: 8
   - caption: "The demo's values set bypass: OpenTofu applies its plan with no approval"
     detail: "Without bypass, a person approves it: funcdctl infra approve frp-bunny-stack"
     hold: 6

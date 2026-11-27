@@ -4,15 +4,15 @@ title: Delete the App
 detail: its stack's destroy removes Bunny's side
 steps:
   - page: editor
-    caption: Deleting the App runs the stack's destroy before its other parts go
+    caption: Deleting the App draws each part as it goes, the stack's destroy first
     detail: funcdctl app delete
-  - run: funcdctl app delete frp-bunny --no-wait
-    hold: 3
+  - run: funcdctl app delete frp-bunny
+    hold: 4
   - wait: the App is gone
     url: api:/apis/funcd.io/v1alpha1/namespaces/default/apps
     until: "!it.some((app) => app.metadata.name === 'frp-bunny')"
     timeout: 900
     speed: 16
   - caption: OpenTofu removed Bunny's side, and then the App and its parts went
-    detail: funcdctl app delete
-    hold: 5
+    detail: each with the time it took
+    hold: 6
