@@ -68,3 +68,31 @@ resource "bunnynet_pullzone" "frps" {
     tier = "Standard"
   }
 }
+
+# Magic Containers adds a pull zone of its own for the CDN endpoint, mc-<id>, which no resource here declares and no
+# destroy removes. The zone above serves the app without it, so the stack deletes it by its Id when it destroys the
+# app, or when a new app gives the endpoint a new zone. The stack's runtime has Python and no shell; the key comes
+# from the run's environment and stays out of the state.
+locals {
+  endpoint_zone = bunnynet_compute_container_app.frps.container[0].endpoint[0].cdn[0].pullzone_id
+}
+
+resource "terraform_data" "endpoint_zone" {
+  input            = local.endpoint_zone
+  triggers_replace = local.endpoint_zone
+
+  provisioner "local-exec" {
+    when        = destroy
+    interpreter = ["/usr/local/bin/python3.14", "-c"]
+    command     = <<-PY
+      import os, urllib.error, urllib.request
+      zone = urllib.request.Request("https://api.bunny.net/pullzone/${self.input}", method="DELETE",
+                                    headers={"AccessKey": os.environ["BUNNYNET_API_KEY"]})
+      try:
+          urllib.request.urlopen(zone, timeout=30)
+      except urllib.error.HTTPError as e:
+          if e.code != 404:
+              raise
+    PY
+  }
+}
