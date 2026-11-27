@@ -45,12 +45,14 @@ fmt:
         (cd "$d" && ruff format . && ruff check --fix .)
     done
 
-# tsc on every App's TypeScript functions and pages; ruff (the flake's single version) and mypy on its Python
-# functions; --locked fails on a stale uv.lock
+# each README against scripts/readme-template.yaml and its word budget; tsc on every App's TypeScript functions and
+# pages; ruff (the flake's single version) and mypy on its Python functions; --locked fails on a stale uv.lock
 check:
     #!/usr/bin/env bash
     set -euo pipefail
     shopt -s nullglob
+    echo "== readme-check"
+    python3 scripts/readme-check.py
     for p in apps/*/functions/ts/package.json apps/*/web/package.json; do
         d=$(dirname "$p")
         echo "== tsc $d"

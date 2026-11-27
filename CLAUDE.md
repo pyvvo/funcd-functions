@@ -44,7 +44,7 @@ The recipes loop over every `apps/*/functions/ts`, `apps/*/functions/py` and `ap
 `apps/*/web` with a `package.json`, so a new App needs no CI change.
 
 The dev shell also installs the lefthook git hooks. pre-commit formats and lints staged files
-with ruff and gofmt, commit-msg enforces Conventional Commits, and pre-push runs `just check`.
+with ruff and gofmt and checks staged READMEs, commit-msg enforces Conventional Commits, and pre-push runs `just check`.
 CI runs the same checks, so never bypass a hook with `--no-verify`.
 
 ## Rules

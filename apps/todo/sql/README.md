@@ -1,12 +1,14 @@
 # The SQL functions of the todo App
 
-funcd's `sql` lane deploys these on real containerd (funcd ADR-0232 to ADR-0235):
+funcd's `sql` lane deploys these on real containerd, as
+[ADR-0232](https://github.com/pyvvo/funcd/blob/main/docs/adr/0232-sql-database-resource-and-rqlite-engine.md) to
+[ADR-0235](https://github.com/pyvvo/funcd/blob/main/docs/adr/0235-sql-change-feed.md) decide:
 
 | File | What |
 |---|---|
 | `notes-db.yaml` | SQLDatabase `notes-db`, one rqlite engine, owned by `notes` |
-| `notes.yaml` | `notes`, TypeScript (`functions/ts/src/notes.ts`): its Drizzle schema runs through `context.sql`, and it is the only writer |
-| `notes-report.yaml` | `notes-report`, Python (`functions/py/notes_report.py`): SQLModel models compiled with the SQLite dialect; it reads and cannot write |
+| `notes.yaml` | `notes`, TypeScript (`functions/ts/src/notes/`): its Drizzle schema runs through `context.sql`, and it is the only writer |
+| `notes-report.yaml` | `notes-report`, Python (`functions/py/src/notes_report/`): SQLModel models compiled with the SQLite dialect; it reads and cannot write |
 | `funcdconfig.yaml` | The lane's daemon config: containerd, file storage, static credentials; the engines post their changes to the bridge address funcd derives (funcd ADR-0238) |
 | `backup.yaml` | BackupSchedule `notes-backup` of `notes-db`, to the lane's S3 server, with the todo App's test Secrets of `../dr` |
 | `backup-b1.yaml` | Backup `notes-b1` of that schedule, created by hand |
