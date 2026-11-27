@@ -24,6 +24,7 @@ decides on its own. An App here follows funcd's App design, and the lane that de
 | `apps/<app>/functions/ts` | Its TypeScript functions, one npm project. `vite build` bundles each `src/<name>/main.ts` into `<name>.mjs` beside its `<name>.contract.yaml`, and the bundles are committed |
 | `apps/<app>/functions/py` | Its Python functions, one uv project. Each is `src/<name>/main.py` with its `<name>.contract.yaml`, listed in `[tool.funcd-bundle.functions]` |
 | `apps/<app>/functions/py-<name>` | A Python function with a dependency the others must not carry, in a uv project of its own: funcd-bundle vendors a project's whole closure into each of its functions |
+| `apps/<app>/web` | Its Site's page: the static files themselves, or an npm project whose `vite build` writes them into `dist/`, which git ignores and `funcdctl push --site` packs |
 | `go.mod` | This repo is also a Go module. funcd pins it by git tag |
 
 ## Toolchain
@@ -39,8 +40,8 @@ For many short commands (agents, scripts), use `scripts/agent/d <cmd>` instead: 
 from a cached `nix print-dev-env` (regenerated when `flake.nix` or `flake.lock` change), about 0.02 s per call
 instead of about 2 s. It caches this repo's flake; funcd and the language repos ship the same script for their own.
 
-The recipes loop over every `apps/*/functions/ts`, `apps/*/functions/py` and `apps/*/functions/py-*`, so a new App
-needs no CI change.
+The recipes loop over every `apps/*/functions/ts`, `apps/*/functions/py` and `apps/*/functions/py-*`, and every
+`apps/*/web` with a `package.json`, so a new App needs no CI change.
 
 The dev shell also installs the lefthook git hooks. pre-commit formats and lints staged files
 with ruff and gofmt, commit-msg enforces Conventional Commits, and pre-push runs `just check`.

@@ -6,6 +6,7 @@ functions:
     image: ${{ images.hello }}
     ingress:
       host: ${{ values.host }}
+      path: /api
 addons:
   - name: ${{ app.name + "-tunnel" }}
     kind: Tunnel
