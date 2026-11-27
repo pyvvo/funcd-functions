@@ -24,8 +24,11 @@ steps:
   - caption: The deploy draws a live view of the rollout
     detail: each part, what it waits on, its time and the deadline
   - command: "View: Toggle Maximized Panel"
-  - run: funcdctl app deploy $REGISTRY/frp-bunny:0.1.0 -f values/demo.yaml --name frp-bunny
+  - run: funcdctl app deploy $REGISTRY/frp-bunny:0.1.0 -f values/demo.yaml --name frp-bunny --wait-lagging
     hold: 8
+  - caption: The stack lags while OpenTofu applies, and the App rolls out without it
+    detail: "--wait-lagging keeps the deploy open until the stack is Ready too"
+    hold: 6
   - caption: "The demo's values set bypass: OpenTofu applies its plan with no approval"
     detail: "Without bypass, a person approves it: funcdctl infra approve frp-bunny-stack"
     hold: 6

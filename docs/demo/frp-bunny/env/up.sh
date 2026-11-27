@@ -8,7 +8,7 @@
 # and colima for funcd's runtime images.
 set -euo pipefail
 : "${DEMO_WORKSPACE:?run by the demo engine}" "${DEMO_STATE:?run by the demo engine}"
-funcd_ref=v0.54.0
+funcd_ref=v0.55.0
 addons_ref=v0.10.0
 lane=frp-bunny-demo
 root=$PWD
