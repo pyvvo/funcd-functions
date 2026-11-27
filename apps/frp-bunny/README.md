@@ -7,6 +7,8 @@ hello Function answers at `/api`. Its path is funcd's experiment 0027, path C. T
 (pyvvo/funcd-addons `infrastack`) applies the Bunny side through an OpenTofu run that a person approves, and destroys
 it the same way when the App goes.
 
+[docs/demo/frp-bunny](../../docs/demo/frp-bunny) records a video of it live on Bunny, from the deploy to the destroy, with the demo plugin of pyvvo/funcd-skills.
+
 It needs funcd v0.49.0 or later, with Jobs and their approval (ADR-0347 to ADR-0351), add-on runtimes and engineless
 kinds (ADR-0344, ADR-0345), the edge behind a tunnel (ADR-0352 to ADR-0354) and stacks in Apps (ADR-0357), and
 pyvvo/funcd-addons v0.8.0 or later.

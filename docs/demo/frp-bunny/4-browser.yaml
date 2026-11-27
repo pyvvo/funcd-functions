@@ -1,0 +1,24 @@
+kind: Chapter
+name: browser
+title: Through the tunnel
+detail: the App's public name, in a browser
+steps:
+  - caption: The stack's outputs, with frp's token shown as (sensitive)
+    detail: funcdctl infra outputs
+  - run: funcdctl infra outputs frp-bunny-stack
+    hold: 5
+  - wait: the public name answers
+    url: bunny:/api
+    timeout: 600
+    speed: 16
+  - page: bunny:/
+    shows: hello from frp-bunny, through hello.frp.test
+    caption: Bunny's HTTPS name serves the App's page, from its Site
+    detail: https://funcd-tunnel-demo.b-cdn.net
+    hold: 5
+  - caption: The answer of /api came through frps and frpc to the hello Function
+    detail: https://funcd-tunnel-demo.b-cdn.net/api
+    hold: 5
+  - caption: Its Host is hello.frp.test, which frpc set for funcd's edge
+    detail: hostRewrite in app/resources/tunnel.yaml
+    hold: 5

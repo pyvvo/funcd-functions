@@ -1,0 +1,39 @@
+kind: Chapter
+name: template
+title: The App template
+detail: a stack, a tunnel, a Function and a page
+steps:
+  - caption: The template names its images, and the values that a deploy gives
+    detail: app/app.yaml
+  - open: app-yaml
+    hold: 5
+  - caption: The Bunny module runs as a Job on the opentofu1 runtime
+    detail: app/resources/stack.yaml
+  - open: stack-yaml
+    hold: 2
+  - type: stack-yaml
+    part: job
+    hold: 1
+  - caption: Unless bypass is set, each run waits until a person approves its plan
+    detail: app/resources/stack.yaml
+    hold: 4
+  - caption: "The InfraStack add-on drives that Job: a plan, an optional approval, an apply"
+    detail: app/resources/stack.yaml
+    hold: 2
+  - type: stack-yaml
+    part: addon
+    hold: 2
+  - caption: The hello Function answers at /api, and the Tunnel runs frpc beside it
+    detail: app/resources/tunnel.yaml
+  - open: tunnel-yaml
+    hold: 2
+  - type: tunnel-yaml
+    part: tunnel
+    hold: 1
+  - caption: frpc dials the pull zone, then hands each request to funcd's edge
+    detail: app/resources/tunnel.yaml
+    hold: 4
+  - caption: The Site serves the Vite page at / on the same host
+    detail: app/resources/web.yaml
+  - open: web-yaml
+    hold: 5

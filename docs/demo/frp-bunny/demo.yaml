@@ -1,0 +1,25 @@
+# The frp-bunny App deployed to a funcd on containerd, its OpenTofu plan approved, its public name on Bunny opened in a
+# browser, then the App deleted and its destroy approved. It spends on Bunny, well under a cent a run, and its teardown
+# removes what the run made there.
+kind: Demo
+name: frp-bunny
+title: A public HTTPS name for a funcd App, through a tunnel on Bunny
+environment: funcd-vm
+setup: docs/demo/frp-bunny/setup.sh
+teardown: docs/demo/frp-bunny/teardown.sh
+terminal:
+  cwd: apps/frp-bunny
+  prompt: frp-bunny
+opening:
+  - goal
+  - why
+  - pieces
+  - contents
+  - blueprint
+chapters:
+  - platform
+  - template
+  - deploy
+  - browser
+  - delete
+recap: recap

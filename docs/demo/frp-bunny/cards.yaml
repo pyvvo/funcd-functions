@@ -1,0 +1,67 @@
+kind: Card
+name: goal
+layout: text
+kicker: funcd demo
+title: A public name, with no inbound port
+paragraphs:
+  - "funcd runs on a machine that the internet cannot reach. The frp-bunny App gives it a public HTTPS name anyway: `<name>.b-cdn.net`, on Bunny."
+  - We deploy the App, whose OpenTofu run creates Bunny's side, and open the page in a browser. Then we delete the App, whose run destroys that side.
+---
+kind: Card
+name: why
+layout: list
+kicker: Why
+title: What it saves
+items:
+  - "**No inbound port**: frpc dials out over wss, so no router or firewall changes"
+  - "**No cloud by hand**: an OpenTofu module creates frps and its pull zone"
+  - "**Optional approval**: a stack's runs can wait for a person to approve their plan"
+  - "**One deploy**: the stack, the tunnel, the Function and the page are one App"
+  - "**Secrets stay in funcd**: the Bunny key and frp's token are its Secrets"
+---
+kind: Card
+name: pieces
+layout: list
+kicker: The tools
+title: The pieces
+items:
+  - "**InfraStack** add-on: runs an OpenTofu module as a Job, to apply or destroy it"
+  - "**Tunnel** add-on: runs frpc as an engine, which dials frps"
+  - "**Bunny**: frps on Magic Containers, behind a pull zone that serves HTTPS"
+  - "**funcd's edge**: serves the requests that come through the tunnel"
+  - "**funcdctl**: pushes the images, deploys the App and approves its runs"
+---
+kind: Card
+name: contents
+layout: contents
+kicker: The demo
+title: Contents
+---
+kind: Card
+name: blueprint
+layout: tree
+kicker: The App
+title: What the developer writes
+files:
+  - app-yaml
+  - stack-yaml
+  - tunnel-yaml
+  - web-yaml
+  - egress-yaml
+  - hello-mjs
+  - main-tf
+  - main-ts
+root: apps/frp-bunny
+compact: true
+---
+kind: Card
+name: recap
+layout: list
+kicker: Recap
+title: What we saw
+items:
+  - An admin registered two add-ons, and the App's egress names what it may reach
+  - One App template holds an OpenTofu stack, a Tunnel, a Function and a Site
+  - The stack applied OpenTofu's plan, its approval bypassed for the demo
+  - Bunny served the page over HTTPS, through frps, frpc and funcd's edge
+  - Deleting the App ran OpenTofu's destroy, which removed Bunny's side

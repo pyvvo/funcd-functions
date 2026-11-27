@@ -1,0 +1,13 @@
+# The frp-bunny demo's funcd as a lane of funcd's harness (scripts/lane.py), which env/up.sh stages and boots: funcd on
+# containerd with env/funcdconfig.yaml and the demo's tokens. Its suite, env/ready.venom.yml, is the readiness check
+# that up.sh runs once the VM is up.
+frp-bunny-demo:
+  description: funcd for funcd-functions' frp-bunny demo, which the demo engine plays against
+  optional: true
+  stage:
+    - from: docs/demo/frp-bunny/env/funcdconfig.yaml
+      to: funcdconfig.yaml
+  tokens:
+    admin: funcd-demo-admin
+    developer: funcd-demo-developer
+  venom: docs/demo/frp-bunny/env/ready.venom.yml

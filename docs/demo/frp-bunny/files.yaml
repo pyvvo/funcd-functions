@@ -1,0 +1,48 @@
+kind: File
+name: app-yaml
+path: apps/frp-bunny/app/app.yaml
+comment: the template's images, and the values a deploy gives
+---
+kind: File
+name: stack-yaml
+path: apps/frp-bunny/app/resources/stack.yaml
+comment: the Bunny module as a Job, driven by an InfraStack
+parts:
+  job:
+    from: "jobs:"
+    until: "addons:"
+  addon:
+    from: "addons:"
+---
+kind: File
+name: tunnel-yaml
+path: apps/frp-bunny/app/resources/tunnel.yaml
+comment: the hello Function, and frpc as a Tunnel
+parts:
+  tunnel:
+    from: "addons:"
+---
+kind: File
+name: web-yaml
+path: apps/frp-bunny/app/resources/web.yaml
+comment: the page, served as a Site
+---
+kind: File
+name: egress-yaml
+path: apps/frp-bunny/egress.yaml
+comment: what the stack and the Tunnel may reach
+---
+kind: File
+name: hello-mjs
+path: apps/frp-bunny/hello/hello.mjs
+comment: answers /api with the Host it got
+---
+kind: File
+name: main-tf
+path: apps/frp-bunny/infra/bunny/main.tf
+comment: frps on Magic Containers, and its pull zone
+---
+kind: File
+name: main-ts
+path: apps/frp-bunny/web/src/main.ts
+comment: the page, which shows the answer of /api

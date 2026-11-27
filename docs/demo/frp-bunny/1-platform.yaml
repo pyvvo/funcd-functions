@@ -1,0 +1,20 @@
+kind: Chapter
+name: platform
+title: The platform side
+detail: two add-ons, and the App's egress
+steps:
+  - caption: "An admin registered two add-ons: InfraStack and Tunnel"
+    detail: funcdctl get addons
+  - run: FUNCD_TOKEN=$ADMIN_TOKEN funcdctl get addons
+    hold: 5
+  - caption: With egress on, a worker reaches the internet only where a policy allows
+    detail: egress.yaml
+  - open: egress-yaml
+    hold: 5
+  - caption: The stack's Job may call Bunny's API, and the Tunnel may dial the pull zone
+    detail: egress.yaml
+    hold: 5
+  - caption: Applied before the deploy, so that the stack's first run reaches Bunny
+    detail: funcdctl apply -f egress.yaml
+  - run: funcdctl apply -f egress.yaml
+    hold: 4
