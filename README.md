@@ -11,6 +11,11 @@ that only a real runtime shows, such as a cold start, a daemon restart, data on 
 - [`apps/todo-shared`](apps/todo-shared): the App that the to-do App requires, deployed by the same lane.
 - [`apps/site-config`](apps/site-config): one Site build served to two environments, each with its own generated
   `config.json`, at a host and at a path, deployed by funcd's `app-todo` lane.
+- [`apps/addon-caller`](apps/addon-caller): a Function that calls an add-on object's engine through funcd, deployed
+  by pyvvo/funcd-addons' `addon-rauthy-signin` lane.
+- [`apps/frp-bunny`](apps/frp-bunny): a public HTTPS name for a funcd host with no inbound port, through frps on
+  Bunny and a Tunnel, deployed by pyvvo/funcd-addons' `addon-frp-bunny` and `addon-frp-bunny-live` lanes.
+- [`apps/volumes`](apps/volumes): two Functions that own volumes, deployed by funcd's `volumes` lane.
 
 ## How funcd uses this repository
 

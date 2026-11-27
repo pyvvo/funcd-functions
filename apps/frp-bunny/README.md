@@ -8,7 +8,7 @@ its hello Function answers at `/api`. Its path is funcd's experiment 0027, path 
 it the same way when the App goes.
 
 It needs funcd v0.49.0 or later, with the [features](docs/server-config.md#the-funcd-features) that it builds on, and
-pyvvo/funcd-addons v0.8.0 or later. [Deploy](#deploy) runs it on Bunny.
+pyvvo/funcd-addons v0.9.0 or later. [Deploy](#deploy) runs it on Bunny.
 
 ## Parts
 
@@ -47,12 +47,12 @@ the Site `<app>-web`; and the Tunnel `<app>-tunnel`.
 - The InfraStack and Tunnel Addons, which an admin registers from a pyvvo/funcd-addons release:
 
   ```sh
-  curl -fsSL https://github.com/pyvvo/funcd-addons/releases/download/v0.5.1/infrastack.yaml | funcdctl apply -f -
-  curl -fsSL https://github.com/pyvvo/funcd-addons/releases/download/v0.5.1/tunnel.yaml | funcdctl apply -f -
+  curl -fsSL https://github.com/pyvvo/funcd-addons/releases/download/v0.9.0/infrastack.yaml | funcdctl apply -f -
+  curl -fsSL https://github.com/pyvvo/funcd-addons/releases/download/v0.9.0/tunnel.yaml | funcdctl apply -f -
   ```
 
-- A registry for the App's images, Node.js with npm to build the page, and a pyvvo/funcd-addons checkout for the
-  InfraStack Function.
+- A registry for the App's images, Node.js with npm to build the page, and the InfraStack add-on's plugin,
+  `funcdctl-infra` from the same release, on PATH, which steps 3 and 5 use.
 - A Bunny account: its API key, and the Id of its public Docker Hub registry in Magic Containers, which
   `values/bunny.yaml` takes as `imageRegistry`. Applying the module creates paid Bunny resources, about $0.47 a month.
 
@@ -67,10 +67,9 @@ the Site `<app>-web`; and the Tunnel `<app>-tunnel`.
    funcdctl apply -f secrets.yaml
    ```
 
-3. Push the images and the template. The module goes through the InfraStack add-on's plugin, `funcdctl-infra` from
-   the same release, on PATH. The plugin locks the module's providers for linux/amd64 and linux/arm64, writes the lock
-   file into the folder, and pushes the module with its providers and a contract that it writes from the module's
-   variables and outputs. The page is a Vite project: its build writes it into `web/dist`, which
+3. Push the images and the template. The module goes through `funcdctl-infra`, which locks the module's providers
+   for linux/amd64 and linux/arm64, writes the lock file into the folder, and pushes the module with its providers and
+   a contract that it writes from the module's variables and outputs. The page is a Vite project: its build writes it into `web/dist`, which
    `funcdctl push --site` packs.
 
    ```sh
@@ -89,13 +88,12 @@ the Site `<app>-web`; and the Tunnel `<app>-tunnel`.
    funcdctl app deploy <registry>/frp-bunny:0.1.0 -f values/bunny.yaml --name frp-bunny --no-wait
    ```
 
-5. Approve the stack's run. Its preview is OpenTofu's plan, three resources to add: the token, frps' container app
-   and its pull zone. The stack's status names the run:
+5. Approve the stack's run. `funcdctl infra approve` finds the run that the stack waits on and shows its preview,
+   OpenTofu's plan of three resources to add: the token, frps' container app and its pull zone. It approves the run
+   once a person confirms:
 
    ```sh
-   funcdctl get infrastack frp-bunny-stack -o json
-   funcdctl job describe <run>
-   funcdctl job approve <run>
+   funcdctl infra approve frp-bunny-stack
    ```
 
    The run applies the plan. The stack turns Ready, `frp-bunny-outputs` gets `pullzone_host` and `FRP_TOKEN`, and the
@@ -118,8 +116,13 @@ the Site `<app>-web`; and the Tunnel `<app>-tunnel`.
    funcdctl app delete frp-bunny --no-wait
    ```
 
-2. Approve the destroy run, `frp-bunny-stack-d<generation>-<uid>`, which the stack's status names; its preview
+2. Approve the destroy run with the same command, which finds that run while the stack is being deleted. Its preview
    destroys the three. The stack goes once the run succeeded, then the App's other parts.
+
+   ```sh
+   funcdctl infra approve frp-bunny-stack
+   ```
+
 3. Magic Containers adds a pull zone of its own for the container's CDN endpoint, named `mc-<id>`, which the module
    does not manage: delete it in Bunny's dashboard.
 4. The Bucket `frp-bunny-state` keeps the emptied state. Delete it, the Secrets and the EgressPolicies when nothing

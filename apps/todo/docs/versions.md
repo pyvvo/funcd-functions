@@ -27,7 +27,7 @@ From 1.2.0:
 - `todo-api`: the todos and their uploads are rows of `todo-db`, queried with Drizzle. `done` marks a todo done,
   `list` can keep only the done or the open todos and counts both, `get` reads a todo with its uploads in one join,
   and `list` names the todos that the change feed reported.
-- `todo-intake` (`intake_sql.py`) records each upload in table `uploads` of `todo-db`, under its todo.
+- `todo-intake` (`functions/py/src/intake_sql/`) records each upload in table `uploads` of `todo-db`, under its todo.
 - `todo-migrate` migrates `todo-db` and copies the todos and upload records of KV into it, each only when absent. It
   keeps the KV records, so a rollback to 1.1.0 still runs, without the todos added since.
 - `todo-db` holds the todos and their uploads: the API owns it, `deletion: retain` keeps it as it keeps

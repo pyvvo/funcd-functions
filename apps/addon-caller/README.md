@@ -1,8 +1,8 @@
 # addon-caller
 
 A Function that [calls an add-on object's engine](https://github.com/pyvvo/funcd/blob/main/docs/adr/0338-a-function-calls-an-add-on-objects-engine.md)
-through funcd. funcd's `addon-rauthy-signin` lane pushes it and applies it beside the add-on object `echo`, a
-traefik/whoami engine that answers the headers it gets.
+through funcd. pyvvo/funcd-addons' `addon-rauthy-signin` lane pushes it and applies it beside the add-on object
+`echo`, a traefik/whoami engine that answers the headers it gets.
 
 ## Parts
 
