@@ -32,8 +32,9 @@ nix develop -c just ci
 ```
 
 It type-checks and rebuilds every App's TypeScript functions, failing when a committed bundle differs from its
-source, and checks every App's Python functions with ruff and mypy. The dev shell also installs the git hooks. They
-format and lint staged files, check the commit message, and run the checks before a push.
+source, type-checks and builds every App's Vite page, and checks every App's Python functions with ruff and mypy.
+The dev shell also installs the git hooks. They format and lint staged files, check the commit message, and run the
+checks before a push.
 
 ## License
 

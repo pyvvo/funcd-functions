@@ -1,6 +1,6 @@
 # Run every recipe through the pinned dev shell: `nix develop -c just <recipe>`.
-# Each recipe covers every apps/*/functions/ts, apps/*/functions/py and apps/*/functions/py-*, so a new App needs no
-# change here.
+# Each recipe covers every apps/*/functions/ts, apps/*/functions/py and apps/*/functions/py-*, and every apps/*/web
+# that is an npm project, so a new App needs no change here.
 
 python := "3.14"
 
@@ -12,7 +12,8 @@ install:
     #!/usr/bin/env bash
     set -euo pipefail
     shopt -s nullglob
-    for d in apps/*/functions/ts; do
+    for p in apps/*/functions/ts/package.json apps/*/web/package.json; do
+        d=$(dirname "$p")
         echo "== npm ci $d"
         (cd "$d" && npm ci --no-audit --no-fund)
         # the functions run on nodejs22; a node from elsewhere (a node_modules/.bin/node) would run the scripts
@@ -24,12 +25,13 @@ install:
         (cd "$d" && uv sync --locked --python {{python}})
     done
 
-# rebuild every App's committed TypeScript bundles (*.mjs)
+# rebuild every App's committed TypeScript bundles (*.mjs), and build its Vite pages into their dist/, which git ignores
 build:
     #!/usr/bin/env bash
     set -euo pipefail
     shopt -s nullglob
-    for d in apps/*/functions/ts; do
+    for p in apps/*/functions/ts/package.json apps/*/web/package.json; do
+        d=$(dirname "$p")
         echo "== build $d"
         (cd "$d" && npm run build)
     done
@@ -43,13 +45,14 @@ fmt:
         (cd "$d" && ruff format . && ruff check --fix .)
     done
 
-# tsc on every App's TypeScript functions; ruff (the flake's single version) and mypy on its Python functions;
-# --locked fails on a stale uv.lock
+# tsc on every App's TypeScript functions and pages; ruff (the flake's single version) and mypy on its Python
+# functions; --locked fails on a stale uv.lock
 check:
     #!/usr/bin/env bash
     set -euo pipefail
     shopt -s nullglob
-    for d in apps/*/functions/ts; do
+    for p in apps/*/functions/ts/package.json apps/*/web/package.json; do
+        d=$(dirname "$p")
         echo "== tsc $d"
         (cd "$d" && npm run typecheck)
     done

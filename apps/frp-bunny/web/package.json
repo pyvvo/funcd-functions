@@ -1,0 +1,14 @@
+{
+  "name": "funcd-functions-frp-bunny-web",
+  "private": true,
+  "type": "module",
+  "description": "The page of the frp-bunny App's Site, which shows the answer of the App's hello Function. vite build writes it into dist/, which funcdctl push --site packs.",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "vite": "8.3.4"
+  }
+}

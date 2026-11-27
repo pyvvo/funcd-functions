@@ -2,9 +2,10 @@
 
 An App that gives a funcd host a public HTTPS name with no inbound port. frps runs on Bunny Magic Containers behind a
 pull zone, `<name>.b-cdn.net`, and frpc runs in funcd as a Tunnel engine (pyvvo/funcd-addons `tunnel`) that dials it
-over wss, then hands each request to funcd's edge with the host of the App's hello Function. Its path is funcd's
-experiment 0027, path C. The InfraStack add-on (pyvvo/funcd-addons `infrastack`) applies the Bunny side through an
-OpenTofu run that a person approves, and destroys it the same way when the App goes.
+over wss, then hands each request to funcd's edge with the App's host, where its Site serves a page at `/` and its
+hello Function answers at `/api`. Its path is funcd's experiment 0027, path C. The InfraStack add-on
+(pyvvo/funcd-addons `infrastack`) applies the Bunny side through an OpenTofu run that a person approves, and destroys
+it the same way when the App goes.
 
 It needs funcd v0.49.0 or later, with Jobs and their approval (ADR-0347 to ADR-0351), add-on runtimes and engineless
 kinds (ADR-0344, ADR-0345), the edge behind a tunnel (ADR-0352 to ADR-0354) and stacks in Apps (ADR-0357), and
@@ -17,7 +18,8 @@ apps/frp-bunny/
 │   ├── app.yaml
 │   └── resources/
 │       ├── stack.yaml
-│       └── tunnel.yaml
+│       ├── tunnel.yaml
+│       └── web.yaml
 ├── egress.yaml
 ├── hello/
 │   ├── hello.contract.yaml
@@ -32,9 +34,18 @@ apps/frp-bunny/
 │       ├── fake.contract.yaml
 │       └── main.tf
 ├── secrets.yaml
-└── values/
-    ├── bunny.yaml
-    └── lane.yaml
+├── values/
+│   ├── bunny.yaml
+│   └── lane.yaml
+└── web/
+    ├── index.html
+    ├── package-lock.json
+    ├── package.json
+    ├── src/
+    │   ├── main.ts
+    │   └── style.css
+    ├── tsconfig.json
+    └── vite.config.ts
 ```
 
 ## Parts
@@ -43,11 +54,12 @@ apps/frp-bunny/
 |---|---|
 | `<app>-stack`, an InfraStack | the Bunny module `infra/bunny`: frps on Magic Containers and the pull zone in front of it, with `deletion: delete`; it binds its Job as `stack`, for the Function that funcd creates from the add-on's image (funcd ADR-0358) |
 | `<app>-stack`, a Job | the module on the add-on's OpenTofu runtime; its state lives in the Bucket `<app>-state`, and it writes the sensitive output `FRP_TOKEN` into the Secret `<app>-outputs` |
-| `<app>-hello`, a Function | answers HTTP on the host `values.host` |
+| `<app>-hello`, a Function | answers HTTP at `/api` on the host `values.host`, naming the Host it got |
+| `<app>-web`, a Site | the page `web/` at `/` on the host `values.host`, open to anyone, which shows the answer of `/api`; it serves from the prefix `web` of the Bucket `<app>-web`, which the App declares with `deletion: delete`, so each install materializes the page again |
 | `<app>-tunnel`, a Tunnel | frpc, with frps at `<name>.b-cdn.net:443` over wss, `FRP_TOKEN` from `<app>-outputs`, the public host `<name>.b-cdn.net`, and the edge at `values.edgeAddress` and `values.edgePort` with the Host rewritten to `values.host` |
 
 `infra/fake` has the module's variables and outputs and creates only its token, so the App runs with no Bunny account
-against a local frps: funcd's `addon-frp-bunny` lane runs it that way, with `values/lane.yaml`.
+against a local frps: pyvvo/funcd-addons' `addon-frp-bunny` lane runs it that way, with `values/lane.yaml`.
 
 ## Before you start
 
@@ -95,7 +107,8 @@ against a local frps: funcd's `addon-frp-bunny` lane runs it that way, with `val
   curl -fsSL https://github.com/pyvvo/funcd-addons/releases/download/v0.5.1/tunnel.yaml | funcdctl apply -f -
   ```
 
-- A registry for the App's images, and a pyvvo/funcd-addons checkout for the InfraStack Function.
+- A registry for the App's images, Node.js with npm to build the page, and a pyvvo/funcd-addons checkout for the
+  InfraStack Function.
 - A Bunny account: its API key, and the Id of its public Docker Hub registry in Magic Containers, which
   `values/bunny.yaml` takes as `imageRegistry`. Applying the module creates paid Bunny resources, about $0.47 a month.
 
@@ -114,11 +127,14 @@ against a local frps: funcd's `addon-frp-bunny` lane runs it that way, with `val
    same release, on your PATH: it locks the module's providers for linux/amd64 and linux/arm64, writes the lock file
    into the folder, and pushes the module with its providers and a contract it writes from the module's variables and
    outputs (funcd ADR-0355). `infra/bunny/bunny.contract.yaml` is that same contract, so pushing the folder by hand,
-   `funcdctl push infra/bunny <ref> --entry main.tf`, also works, and the lanes do so with `infra/fake`.
+   `funcdctl push infra/bunny <ref> --entry main.tf`, also works, and the lanes do so with `infra/fake`. The page is a
+   Vite project: its build writes it into `web/dist`, which `funcdctl push --site` packs.
 
    ```sh
    funcdctl infra push infra/bunny <registry>/frp-bunny-module:0.1.0
    funcdctl push hello/hello.mjs <registry>/frp-bunny-hello:0.1.0
+   (cd web && npm ci && npm run build)
+   funcdctl push --site web/dist <registry>/frp-bunny-web:0.1.0
    funcdctl app lock app -f values/bunny.yaml
    funcdctl push --template app <registry>/frp-bunny:0.1.0
    ```
@@ -143,13 +159,13 @@ against a local frps: funcd's `addon-frp-bunny` lane runs it that way, with `val
    Tunnel's engine restarts with the token and logs in to frps. `funcdctl infra outputs frp-bunny-stack` shows the
    outputs, `FRP_TOKEN` as `(sensitive)` (funcd ADR-0356).
 
-6. Call the public name. Magic Containers may take a minute to start frps:
+6. Open `https://<name>.b-cdn.net/` in a browser. Magic Containers may take a minute to start frps. The page fetches
+   `/api` and shows the hello Function's answer, `hello from frp-bunny, through hello.frp.test`: the Host that reached
+   funcd is the one the Tunnel rewrote. The Function also answers on its own:
 
    ```sh
-   curl https://<name>.b-cdn.net/
+   curl https://<name>.b-cdn.net/api
    ```
-
-   It answers `hello from frp-bunny, …`.
 
 ## Destroy
 

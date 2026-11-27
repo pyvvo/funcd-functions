@@ -4,6 +4,7 @@ registry: ${{ values.registry }}
 images:
   module: frp-bunny-module:0.1.0
   hello: frp-bunny-hello:0.1.0
+  web: frp-bunny-web:0.1.0
 valuesSchema:
   type: object
   properties:

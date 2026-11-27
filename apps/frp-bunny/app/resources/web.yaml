@@ -1,0 +1,16 @@
+buckets:
+  - name: ${{ app.name + "-web" }}
+    deletion: delete
+    prefixes:
+      - name: web
+sites:
+  - name: ${{ app.name + "-web" }}
+    image: ${{ images.web }}
+    bindings:
+      blob:
+        - bucket: ${{ app.name + "-web" }}
+          prefix: web
+    ingress:
+      host: ${{ values.host }}
+      auth:
+        mode: open

@@ -1,0 +1,33 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+}
+
+body {
+  display: grid;
+  min-height: 100vh;
+  margin: 0;
+  place-items: center;
+}
+
+main {
+  max-width: 40rem;
+  padding: 1rem;
+}
+
+h2,
+output {
+  font-family: ui-monospace, monospace;
+}
+
+h2 {
+  font-size: 1rem;
+}
+
+output {
+  display: block;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  white-space: pre-wrap;
+}
