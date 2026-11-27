@@ -1,7 +1,10 @@
 # volumes
 
-Two Functions that own volumes (funcd ADR-0262). funcd's `volumes` lane deploys the App on containerd with a 64 MiB
-volume image and checks what each volume type keeps.
+Two Functions that [own volumes](https://github.com/pyvvo/funcd/blob/main/docs/adr/0262-function-owned-volumes.md).
+funcd's `volumes` lane deploys the App on containerd with a 64 MiB volume image and checks what each volume type
+keeps.
+
+## Parts
 
 | Path | What |
 |---|---|
