@@ -1,6 +1,8 @@
 # The SQL functions of the todo App
 
-funcd's `sql` lane deploys these on real containerd (funcd ADR-0232 to ADR-0235):
+funcd's `sql` lane deploys these on real containerd, as
+[ADR-0232](https://github.com/pyvvo/funcd/blob/main/docs/adr/0232-sql-database-resource-and-rqlite-engine.md) to
+[ADR-0235](https://github.com/pyvvo/funcd/blob/main/docs/adr/0235-sql-change-feed.md) decide:
 
 | File | What |
 |---|---|

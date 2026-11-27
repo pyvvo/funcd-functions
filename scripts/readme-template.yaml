@@ -1,0 +1,81 @@
+# The shape of each README of this repository. scripts/readme-check.py holds every README.md to the shape whose
+# paths match it, and to that shape's word budget; .claude/rules/readme.md holds the writing rules. Like funcd's
+# develop-page template, it fixes outcomes and an order, not a full outline: a section appears only when it explains a
+# real task or behavior of what the folder holds.
+#
+# A shape's first section is the text under the README's `# ` title, before its first `##` heading. Its sections are the
+# `##` headings, in this order. Task sections go where `free` stands, each under a heading that names its task. A
+# required section appears in every README of the shape, and a refused heading in none.
+root:
+  paths:
+    - README.md
+  first:
+    holds: >-
+      What the repository holds and which of funcd's tests deploy it.
+  sections:
+    - heading: Apps
+      required: true
+      holds: >-
+        Each App's folder, what it shows and the lane that deploys it.
+    - heading: How funcd uses this repository
+      required: true
+      holds: >-
+        How funcd pins the repository, how a change reaches funcd, and how to test a change that is not released.
+    - heading: Develop
+      required: true
+      holds: >-
+        The command that checks every App, what it checks, and the git hooks that the dev shell installs.
+    - heading: License
+      holds: >-
+        The license, and a link to its file.
+# An App: a folder of apps/ that holds an App template. A shared App with a version and no part, such as
+# apps/todo-shared, has the first section alone.
+app:
+  paths:
+    - apps/*/README.md
+  first:
+    holds: >-
+      What the App does and which lane deploys it, then its smallest working run: the command that deploys it, or a link
+      to the Deploy section when a deploy takes several steps.
+  sections:
+    - heading: Parts
+      holds: >-
+        The objects that the App deploys, or the files that hold them, each with what it does.
+    - heading: Prerequisites
+      holds: >-
+        What a deploy needs first: the server's config keys and why each one, the add-ons, a registry, the tools, and an
+        account with what it costs.
+    - free: true
+      holds: >-
+        One task or behavior of the App per section, under a heading that names it, such as "One build at any path" or
+        "What each volume keeps". Reference detail that no task needs goes to a page under the App's docs/, linked on
+        the term that needs it.
+    - heading: Deploy
+      holds: >-
+        Each step of a deploy, in order, with its commands and the result that shows that it worked.
+    - heading: Destroy
+      holds: >-
+        How to delete the App, the steps that wait for a person, and what to clean up by hand.
+    - heading: Lanes
+      holds: >-
+        How a lane runs the App when it differs from the Deploy section: the lane, its values file, and what it uses
+        instead of a real service.
+    - heading: Build
+      holds: >-
+        The command that rebuilds the App's committed bundles or its page.
+  refused:
+    - Before you start
+    - Install
+    - Files
+# A folder inside an App, such as apps/todo/sql, which a lane deploys on its own: what it holds and which lane deploys
+# it, in its first section, then task sections.
+part:
+  paths:
+    - apps/*/*/README.md
+  first:
+    holds: >-
+      What the folder holds, which lane deploys it, and what each of its files is.
+  sections:
+    - free: true
+      holds: >-
+        One task or behavior of the folder per section, under a heading that names it.
