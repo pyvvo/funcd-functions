@@ -50,12 +50,12 @@ the Site `<app>-web`; and the Tunnel `<app>-tunnel`.
 - The InfraStack and Tunnel Addons, which an admin registers from a pyvvo/funcd-addons release:
 
   ```sh
-  curl -fsSL https://github.com/pyvvo/funcd-addons/releases/download/v0.9.0/infrastack.yaml | funcdctl apply -f -
-  curl -fsSL https://github.com/pyvvo/funcd-addons/releases/download/v0.9.0/tunnel.yaml | funcdctl apply -f -
+  curl -fsSL https://github.com/pyvvo/funcd-addons/releases/download/v0.10.0/infrastack.yaml | funcdctl apply -f -
+  curl -fsSL https://github.com/pyvvo/funcd-addons/releases/download/v0.10.0/tunnel.yaml | funcdctl apply -f -
   ```
 
 - A registry for the App's images, Node.js with npm to build the page, and the InfraStack add-on's plugin,
-  `funcdctl-infra` from the same release, on PATH, which steps 3 and 5 use.
+  `funcdctl-infra`, from the same release's archive for your platform, on PATH, which steps 3 and 5 use.
 - A Bunny account: its API key, and the Id of its public Docker Hub registry in Magic Containers, which
   `values/bunny.yaml` takes as `imageRegistry`. Applying the module creates paid Bunny resources, about $0.47 a month.
 
