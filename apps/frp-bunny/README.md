@@ -59,7 +59,7 @@ apps/frp-bunny/
 | `<app>-tunnel`, a Tunnel | frpc, with frps at `<name>.b-cdn.net:443` over wss, `FRP_TOKEN` from `<app>-outputs`, the public host `<name>.b-cdn.net`, and the edge at `values.edgeAddress` and `values.edgePort` with the Host rewritten to `values.host` |
 
 `infra/fake` has the module's variables and outputs and creates only its token, so the App runs with no Bunny account
-against a local frps: funcd's `addon-frp-bunny` lane runs it that way, with `values/lane.yaml`.
+against a local frps: pyvvo/funcd-addons' `addon-frp-bunny` lane runs it that way, with `values/lane.yaml`.
 
 ## Before you start
 
