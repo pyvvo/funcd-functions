@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 # The frp-bunny demo's own teardown, before env/down.sh deletes the VM and with it the stack's OpenTofu state. When the
 # journey stopped before its end, it deletes the App and approves each destroy run of the stack by its preview's
-# digest, so that OpenTofu removes Bunny's side. Then it deletes the Magic Containers pull zone that this run added,
-# which no destroy removes. When the pull zone funcd-tunnel-demo is still there, it keeps the VM for env/down.sh and
-# fails. Only what this run made: setup.sh listed Bunny's pull zones first.
+# digest, so that OpenTofu removes Bunny's side, the pull zone Magic Containers added included. When Bunny still runs
+# the container app funcd-tunnel-demo, the destroy did not finish: it keeps the VM for env/down.sh and fails.
 set -uo pipefail
 base=$(dirname "$DEMO_WORKSPACE")
-[ "$(cat "$base/owner" 2>/dev/null)" = "$DEMO_STATE" ] && [ -f "$base/zones-before" ] || exit 0
+[ "$(cat "$base/owner" 2>/dev/null)" = "$DEMO_STATE" ] && [ -f "$base/apps-before" ] || exit 0
 export PATH=$base/bin:$PATH FUNCD_SERVER=http://127.0.0.1:8080 FUNCD_TOKEN=funcd-demo-developer
 bunny=docs/demo/frp-bunny/env/bunny.py
 
@@ -30,16 +29,9 @@ for run in json.load(sys.stdin) or []:
   sleep 2
 done
 
-failed=0
-python3 "$bunny" zones > "$base/zones-after" || failed=1
-while read -r id zone; do
-  case "$zone" in
-    mc-*) grep -q "^$id " "$base/zones-before" || python3 "$bunny" delete-zone "$id" || failed=1 ;;
-    funcd-tunnel-demo)
-      echo "Bunny still has the pull zone $zone, Id $id: the stack's destroy did not finish" >&2
-      touch "$base/keep-vm"
-      failed=1
-      ;;
-  esac
-done < "$base/zones-after"
-exit "$failed"
+python3 "$bunny" apps > "$base/apps-after" || exit 1
+if grep -qx funcd-tunnel-demo "$base/apps-after"; then
+  echo "Bunny still runs the container app funcd-tunnel-demo: the stack's destroy did not finish" >&2
+  touch "$base/keep-vm"
+  exit 1
+fi
