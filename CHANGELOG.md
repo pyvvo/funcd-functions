@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.31.1](https://github.com/pyvvo/funcd-functions/compare/v0.31.0...v0.31.1) (2026-11-28)
+
+
+### Bug Fixes
+
+* **frp-bunny:** the stack's destroy deletes the pull zone Magic Containers adds for frps' endpoint ([#59](https://github.com/pyvvo/funcd-functions/issues/59)) ([63ded85](https://github.com/pyvvo/funcd-functions/commit/63ded8541b1ac30cc10ec49cd23d51d917fe929d))
+
 ## [0.31.0](https://github.com/pyvvo/funcd-functions/compare/v0.30.0...v0.31.0) (2026-11-27)
 
 
