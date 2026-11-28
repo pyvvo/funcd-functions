@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Bunny's API for the frp-bunny demo's setup and teardown, with the key from the file that DEMO_BUNNY_KEY_FILE names,
-which it never prints.
+which it never prints. It lists the Magic Containers apps: Bunny's list of pull zones leaves out the zones in front of
+a Magic Container, the stack's own zone included.
 
-bunny.py zones             print the Id and the Name of each pull zone, one a line
-bunny.py delete-zone <id>  delete the pull zone with that Id
+bunny.py apps   print the name of each Magic Containers app, one a line
 """
 
 import json
@@ -24,22 +24,8 @@ def call(method: str, path: str) -> bytes:
         return answer.read()
 
 
-def zones() -> list:
-    found, page = [], 1
-    while True:
-        answer = json.loads(call("GET", f"/pullzone?page={page}&perPage=1000"))
-        if not isinstance(answer, dict):
-            return found + answer
-        found += answer["Items"]
-        if not answer.get("HasMoreItems"):
-            return found
-        page += 1
-
-
-if sys.argv[1:] == ["zones"]:
-    for zone in zones():
-        print(zone["Id"], zone["Name"])
-elif len(sys.argv) == 3 and sys.argv[1] == "delete-zone":
-    call("DELETE", f"/pullzone/{int(sys.argv[2])}")
+if sys.argv[1:] == ["apps"]:
+    for app in json.loads(call("GET", "/mc/apps")).get("items", []):
+        print(app["name"])
 else:
     sys.exit(__doc__)

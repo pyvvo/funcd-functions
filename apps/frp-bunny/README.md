@@ -92,7 +92,8 @@ the Site `<app>-web`; and the Tunnel `<app>-tunnel`.
    ```
 
 5. Approve the stack's run. `funcdctl infra approve` finds the run that the stack waits on and shows its preview,
-   OpenTofu's plan of three resources to add: the token, frps' container app and its pull zone. It approves the run
+   OpenTofu's plan of four resources to add: the token, frps' container app, its pull zone, and the Id of the pull
+   zone that Magic Containers adds for the container's endpoint, `mc-<id>`. It approves the run
    once a person confirms:
 
    ```sh
@@ -120,15 +121,14 @@ the Site `<app>-web`; and the Tunnel `<app>-tunnel`.
    ```
 
 2. Approve the destroy run with the same command, which finds that run while the stack is being deleted. Its preview
-   destroys the three. The stack goes once the run succeeded, then the App's other parts.
+   destroys the four, and the run deletes the `mc-<id>` zone by its Id. The stack goes once the run succeeded, then
+   the App's other parts.
 
    ```sh
    funcdctl infra approve frp-bunny-stack
    ```
 
-3. Magic Containers adds a pull zone of its own for the container's CDN endpoint, named `mc-<id>`, which the module
-   does not manage: delete it in Bunny's dashboard.
-4. The Bucket `frp-bunny-state` keeps the emptied state. Delete it, the Secrets and the EgressPolicies when nothing
+3. The Bucket `frp-bunny-state` keeps the emptied state. Delete it, the Secrets and the EgressPolicies when nothing
    else uses them.
 
 ## Lanes
